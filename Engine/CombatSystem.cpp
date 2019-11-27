@@ -60,6 +60,7 @@ unsigned int CombatSystem::AddEffectTemplate(Effect effect_in)
 		if (!effects_templates[i].isActive())
 		{
 			effects_templates[i] = effect_in;
+			effects_templates[i].ActivateEffect();
 			return (unsigned int)i;
 		}
 	}

@@ -321,6 +321,16 @@ void Graphics::PutPixel( int x,int y,Color c )
 	pSysBuffer[Graphics::ScreenWidth * y + x] = c;
 }
 
+void Graphics::PutPixelInCanvas(int x, int y, Color c)
+{
+	if (!(x < 0 || x >= Graphics::ScreenWidth))
+	{
+		if (!(y < 0 || y >= Graphics::ScreenHeight)) {
+			PutPixel(x, y, c);
+		}
+	}
+}
+
 void Graphics::DrawCircle(Vec2 position_in, float radius_in, Color c)
 {
 	for (int x_a = -radius_in; x_a < radius_in; x_a++)
@@ -329,7 +339,7 @@ void Graphics::DrawCircle(Vec2 position_in, float radius_in, Color c)
 		{
 			if ((x_a * x_a)+(y_a * y_a) < radius_in*radius_in)
 			{
-				if ((x_a * x_a) + (y_a * y_a) > radius_in * radius_in * 0.95f)
+				if ((x_a * x_a) + (y_a * y_a) > (radius_in-1.0f) * (radius_in-1.0f))
 				{
 					int x_b = x_a + position_in.x;
 					int y_b = y_a + position_in.y;
@@ -343,6 +353,59 @@ void Graphics::DrawCircle(Vec2 position_in, float radius_in, Color c)
 				}
 			}
 		}
+	}
+}
+
+void Graphics::DrawLine(Vec2& a, Vec2& b, Color c)
+{
+	float xstart = (float)a.x;
+	float ystart = (float)a.y;
+	float xend = b.x - a.x;
+	float yend = b.y - a.y;
+	if (abs(xend) > abs(yend))
+	{
+		if (xend >= 0.0f)
+		{
+			for (int x = 0; x < xend; x++)
+			{
+				int y = ((float)x / xend)*(yend);
+
+				PutPixelInCanvas(x + xstart, y + ystart, c);
+			}
+			return;
+		}
+		else
+		{
+			for (int x = 0; x > xend; x--)
+			{
+				int y = ((float)x / xend)*(yend);
+
+				PutPixelInCanvas(x + xstart, y + ystart, c);
+			}
+			return;
+		}
+	}else{
+		if (yend >= 0.0f)
+		{
+			for (int y = 0; y < yend; y++)
+			{
+				int x = ((float)y / yend)*(xend);
+
+				PutPixelInCanvas(x + xstart, y + ystart, c);
+			}
+			return;
+		}
+		else
+		{
+			for (int y = 0; y > yend; y--)
+			{
+				int x = ((float)y / yend)*(xend);
+
+				PutPixelInCanvas(x + xstart, y + ystart, c);
+			}
+			return;
+		}
+		
 	}
 }
 

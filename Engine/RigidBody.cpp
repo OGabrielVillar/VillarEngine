@@ -46,6 +46,11 @@ void RigidBody::SetCircleForm(CircleForm circleform_in)
 	form = circleform_in;
 }
 
+void RigidBody::SetCircleFormRadius(float float_in)
+{
+	form.SetRadius(float_in);
+}
+
 void RigidBody::SetUnitTransformationAttached(Transformation* unitTransformation_in)
 {
 	unitAttached.SetUnitTransformationAttachment(unitTransformation_in);

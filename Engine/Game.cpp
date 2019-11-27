@@ -94,6 +94,19 @@ void Game::ComposeFrame()
 		}
 		i++;
 	}
+	i = 0;
+	while (i < UNITSLIMIT)
+	{
+		pU = &world.GetUnit(i);
+		if (!pU->GetName().empty())
+		{
+			gfx.DrawCircle(pU->rigidbody.GetTransformation().GetPosition(), pU->GetRadius(), Colors::Magenta);
+		}
+		i++;
+	}
+
+	gfx.DrawLine(world.GetUnit(0).rigidbody.GetTransformation().GetPosition(), world.GetUnit(1).rigidbody.GetTransformation().GetPosition(),Colors::Magenta);
+
 	/*
 	link.Draw( gfx );
 	gfx.PutPixel(500, 500, Colors::Magenta);

@@ -18,6 +18,7 @@ public: //SETTERS
 	void SetVelocity(Vec2 velocity_in);
 	void SetAcceleration(Vec2 acceleration_in);
 	void SetCircleForm(CircleForm circleform_in);
+	void SetCircleFormRadius(float float_in);
 public: //GETTERS
 	Transformation GetTransformation();
 	float GetMass();

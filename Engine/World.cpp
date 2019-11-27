@@ -7,16 +7,41 @@ World::World() :
 {
 	//testPorposes
 	AddUnit(Unit("esfera", Vec2(300.0f, 300.0f)));
-	Transformation* oi = &GetCreatedUnit()->GetTransformation();
 	GetCreatedUnit()->SetRadiusTo(150.0f);
-	GetCreatedUnit()->SetTransformation(Transformation(GetCreatedUnit()->GetPosition()*1.1f));
 	control.SetSelectedUnit(*GetCreatedUnit());
+
 	Effect xeffect;
 	xeffect.SetFunction(0, Function::Type::AddForce, Function::Unit::Source);
-	xeffect.SetFunctionTransformation(0,0,Transformation(Vec2(-1.0f,0.0f)));
+	xeffect.SetFunctionTransformation(0,0,Transformation(Vec2(-0.1f,0.0f)));
 	AddCommand(GetCreatedUnit(), 'A', xeffect);
+
+	Effect deffect;
+	deffect.SetFunction(0, Function::Type::AddForce, Function::Unit::Source);
+	deffect.SetFunctionTransformation(0, 0, Transformation(Vec2(0.1f, 0.0f)));
+	AddCommand(GetCreatedUnit(), 'D', deffect);
+
+	Effect weffect;
+	weffect.SetFunction(0, Function::Type::AddForce, Function::Unit::Source);
+	weffect.SetFunctionTransformation(0, 0, Transformation(Vec2(0.0f, -0.1f)));
+	AddCommand(GetCreatedUnit(), 'W', weffect);
+
+	Effect seffect;
+	seffect.SetFunction(0, Function::Type::AddForce, Function::Unit::Source);
+	seffect.SetFunctionTransformation(0, 0, Transformation(Vec2(0.0f, 0.1f)));
+	AddCommand(GetCreatedUnit(), 'S', seffect);
+
+	Effect qeffect;
+	qeffect.SetFunction(0, Function::Type::AddRadiusOfUnit, Function::Unit::Source);
+	qeffect.SetFunctionFloat(0, 0, 0.3);
+	AddCommand(GetCreatedUnit(), 'Q', qeffect);
+
+	Effect eeffect;
+	eeffect.SetFunction(0, Function::Type::AddRadiusOfUnit, Function::Unit::Source);
+	eeffect.SetFunctionFloat(0, 0, -0.3);
+	AddCommand(GetCreatedUnit(), 'E', eeffect);
+
 	AddUnit(Unit("bob",Vec2(600.0f,600.0f)));
-	GetCreatedUnit()->SetRadiusTo(80.0f);
+	GetCreatedUnit()->SetRadiusTo(10.0f);
 	//testEnding/*/
 }
 

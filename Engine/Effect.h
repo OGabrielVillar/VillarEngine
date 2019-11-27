@@ -32,6 +32,7 @@ public://FUNCTIONS SETTING
 public://FUNCTIONS EFFECTS
 	void ApplyFunctions();
 	void AddForce(Unit* Punit, Transformation transformation_in);
+	void AddRadiusOfUnit(Unit * Punit, float float_in);
 
 private://VARIABLES
 	Type type = Type::Non;

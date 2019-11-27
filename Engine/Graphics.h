@@ -60,7 +60,9 @@ public:
 		PutPixel( x,y,{ unsigned char( r ),unsigned char( g ),unsigned char( b ) } );
 	}
 	void PutPixel( int x,int y,Color c );
+	void PutPixelInCanvas(int x, int y, Color c);
 	void DrawCircle( Vec2 position, float radius, Color c);
+	void DrawLine( Vec2& start, Vec2& end, Color c);
 	void DrawSpriteNonChroma( int x,int y,const Surface& s );
 	void DrawSpriteNonChroma( int x,int y,const RectI& srcRect,const Surface& s );
 	void DrawSpriteNonChroma( int x,int y,RectI srcRect,const RectI& clip,const Surface& s );

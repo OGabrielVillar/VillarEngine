@@ -36,7 +36,7 @@ void Unit::SetRadiusTo(float radius_in)
 	radius = radius_in;
 	if (isDefautBody)
 	{
-		rigidbody.SetCircleForm(CircleForm(transformation, radius));
+		rigidbody.SetCircleFormRadius(radius_in);
 	}
 }
 

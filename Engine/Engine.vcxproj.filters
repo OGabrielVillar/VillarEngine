@@ -127,7 +127,7 @@
       <Filter>Header Files\World Side</Filter>
     </ClInclude>
     <ClInclude Include="Function.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\World Side</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -216,7 +216,7 @@
       <Filter>Source Files\WorldSide</Filter>
     </ClCompile>
     <ClCompile Include="Effect.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\WorldSide</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

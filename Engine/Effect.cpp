@@ -45,39 +45,34 @@ void Effect::SetFunctionTransformation(int index_in, int transf_index_in, Transf
 void Effect::ApplyFunctions()
 {
 	Function* pFuncion = &functionslist[0];
-	while (pFuncion != &functionslist[FUNCTIONSLIMIT+1])
+	while (pFuncion != &functionslist[FUNCTIONSLIMIT])
 	{
-		switch (pFuncion->type)
-		{
+		Unit* pTarget = source;
+
+		switch (pFuncion->unit) {
+		case Function::Unit::Target:
+			pTarget = target;break;
+		default:break;}
+
+		switch (pFuncion->type){
 		case Function::Type::AddForce:
-			switch (pFuncion->unit)
-			{
-			case Function::Unit::Source:
-				AddForce(source,pFuncion->t[0]);
-				break;
-			case Function::Unit::Target:
-				AddForce(target, pFuncion->t[0]);
-				break;
-			case Function::Unit::Non:
-				break;
-			default:
-				break;
-			}
-			break;
-
-		case Function::Type::Non:
-			break;
-
-		default:
-			break;
-		}
+			AddForce(pTarget,pFuncion->t[0]);break;
+		case Function::Type::AddRadiusOfUnit:
+			AddRadiusOfUnit(pTarget,pFuncion->f[0]);break;
+		default:break;}
 
 		pFuncion++;
 
 	}
+	active = false;
 }
 
 void Effect::AddForce(Unit* Punit, Transformation transformation_in)
 {
 	Punit->rigidbody.AddForce(transformation_in.position);
+}
+
+void Effect::AddRadiusOfUnit(Unit* Punit, float float_in)
+{
+	Punit->SetRadiusTo(Punit->GetRadius() + float_in);
 }

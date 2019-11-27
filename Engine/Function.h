@@ -9,6 +9,8 @@ public:
 	{
 		Non,
 		AddForce,
+		SetRadiusOfUnit,
+		AddRadiusOfUnit,
 	};
 	enum class Unit
 	{
