@@ -321,6 +321,31 @@ void Graphics::PutPixel( int x,int y,Color c )
 	pSysBuffer[Graphics::ScreenWidth * y + x] = c;
 }
 
+void Graphics::DrawCircle(Vec2 position_in, float radius_in, Color c)
+{
+	for (int x_a = -radius_in; x_a < radius_in; x_a++)
+	{
+		for (int y_a = -radius_in; y_a < radius_in; y_a++)
+		{
+			if ((x_a * x_a)+(y_a * y_a) < radius_in*radius_in)
+			{
+				if ((x_a * x_a) + (y_a * y_a) > radius_in * radius_in * 0.95f)
+				{
+					int x_b = x_a + position_in.x;
+					int y_b = y_a + position_in.y;
+					if (!(x_b < 0 || x_b >= Graphics::ScreenWidth))
+					{
+						if (!(y_b < 0 || y_b >= Graphics::ScreenHeight))
+						{
+							PutPixel(x_b, y_b, c);
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
 void Graphics::DrawSpriteNonChroma( int x,int y,const Surface& s )
 {
 	DrawSpriteNonChroma( x,y,s.GetRect(),s );

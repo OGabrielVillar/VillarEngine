@@ -29,6 +29,10 @@
 #include "Character.h"
 #include "Font.h"
 #include "Sound.h"
+#include "List.h"
+
+
+#include "World.h"
 
 class Game
 {
@@ -39,18 +43,28 @@ public:
 	void Go();
 private:
 	void ComposeFrame();
-	void UpdateModel();
+	void Update();
 	/********************************/
 	/*  User Functions              */
 	/********************************/
 private:
 	MainWindow& wnd;
 	Graphics gfx;
+	World world;
+	Control* defaultControl;
 	/********************************/
-	/*  User Variables              */
+	/*  User Variables              
+	List<std::string> list;
 	FrameTimer ft;
-	Character link = Character( { 100.0f,100.0f } );
+	Character link = Vec2(111,111);
 	Font font = "Images\\Fixedsys16x28.bmp";
 	Sound hit = L"Sounds\\hit.wav";
+	Sound song = Sound(L"Sounds\\SonzinJogo01.wav",3.0f,60.0f);
+	Vei2 textPos = Vei2(500,100);
+	int trigger = 0;
+	int stresstest = 1;
+	std::string string = std::string("0");;
+	std::string finalString = std::string("0");;
+	Vec2 canvas0n0 = Vec2(0, 0);*/
 	/********************************/
 };

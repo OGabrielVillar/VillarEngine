@@ -5,7 +5,7 @@
 class Vec2
 {
 public:
-	Vec2() = default;
+	Vec2();
 	Vec2( float x_in,float y_in );
 	Vec2 operator+( const Vec2& rhs ) const;
 	Vec2& operator+=( const Vec2& rhs );
@@ -18,6 +18,7 @@ public:
 	Vec2& Normalize();
 	Vec2 GetNormalized() const;
 	explicit operator Vei2() const;
+	float GetTangencialRelativeDistance(Vec2 mdl_target, Vec2 end_target);
 public:
 	float x;
 	float y;

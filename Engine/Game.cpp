@@ -21,23 +21,30 @@
 #include "MainWindow.h"
 #include "Game.h"
 
-Game::Game( MainWindow& wnd )
+Game::Game(MainWindow& wnd)
 	:
-	wnd( wnd ),
-	gfx( wnd )
+	wnd(wnd),
+	gfx(wnd),
+	world()
 {
+	defaultControl = world.GetControl();
+	defaultControl->BindKeyboard(wnd.kbd);
+	world.GetPCombatSystem()->BindKeyboard(wnd.kbd);
 }
 
 void Game::Go()
 {
 	gfx.BeginFrame();	
-	UpdateModel();
+	Update();
 	ComposeFrame();
 	gfx.EndFrame();
 }
 
-void Game::UpdateModel()
+void Game::Update()
 {
+	world.Go();
+
+	/*
 	// process key messages while any remain
 	while( !wnd.kbd.KeyIsEmpty() )
 	{
@@ -47,33 +54,67 @@ void Game::UpdateModel()
 		{
 			link.ActivateEffect();
 			hit.Play();
+			list.EraseBackElement();
 		}
 	}
 	// process arrow keys state
 	Vec2 dir = { 0.0f,0.0f };
-	if( wnd.kbd.KeyIsPressed( VK_UP ) )
+	if( wnd.kbd.KeyIsPressed('W') )
 	{
 		dir.y -= 1.0f;
 	}
-	if( wnd.kbd.KeyIsPressed( VK_DOWN ) )
+	if( wnd.kbd.KeyIsPressed('S') )
 	{
 		dir.y += 1.0f;
 	}
-	if( wnd.kbd.KeyIsPressed( VK_LEFT ) )
+	if( wnd.kbd.KeyIsPressed('A') )
 	{
 		dir.x -= 1.0f;
 	}
-	if( wnd.kbd.KeyIsPressed( VK_RIGHT ) )
+	if( wnd.kbd.KeyIsPressed('D') )
 	{
 		dir.x += 1.0f;
 	}
 	link.SetDirection( dir );
 	// update character
 	link.Update( ft.Mark() );
+	*/
 }
 
-void Game::ComposeFrame()
+void Game::ComposeFrame()		
 {
+	char i = 0;
+	Unit* pU;
+	while (i < UNITSLIMIT)
+	{
+		pU = &world.GetUnit(i);
+		if (!pU->GetName().empty())
+		{
+			gfx.DrawCircle(pU->GetPosition(), pU->GetRadius(), Colors::White);
+		}
+		i++;
+	}
+	/*
 	link.Draw( gfx );
-	font.DrawText( "Becky.\nLemme smash.",wnd.mouse.GetPos() - Vei2{ 50,150 },Colors::White,gfx );
+	gfx.PutPixel(500, 500, Colors::Magenta);
+	//font.DrawText( "Becky.\nLemme smash.",wnd.mouse.GetPos() - Vei2{ 50,150 },Colors::White,gfx );
+	if (trigger >= 60)
+	{
+		string = std::string("\nFps: " + std::to_string(1 / ft.Get()) );
+		list.PushElement(string);
+		trigger = 0;
+	}
+	finalString = '0';
+	for (int i = 0; i < list.capacity(); i++)
+	{
+		finalString += list[i];
+	}
+	font.DrawText(finalString, textPos, Colors::Yellow, gfx);
+	for (size_t i = 0; i < 20000000; i++)
+	{
+		char a = 0;
+		a = 1;
+	}
+	trigger ++;
+	*/
 }

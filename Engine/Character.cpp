@@ -1,5 +1,20 @@
 #include "Character.h"
 
+Character::Character()
+	:
+	sprite("Images\\link90x90.bmp"),
+	pos(Vec2())
+{
+	for (int i = 0; i < (int)Sequence::StandingLeft; i++)
+	{
+		animations.emplace_back(Animation(90, 90 * i, 90, 90, 4, sprite, 0.16f));
+	}
+	for (int i = (int)Sequence::StandingLeft; i < (int)Sequence::Count; i++)
+	{
+		animations.emplace_back(Animation(0, 90 * (i - (int)Sequence::StandingLeft), 90, 90, 1, sprite, 0.16f));
+	}
+}
+
 Character::Character( const Vec2& pos )
 	:
 	sprite( "Images\\link90x90.bmp" ),
@@ -66,6 +81,11 @@ void Character::SetDirection( const Vec2& dir )
 		}
 	}
 	vel = dir * speed;
+}
+
+Vec2 Character::GetPosition()
+{
+	return pos;
 }
 
 void Character::Update( float dt )

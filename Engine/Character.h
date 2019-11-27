@@ -19,9 +19,11 @@ private:
 		Count
 	};
 public:
+	Character( );
 	Character( const Vec2& pos );
 	void Draw( Graphics& gfx ) const;
 	void SetDirection( const Vec2& dir );
+	Vec2 GetPosition();
 	void Update( float dt );
 	// activates a damage visual effect
 	void ActivateEffect();
