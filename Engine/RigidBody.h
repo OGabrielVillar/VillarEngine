@@ -3,6 +3,7 @@
 #define NFORCESLIMIT 9
 
 #include "Form.h"
+#include "Material.h"
 #include "UnitToBodyAttachment.h"
 
 class RigidBody
@@ -51,6 +52,6 @@ public://PHYSICS
 	// http://gamedev.tutsplus.com/tutorials/implementation/how-to-create-a-custom-2d-physics-engine-friction-scene-and-jump-table/
 	float staticFriction;
 	float dynamicFriction;
-	float restitution;
+	Material material;
 };
 

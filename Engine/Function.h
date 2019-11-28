@@ -9,8 +9,9 @@ public:
 	{
 		Non,
 		AddForce,
-		SetRadiusOfUnit,
-		AddRadiusOfUnit,
+		SetUnitRadius,
+		AddUnitRadius,
+		SetUnitPosition,
 	};
 	enum class Unit
 	{
@@ -22,4 +23,5 @@ public:
 	Unit unit;
 	float f[1];
 	Transformation t[1];
+	Vec2 v[1];
 };

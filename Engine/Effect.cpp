@@ -42,6 +42,11 @@ void Effect::SetFunctionTransformation(int index_in, int transf_index_in, Transf
 	functionslist[index_in].t[transf_index_in] = transf_in;
 }
 
+void Effect::SetFunctionVec2(int index_in, int transf_index_in, Vec2 vec2_in)
+{
+	functionslist[index_in].v[transf_index_in] = vec2_in;
+}
+
 void Effect::ApplyFunctions()
 {
 	Function* pFuncion = &functionslist[0];
@@ -57,8 +62,10 @@ void Effect::ApplyFunctions()
 		switch (pFuncion->type){
 		case Function::Type::AddForce:
 			AddForce(pTarget,pFuncion->t[0]);break;
-		case Function::Type::AddRadiusOfUnit:
-			AddRadiusOfUnit(pTarget,pFuncion->f[0]);break;
+		case Function::Type::AddUnitRadius:
+			AddUnitRadius(pTarget,pFuncion->f[0]);break;
+		case Function::Type::SetUnitPosition:
+			SetUnitPosition(pTarget, pFuncion->v[0]); break;
 		default:break;}
 
 		pFuncion++;
@@ -72,7 +79,14 @@ void Effect::AddForce(Unit* Punit, Transformation transformation_in)
 	Punit->rigidbody.AddForce(transformation_in.position);
 }
 
-void Effect::AddRadiusOfUnit(Unit* Punit, float float_in)
+void Effect::AddUnitRadius(Unit* Punit, float float_in)
 {
 	Punit->SetRadius(Punit->GetRadius() + float_in);
+}
+
+void Effect::SetUnitPosition(Unit * Punit, Vec2 position_in)
+{
+	Transformation t = Punit->GetTransformation();
+	t.position = position_in;
+	Punit->SetTransformation(t);
 }

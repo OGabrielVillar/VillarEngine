@@ -28,11 +28,13 @@ public://FUNCTIONS SETTING
 	void SetFunction(int index_in, Function::Type type_in, Function::Unit unit_in);
 	void SetFunctionFloat(int index_in, int float_index_in, float float_in);
 	void SetFunctionTransformation(int index_in, int transf_index_in, Transformation transf_in);
+	void SetFunctionVec2(int index_in, int transf_index_in, Vec2 vec2_in);
 
 public://FUNCTIONS EFFECTS
 	void ApplyFunctions();
 	void AddForce(Unit* Punit, Transformation transformation_in);
-	void AddRadiusOfUnit(Unit * Punit, float float_in);
+	void AddUnitRadius(Unit * Punit, float float_in);
+	void SetUnitPosition(Unit * Punit, Vec2 position_in);
 
 private://VARIABLES
 	Type type = Type::Non;

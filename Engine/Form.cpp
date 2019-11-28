@@ -16,6 +16,11 @@ void Form::SetRadius(float radius_in)
 	radius = radius_in;
 }
 
+bool Form::IsCircle()
+{
+	return type == Type::Point;
+}
+
 Transformation Form::GetTransformation()
 {
 	return transformation;

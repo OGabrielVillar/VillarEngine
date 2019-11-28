@@ -17,9 +17,8 @@ void PhysicSystem::MoveBodys()
 	{
 		if (!Punit->GetName().empty())
 		{
-			Punit->rigidbody.acceleration = Punit->rigidbody.force*ft;
-			Punit->rigidbody.velocity += Punit->rigidbody.acceleration;
-			Punit->rigidbody.SetTransformation(Punit->rigidbody.GetTransformation() + Punit->rigidbody.GetVelocity());
+			Punit->rigidbody.velocity += Punit->rigidbody.force;//divided by the mass
+			Punit->rigidbody.SetTransformation(Punit->rigidbody.GetTransformation() + Punit->rigidbody.GetVelocity()*ft);
 			Punit->rigidbody.force.Set(0.0f, 0.0f);
 		}
 		Punit++;
@@ -42,7 +41,7 @@ bool PhysicSystem::IsCollinding(RigidBody * rb_a, RigidBody * rb_b)
 bool PhysicSystem::PointPointCollisionTest(RigidBody * rb_a, RigidBody * rb_b)
 {
 	float radius_sum = rb_a->form.radius + rb_b->form.radius;
-	if (SqrdDistance(rb_a->form.transformation.GetPosition(),rb_b->form.transformation.GetPosition()) < radius_sum*radius_sum)
+	if (SqrdDistance(rb_a->form.transformation.GetPosition(),rb_b->form.transformation.GetPosition()) <= radius_sum*radius_sum)
 	{
 		return true;
 	}

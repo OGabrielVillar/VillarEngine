@@ -32,18 +32,29 @@ World::World() :
 	AddCommand(GetCreatedUnit(), 'S', seffect);
 
 	Effect qeffect;
-	qeffect.SetFunction(0, Function::Type::AddRadiusOfUnit, Function::Unit::Source);
+	qeffect.SetFunction(0, Function::Type::AddUnitRadius, Function::Unit::Source);
 	qeffect.SetFunctionFloat(0, 0, 1.0);
 	AddCommand(GetCreatedUnit(), 'Q', qeffect);
 
 	Effect eeffect;
-	eeffect.SetFunction(0, Function::Type::AddRadiusOfUnit, Function::Unit::Source);
+	eeffect.SetFunction(0, Function::Type::AddUnitRadius, Function::Unit::Source);
 	eeffect.SetFunctionFloat(0, 0, -1.0);
 	AddCommand(GetCreatedUnit(), 'E', eeffect);
+
+	Effect spaceeffect;
+	spaceeffect.SetFunction(0, Function::Type::SetUnitPosition, Function::Unit::Source);
+	spaceeffect.SetFunctionVec2(0, 0, Vec2(300.0f,300.0f));
+	AddCommand(GetCreatedUnit(), (char)32, spaceeffect);
 
 	AddUnit(Unit("bob",Vec2(600.0f,600.0f)));
 	GetCreatedUnit()->SetRadius(100.0f);
 	GetCreatedUnit()->rigidbody.form.transformation.orientation = PI/2;
+
+	Effect spaceeffect2;
+	spaceeffect2.SetFunction(0, Function::Type::SetUnitPosition, Function::Unit::Source);
+	spaceeffect2.SetFunctionVec2(0, 0, Vec2(600.0f, 300.0f));
+	AddCommand(GetCreatedUnit(), (char)32, spaceeffect2);
+
 	//testEnding/*/
 }
 

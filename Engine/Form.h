@@ -17,6 +17,7 @@ public:
 public: //SETTERS
 	void SetTransformation(Transformation transformation_in);
 	void SetRadius(float radius_in);
+	bool IsCircle();
 public: //GETTERS
 	Transformation GetTransformation();
 	float GetRadius();
