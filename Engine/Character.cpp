@@ -35,11 +35,11 @@ void Character::Draw( Graphics& gfx ) const
 	// if effect active, draw sprite replacing opaque pixels with red
 	if( effectActive )
 	{
-		animations[(int)iCurSequence].DrawColor( (Vei2)pos,gfx,Colors::Red );
+		//animations[(int)iCurSequence].DrawColor( (Vei2)pos,gfx,Colors::Red );
 	}
 	else
 	{
-		animations[(int)iCurSequence].Draw( (Vei2)pos,gfx );
+		//animations[(int)iCurSequence].Draw( (Vei2)pos,gfx );
 	}
 }
 

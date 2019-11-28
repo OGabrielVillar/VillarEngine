@@ -72,13 +72,7 @@
     <ClInclude Include="Vei2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Animation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="FrameTimer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Character.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Vec2.h">
@@ -117,9 +111,6 @@
     <ClInclude Include="World.h">
       <Filter>Header Files\World Side</Filter>
     </ClInclude>
-    <ClInclude Include="CircleForm.h">
-      <Filter>Header Files\World Side</Filter>
-    </ClInclude>
     <ClInclude Include="UnitToBodyAttachment.h">
       <Filter>Header Files\World Side</Filter>
     </ClInclude>
@@ -128,6 +119,12 @@
     </ClInclude>
     <ClInclude Include="Function.h">
       <Filter>Header Files\World Side</Filter>
+    </ClInclude>
+    <ClInclude Include="Form.h">
+      <Filter>Header Files\World Side</Filter>
+    </ClInclude>
+    <ClInclude Include="VMath.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -167,16 +164,10 @@
     <ClCompile Include="Vei2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Animation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="FrameTimer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Vec2.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Character.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Font.cpp">
@@ -206,9 +197,6 @@
     <ClCompile Include="Control.cpp">
       <Filter>Source Files\WorldSide</Filter>
     </ClCompile>
-    <ClCompile Include="CircleForm.cpp">
-      <Filter>Source Files\WorldSide</Filter>
-    </ClCompile>
     <ClCompile Include="RigidBody.cpp">
       <Filter>Source Files\WorldSide</Filter>
     </ClCompile>
@@ -216,6 +204,9 @@
       <Filter>Source Files\WorldSide</Filter>
     </ClCompile>
     <ClCompile Include="Effect.cpp">
+      <Filter>Source Files\WorldSide</Filter>
+    </ClCompile>
+    <ClCompile Include="Form.cpp">
       <Filter>Source Files\WorldSide</Filter>
     </ClCompile>
   </ItemGroup>

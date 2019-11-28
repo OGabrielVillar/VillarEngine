@@ -1,4 +1,4 @@
-#pragma once
+/*/#pragma once
 
 #include "Vei2.h"
 
@@ -19,7 +19,11 @@ public:
 	Vec2 GetNormalized() const;
 	explicit operator Vei2() const;
 	float GetTangencialRelativeDistance(Vec2 mdl_target, Vec2 end_target);
+	float CrossProduct(const Vec2 & a, const Vec2 & b);
+	Vec2 CrossProduct(const Vec2 & a, float s);
+	Vec2 CrossProduct(float s, const Vec2 & a);
 public:
 	float x;
 	float y;
 };
+/*/

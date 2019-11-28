@@ -74,5 +74,5 @@ void Effect::AddForce(Unit* Punit, Transformation transformation_in)
 
 void Effect::AddRadiusOfUnit(Unit* Punit, float float_in)
 {
-	Punit->SetRadiusTo(Punit->GetRadius() + float_in);
+	Punit->SetRadius(Punit->GetRadius() + float_in);
 }

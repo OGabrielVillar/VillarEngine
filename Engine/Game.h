@@ -52,10 +52,10 @@ private:
 	Graphics gfx;
 	World world;
 	Control* defaultControl;
+	FrameTimer ft;
 	/********************************/
 	/*  User Variables              
 	List<std::string> list;
-	FrameTimer ft;
 	Character link = Vec2(111,111);
 	Font font = "Images\\Fixedsys16x28.bmp";
 	Sound hit = L"Sounds\\hit.wav";

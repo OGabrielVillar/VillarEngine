@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Animation.h"
-#include "Vec2.h"
+#include "VMath.h"
 
 class Character
 {

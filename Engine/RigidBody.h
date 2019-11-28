@@ -2,42 +2,55 @@
 
 #define NFORCESLIMIT 9
 
-#include "CircleForm.h"
+#include "Form.h"
 #include "UnitToBodyAttachment.h"
 
 class RigidBody
 {
 public:
 	RigidBody();
-	RigidBody(Transformation transformation_in, float mass_in);
-	RigidBody(Transformation transformation_in, float mass_in, Transformation& unitTransformation_in);
+	RigidBody(Transformation transformation_in);
+	RigidBody(Form *form_in, unsigned int x, unsigned int y);
 public: //SETTERS
 	void SetTransformation(Transformation transformation_in);
-	void SetMass(float mass_in);
-	void SetUnitTransformationAttached(Transformation* unitTransformation_in);
 	void SetVelocity(Vec2 velocity_in);
-	void SetAcceleration(Vec2 acceleration_in);
-	void SetCircleForm(CircleForm circleform_in);
-	void SetCircleFormRadius(float float_in);
+	void SetForm(Form Form_in);
+	void SetFormRadius(float float_in);
 public: //GETTERS
 	Transformation GetTransformation();
-	float GetMass();
 	Vec2 GetVelocity();
-	Vec2 GetAcceleration();
-	Vec2 GetFinalForce();
+	Vec2 GetForce();
 public: //FUNCTIONS
 	void AddForce(Vec2 force_in);
 	void ApplyForces();
 	void ClearForces();
-private:
-	float mass = 1;
-	Vec2 velocity;
-	Vec2 acceleration;
-	CircleForm form;
-	UnitToBodyAttachment unitAttached;
-	bool uses_gravity;
-	Vec2 forces[NFORCESLIMIT];
-	Vec2 final_force;
+	void ApplyImpulse(const Vec2& impulse, const Vec2& contactVector);
+	void SetStatic(void);
+	void SetOrientation(float radians);
+
+
+
 public:
-	Transformation* units_transformation;
+	Form form;
+	bool uses_gravity;
+public://PHYSICS
+	Vec2 velocity;
+	float angularVelocity;
+	float torque;
+	float orient; // radians
+
+	Vec2 force;
+	Vec2 acceleration;
+
+	// Set by shape
+	float I;  // moment of inertia
+	float iI; // inverse inertia
+	float m;  // mass
+	float im; // inverse masee
+
+	// http://gamedev.tutsplus.com/tutorials/implementation/how-to-create-a-custom-2d-physics-engine-friction-scene-and-jump-table/
+	float staticFriction;
+	float dynamicFriction;
+	float restitution;
 };
+

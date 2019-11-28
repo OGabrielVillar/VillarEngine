@@ -5,8 +5,10 @@ CombatSystem::CombatSystem(Unit * unit_list_in)
 	unit_list = unit_list_in;
 }
 
-void CombatSystem::Go()
+void CombatSystem::Go(float ft_in)
 {
+	ft = ft_in;
+
 	CheckForCommands();
 	CheckForEffects();
 }
@@ -64,6 +66,7 @@ unsigned int CombatSystem::AddEffectTemplate(Effect effect_in)
 			return (unsigned int)i;
 		}
 	}
+	return 0;
 }
 
 void CombatSystem::BindKeyboard(Keyboard & kbd_in)

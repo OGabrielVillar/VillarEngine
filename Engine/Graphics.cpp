@@ -333,16 +333,16 @@ void Graphics::PutPixelInCanvas(int x, int y, Color c)
 
 void Graphics::DrawCircle(Vec2 position_in, float radius_in, Color c)
 {
-	for (int x_a = -radius_in; x_a < radius_in; x_a++)
+	for (int x_a = (int)-radius_in; x_a < (int)radius_in; x_a++)
 	{
-		for (int y_a = -radius_in; y_a < radius_in; y_a++)
+		for (int y_a = (int)-radius_in; y_a < (int)radius_in; y_a++)
 		{
 			if ((x_a * x_a)+(y_a * y_a) < radius_in*radius_in)
 			{
 				if ((x_a * x_a) + (y_a * y_a) > (radius_in-1.0f) * (radius_in-1.0f))
 				{
-					int x_b = x_a + position_in.x;
-					int y_b = y_a + position_in.y;
+					int x_b = x_a + (int)position_in.x;
+					int y_b = y_a + (int)position_in.y;
 					if (!(x_b < 0 || x_b >= Graphics::ScreenWidth))
 					{
 						if (!(y_b < 0 || y_b >= Graphics::ScreenHeight))
@@ -368,9 +368,9 @@ void Graphics::DrawLine(Vec2& a, Vec2& b, Color c)
 		{
 			for (int x = 0; x < xend; x++)
 			{
-				int y = ((float)x / xend)*(yend);
+				int y = (int)(((float)x / xend)*(yend));
 
-				PutPixelInCanvas(x + xstart, y + ystart, c);
+				PutPixelInCanvas(x + (int)xstart, y + (int)ystart, c);
 			}
 			return;
 		}
@@ -378,9 +378,9 @@ void Graphics::DrawLine(Vec2& a, Vec2& b, Color c)
 		{
 			for (int x = 0; x > xend; x--)
 			{
-				int y = ((float)x / xend)*(yend);
+				int y = (int)(((float)x / xend)*(yend));
 
-				PutPixelInCanvas(x + xstart, y + ystart, c);
+				PutPixelInCanvas(x + (int)xstart, y + (int)ystart, c);
 			}
 			return;
 		}
@@ -389,9 +389,9 @@ void Graphics::DrawLine(Vec2& a, Vec2& b, Color c)
 		{
 			for (int y = 0; y < yend; y++)
 			{
-				int x = ((float)y / yend)*(xend);
+				int x = (int)(((float)y / yend)*(xend));
 
-				PutPixelInCanvas(x + xstart, y + ystart, c);
+				PutPixelInCanvas(x + (int)xstart, y + (int)ystart, c);
 			}
 			return;
 		}
@@ -399,9 +399,9 @@ void Graphics::DrawLine(Vec2& a, Vec2& b, Color c)
 		{
 			for (int y = 0; y > yend; y--)
 			{
-				int x = ((float)y / yend)*(xend);
+				int x = (int)(((float)y / yend)*(xend));
 
-				PutPixelInCanvas(x + xstart, y + ystart, c);
+				PutPixelInCanvas(x + (int)xstart, y + (int)ystart, c);
 			}
 			return;
 		}

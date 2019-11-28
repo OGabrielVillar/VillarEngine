@@ -5,16 +5,16 @@ Transformation::Transformation(Vec2 position_in)
 	position = position_in;
 }
 
-Transformation::Transformation(Vec2 position_in, Vec2 scale_in, Vec2 rotation_in)
+Transformation::Transformation(Vec2 position_in, Vec2 scale_in, float orientation_in)
 {
 	position = position_in;
 	scale = scale_in;
-	rotation = rotation_in;
+	orientation = orientation_in;
 }
 
 Transformation Transformation::operator+(const Transformation & rhs) const
 {
-	return Transformation(position + rhs.position, Vec2(scale.x * rhs.scale.x, scale.y * rhs.scale.y), rotation + rhs.rotation);
+	return Transformation(position + rhs.position, Vec2(scale.x * rhs.scale.x, scale.y * rhs.scale.y), orientation + rhs.orientation);
 }
 
 Transformation & Transformation::operator+=(const Transformation & rhs)
@@ -24,7 +24,7 @@ Transformation & Transformation::operator+=(const Transformation & rhs)
 
 Transformation Transformation::operator*(float rhs) const
 {
-	return Transformation(position * rhs, scale * rhs, rotation * rhs);
+	return Transformation(position * rhs, scale * rhs, orientation * rhs);
 }
 
 Transformation & Transformation::operator*=(float rhs)
@@ -34,7 +34,7 @@ Transformation & Transformation::operator*=(float rhs)
 
 Transformation Transformation::operator-(const Transformation & rhs) const
 {
-	return Transformation(position - rhs.position, scale - rhs.scale, rotation - rhs.rotation);
+	return Transformation(position - rhs.position, scale - rhs.scale, orientation - rhs.orientation);
 }
 
 Transformation & Transformation::operator-=(const Transformation & rhs)
@@ -44,5 +44,5 @@ Transformation & Transformation::operator-=(const Transformation & rhs)
 
 Vec2 Transformation::GetPosition()
 {
-	return position;
+	return Vec2(position.x, position.y);
 }

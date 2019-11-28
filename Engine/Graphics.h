@@ -26,7 +26,7 @@
 #include "Colors.h"
 #include "Surface.h"
 #include "RectI.h"
-#include "Vec2.h"
+#include "VMath.h"
 
 class Graphics
 {

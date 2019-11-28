@@ -1,6 +1,6 @@
 #include "Vec2.h"
 #include <cmath>
-
+/*/
 Vec2::Vec2()
 {
 	x = 0.0f;
@@ -83,3 +83,22 @@ float Vec2::GetTangencialRelativeDistance(Vec2 mdl_target, Vec2 end_target)
 	float final = 1 - ( mdl_sqr_hip / sqr_hip );
 	return final;
 }
+
+// Two crossed vectors return a scalar
+float Vec2::CrossProduct(const Vec2& a, const Vec2& b)
+{
+	return a.x * b.y - a.y * b.x;
+}
+
+// More exotic (but necessary) forms of the cross product
+// with a vector a and scalar s, both returning a vector
+Vec2 Vec2::CrossProduct(const Vec2& a, float s)
+{
+	return Vec2(s * a.y, -s * a.x);
+}
+
+Vec2 Vec2::CrossProduct(float s, const Vec2& a)
+{
+	return Vec2(-s * a.y, s * a.x);
+}
+/*/

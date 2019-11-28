@@ -7,48 +7,50 @@ World::World() :
 {
 	//testPorposes
 	AddUnit(Unit("esfera", Vec2(300.0f, 300.0f)));
-	GetCreatedUnit()->SetRadiusTo(150.0f);
+	GetCreatedUnit()->SetRadius(150.0f);
 	control.SetSelectedUnit(*GetCreatedUnit());
+	GetCreatedUnit()->rigidbody.form.transformation.orientation = PI / 2;
 
 	Effect xeffect;
 	xeffect.SetFunction(0, Function::Type::AddForce, Function::Unit::Source);
-	xeffect.SetFunctionTransformation(0,0,Transformation(Vec2(-0.1f,0.0f)));
+	xeffect.SetFunctionTransformation(0,0,Transformation(Vec2(-7000.1f,0.0f)));
 	AddCommand(GetCreatedUnit(), 'A', xeffect);
 
 	Effect deffect;
 	deffect.SetFunction(0, Function::Type::AddForce, Function::Unit::Source);
-	deffect.SetFunctionTransformation(0, 0, Transformation(Vec2(0.1f, 0.0f)));
+	deffect.SetFunctionTransformation(0, 0, Transformation(Vec2(7000.1f, 0.0f)));
 	AddCommand(GetCreatedUnit(), 'D', deffect);
 
 	Effect weffect;
 	weffect.SetFunction(0, Function::Type::AddForce, Function::Unit::Source);
-	weffect.SetFunctionTransformation(0, 0, Transformation(Vec2(0.0f, -0.1f)));
+	weffect.SetFunctionTransformation(0, 0, Transformation(Vec2(0.0f, -7000.1f)));
 	AddCommand(GetCreatedUnit(), 'W', weffect);
 
 	Effect seffect;
 	seffect.SetFunction(0, Function::Type::AddForce, Function::Unit::Source);
-	seffect.SetFunctionTransformation(0, 0, Transformation(Vec2(0.0f, 0.1f)));
+	seffect.SetFunctionTransformation(0, 0, Transformation(Vec2(0.0f, 7000.1f)));
 	AddCommand(GetCreatedUnit(), 'S', seffect);
 
 	Effect qeffect;
 	qeffect.SetFunction(0, Function::Type::AddRadiusOfUnit, Function::Unit::Source);
-	qeffect.SetFunctionFloat(0, 0, 0.3);
+	qeffect.SetFunctionFloat(0, 0, 1.0);
 	AddCommand(GetCreatedUnit(), 'Q', qeffect);
 
 	Effect eeffect;
 	eeffect.SetFunction(0, Function::Type::AddRadiusOfUnit, Function::Unit::Source);
-	eeffect.SetFunctionFloat(0, 0, -0.3);
+	eeffect.SetFunctionFloat(0, 0, -1.0);
 	AddCommand(GetCreatedUnit(), 'E', eeffect);
 
 	AddUnit(Unit("bob",Vec2(600.0f,600.0f)));
-	GetCreatedUnit()->SetRadiusTo(10.0f);
+	GetCreatedUnit()->SetRadius(100.0f);
+	GetCreatedUnit()->rigidbody.form.transformation.orientation = PI/2;
 	//testEnding/*/
 }
 
 void World::Go()
 {
-	combatSystem.Go();
-	physicSystem.Go();
+	combatSystem.Go(ft.Mark());
+	physicSystem.Go(ft.Mark());
 }
 
 void World::AddUnit(Unit unt_in)
@@ -97,7 +99,7 @@ Unit & World::GetUnit(int index)
 {
 	if (index > UNITSLIMIT)
 	{
-		return Unit();
+		return units[0];
 	}
 	return units[index];
 }

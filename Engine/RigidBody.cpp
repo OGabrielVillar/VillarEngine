@@ -4,56 +4,46 @@ RigidBody::RigidBody()
 {
 }
 
-RigidBody::RigidBody(Transformation transformation_in, float mass_in)
+RigidBody::RigidBody(Transformation transformation_in)
 {
 	SetTransformation(transformation_in);
-	SetMass(mass_in);
 }
 
-RigidBody::RigidBody(Transformation transformation_in, float mass_in, Transformation& unitTransformation_in)
+RigidBody::RigidBody(Form * form_in, unsigned int x, unsigned int y)
+//: form(form_in->Clone())
 {
-	units_transformation = &unitTransformation_in;
-	SetTransformation(transformation_in);
-	SetMass(mass_in);
+	//form->rigidbody = this;
+	SetTransformation(Vec2((float)x, (float)y));
+	velocity.Set(0, 0);
+	angularVelocity = 0;
+	torque = 0;
+	orient = Random(-PI, PI);
+	force.Set(0, 0);
+	staticFriction = 0.5f;
+	dynamicFriction = 0.3f;
+	restitution = 0.2f;
+	//form->Initialize();
 }
 
 void RigidBody::SetTransformation(Transformation transformation_in)
 {
-	if (unitAttached.GetUnitTransformationAttachment() != nullptr)
-	{
-		//unitAttached.SetUnitTransformation(transformation_in);
-	}
 	form.SetTransformation(transformation_in);
 }
 
-void RigidBody::SetMass(float mass_in)
-{
-	mass = mass_in;
-}
 
 void RigidBody::SetVelocity(Vec2 velocity_in)
 {
 	velocity = velocity_in;
 }
 
-void RigidBody::SetAcceleration(Vec2 acceleration_in)
+void RigidBody::SetForm(Form Form_in)
 {
-	acceleration = acceleration_in;
+	form = Form_in;
 }
 
-void RigidBody::SetCircleForm(CircleForm circleform_in)
-{
-	form = circleform_in;
-}
-
-void RigidBody::SetCircleFormRadius(float float_in)
+void RigidBody::SetFormRadius(float float_in)
 {
 	form.SetRadius(float_in);
-}
-
-void RigidBody::SetUnitTransformationAttached(Transformation* unitTransformation_in)
-{
-	unitAttached.SetUnitTransformationAttachment(unitTransformation_in);
 }
 
 Transformation RigidBody::GetTransformation()
@@ -61,55 +51,48 @@ Transformation RigidBody::GetTransformation()
 	return form.GetTransformation();
 }
 
-float RigidBody::GetMass()
-{
-	return mass;
-}
 
 Vec2 RigidBody::GetVelocity()
 {
 	return velocity;
 }
 
-Vec2 RigidBody::GetAcceleration()
+Vec2 RigidBody::GetForce()
 {
-	return acceleration;
-}
-
-Vec2 RigidBody::GetFinalForce()
-{
-	Vec2 sum;
-	int i = 0;
-	while (i <= NFORCESLIMIT)
-	{
-		sum += forces[i];
-		i++;
-	}
-	return sum;
+	return force;
 }
 
 void RigidBody::AddForce(Vec2 force_in)
 {
-	for (int i = 0; i < NFORCESLIMIT; i++)
-	{
-		if (forces[i].x == 0 && forces[i].y == 0)
-		{
-			forces[i] = force_in;
-			return;
-		}
-	}
+	force += force_in;
 }
 
 void RigidBody::ApplyForces()
 {
-	velocity += GetFinalForce();
 	ClearForces();
 }
 
 void RigidBody::ClearForces()
 {
-	for (int i = 0; i < NFORCESLIMIT; i++)
-	{
-		forces[i] *= 0;
-	}
+	force.Set(0.0f,0.0f);
+}
+
+void RigidBody::ApplyImpulse(const Vec2 & impulse, const Vec2 & contactVector)
+{
+	velocity += im * impulse;
+	angularVelocity += iI * Cross(contactVector, impulse);
+}
+
+void RigidBody::SetStatic(void)
+{
+	I = 0.0f;
+	iI = 0.0f;
+	m = 0.0f;
+	im = 0.0f;
+}
+
+void RigidBody::SetOrientation(float radians)
+{
+	orient = radians;
+	//form.SetOrientation(radians);
 }

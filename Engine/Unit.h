@@ -15,15 +15,14 @@ public:
 	Unit(std::string name_in, Transformation transf_in);
 	void AddCommand(Command cmd);
 public: //SETTERS
-	void SetRadiusTo(float radius_in);
+	void SetRadius(float radius_in);
 	void SetTransformation(Transformation transformation_in);
 	void SetRigidBody(RigidBody rigidbody_in);
 public: //GETTERS
-	Vec2 GetPosition();
 	Command& GetCommand(char index);
 	std::string& GetName();
 	float GetRadius();
-	Transformation& GetTransformation();
+	Transformation GetTransformation();
 
 	RigidBody rigidbody;
 private:

@@ -10,7 +10,7 @@ class CombatSystem
 {
 public:
 	CombatSystem(Unit* unit_list_in);
-	void Go();
+	void Go(float ft);
 
 	void CheckForCommands();
 	void CheckForEffects();
@@ -24,4 +24,5 @@ private:
 	Effect effects_templates[EFFECTTEMPLATELIMIT];
 	Unit* unit_list;
 	Keyboard* kbd = nullptr;
+	float ft;
 };

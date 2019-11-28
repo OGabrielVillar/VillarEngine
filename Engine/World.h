@@ -5,6 +5,7 @@
 #include "PhysicSystem.h"
 #include "Control.h"
 #include "AI.h"
+#include "FrameTimer.h"
 
 class World
 {
@@ -27,4 +28,5 @@ private:
 	PhysicSystem physicSystem;
 	Control control;
 	Unit* newUnit = nullptr;
+	FrameTimer ft;
 };

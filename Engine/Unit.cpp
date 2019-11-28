@@ -12,11 +12,6 @@ Unit::Unit(std::string name_in, Transformation transf_in)
 	CreateDefaultRigidBody();
 }
 
-Vec2 Unit::GetPosition()
-{
-	return transformation.GetPosition();
-}
-
 void Unit::AddCommand(Command cmd)
 {
 	char i = 0;
@@ -31,31 +26,27 @@ void Unit::AddCommand(Command cmd)
 	}
 }
 
-void Unit::SetRadiusTo(float radius_in)
+void Unit::SetRadius(float radius_in)
 {
-	radius = radius_in;
-	if (isDefautBody)
-	{
-		rigidbody.SetCircleFormRadius(radius_in);
-	}
+	rigidbody.form.radius = radius_in;
 }
 
 void Unit::SetTransformation(Transformation transformation_in)
 {
 	transformation = transformation_in;
+	rigidbody.SetTransformation(transformation_in);
 }
 
 void Unit::SetRigidBody(RigidBody rigidbody_in)
 {
 	rigidbody = rigidbody_in;
-	rigidbody.SetUnitTransformationAttached(&transformation);
 }
 
 Command & Unit::GetCommand(char index)
 {
 	if (index > COMMANDCARDLENGHT)
 	{
-		return Command();
+		return commandCard[0];
 	}
 	return commandCard[index];
 }
@@ -67,18 +58,17 @@ std::string & Unit::GetName()
 
 float Unit::GetRadius()
 {
-	return radius;
+	return rigidbody.form.radius;
 }
 
-Transformation & Unit::GetTransformation()
+Transformation Unit::GetTransformation()
 {
-	return transformation;
+	return rigidbody.GetTransformation();
 }
 
 void Unit::CreateDefaultRigidBody()
 {
-	rigidbody = RigidBody(transformation, 10.0f, transformation);
-	rigidbody.units_transformation = &transformation;
-	rigidbody.SetCircleForm(CircleForm(transformation, radius));
+	rigidbody = RigidBody(transformation);
+	rigidbody.SetForm(Form(transformation, radius));
 	isDefautBody = 1;
 }
