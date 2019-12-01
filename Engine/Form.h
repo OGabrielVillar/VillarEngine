@@ -20,6 +20,7 @@ public: //SETTERS
 	bool IsCircle();
 public: //GETTERS
 	Transformation GetTransformation();
+	Vec2 GetPosition();
 	float GetRadius();
 public:
 	Type type = Type::Point;

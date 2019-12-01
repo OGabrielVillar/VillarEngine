@@ -1,6 +1,6 @@
 #pragma once
 
-#include "VMath.h"
+#include "Vec2.h"
 
 
 class Transformation

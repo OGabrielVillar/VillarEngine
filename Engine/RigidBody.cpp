@@ -17,11 +17,10 @@ RigidBody::RigidBody(Form * form_in, unsigned int x, unsigned int y)
 	velocity.Set(0, 0);
 	angularVelocity = 0;
 	torque = 0;
-	orient = Random(-PI, PI);
+	//orient = Random(-PI, PI);
 	force.Set(0, 0);
 	staticFriction = 0.5f;
 	dynamicFriction = 0.3f;
-	restitution = 0.2f;
 	//form->Initialize();
 }
 
@@ -44,6 +43,7 @@ void RigidBody::SetForm(Form Form_in)
 void RigidBody::SetFormRadius(float float_in)
 {
 	form.SetRadius(float_in);
+	//mass = PI * form.radius * form.radius * density;
 }
 
 Transformation RigidBody::GetTransformation()

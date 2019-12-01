@@ -43,6 +43,8 @@ public://PHYSICS
 	Vec2 force;
 	Vec2 acceleration;
 
+	float mass = 1.0f;
+	float density = 0.3f;
 	// Set by shape
 	float I;  // moment of inertia
 	float iI; // inverse inertia

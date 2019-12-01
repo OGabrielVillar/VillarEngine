@@ -1,6 +1,6 @@
 #pragma once
 #define	EFFECTTEMPLATELIMIT 99
-#define	EFFECTLIMIT 9
+#define	EFFECTLIMIT 99
 #define	COMMANDLIMIT 25
 
 #include "Effect.h"

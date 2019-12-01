@@ -1,6 +1,5 @@
 #include "Vec2.h"
 #include <cmath>
-/*/
 Vec2::Vec2()
 {
 	x = 0.0f;
@@ -13,45 +12,93 @@ Vec2::Vec2( float x_in,float y_in )
 	y( y_in )
 {
 }
+// +
+	Vec2 Vec2::operator+( const Vec2& rhs ) const
+	{
+		return Vec2( x + rhs.x,y + rhs.y );
+	}
+	Vec2& Vec2::operator+=( const Vec2& rhs )
+	{
+		return *this = *this + rhs;
+	}
+	Vec2 Vec2::operator+(float rhs) const
+	{
+		return Vec2(x+rhs,y+rhs);
+	}
+	Vec2 & Vec2::operator+=(float rhs)
+	{
+		return *this = *this + rhs;
+	}
+	// -
+	Vec2 Vec2::operator-(const Vec2& rhs) const
+	{
+		return Vec2(x - rhs.x, y - rhs.y);
+	}
+	Vec2 Vec2::operator-() const
+	{
+		return Vec2(-x, -y);
+	}
+	Vec2& Vec2::operator-=(const Vec2& rhs)
+	{
+		return *this = *this - rhs;
+	}
+	Vec2 Vec2::operator-(float rhs) const
+	{
+		return Vec2(x - rhs, y - rhs);
+	}
+	Vec2 & Vec2::operator-=(float rhs)
+	{
+		return *this = *this - rhs;
+	}
+// *
+	Vec2 Vec2::operator*(const Vec2 & rhs) const
+	{
+		return Vec2(x*rhs.x,y*rhs.y);
+	}
+	Vec2 & Vec2::operator*=(const Vec2 & rhs)
+	{
+		return *this = *this * rhs;
+	}
+	Vec2 Vec2::operator*( float rhs ) const
+	{
+		return Vec2( x * rhs,y * rhs );
+	}
+	Vec2& Vec2::operator*=( float rhs )
+	{
+		return *this = *this * rhs;
+	}
+// /
+	Vec2 Vec2::operator/(const Vec2 & rhs) const
+	{
+		return Vec2(x / rhs.x, y / rhs.y);
+	}
+	Vec2 & Vec2::operator/=(const Vec2 & rhs)
+	{
+		return *this = *this / rhs;
+	}
+	Vec2 Vec2::operator/(float rhs) const
+	{
+		return Vec2(x / rhs, y / rhs);
+	}
+	Vec2 & Vec2::operator/=(float rhs)
+	{
+		return *this = *this / rhs;
+	}
 
-Vec2 Vec2::operator+( const Vec2& rhs ) const
+void Vec2::Set(float x_in, float y_in)
 {
-	return Vec2( x + rhs.x,y + rhs.y );
+	x = x_in;
+	y = y_in;
 }
 
-Vec2& Vec2::operator+=( const Vec2& rhs )
+float Vec2::Len() const
 {
-	return *this = *this + rhs;
+	return std::sqrt(x * x + y * y);
 }
 
-Vec2 Vec2::operator*( float rhs ) const
+float Vec2::LenSqr() const
 {
-	return Vec2( x * rhs,y * rhs );
-}
-
-Vec2& Vec2::operator*=( float rhs )
-{
-	return *this = *this * rhs;
-}
-
-Vec2 Vec2::operator-( const Vec2& rhs ) const
-{
-	return Vec2( x - rhs.x,y - rhs.y );
-}
-
-Vec2& Vec2::operator-=( const Vec2& rhs )
-{
-	return *this = *this - rhs;
-}
-
-float Vec2::GetLength() const
-{
-	return std::sqrt( GetLengthSq() );
-}
-
-float Vec2::GetLengthSq() const
-{
-	return x * x + y * y;
+	return std::sqrt(Len());
 }
 
 Vec2& Vec2::Normalize()
@@ -61,7 +108,7 @@ Vec2& Vec2::Normalize()
 
 Vec2 Vec2::GetNormalized() const
 {
-	const float len = GetLength();
+	const float len = Len();
 	if( len != 0.0f )
 	{
 		return *this * (1.0f / len);
@@ -101,4 +148,3 @@ Vec2 Vec2::CrossProduct(float s, const Vec2& a)
 {
 	return Vec2(-s * a.y, s * a.x);
 }
-/*/

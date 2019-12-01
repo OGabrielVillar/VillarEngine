@@ -28,7 +28,7 @@ void Unit::AddCommand(Command cmd)
 
 void Unit::SetRadius(float radius_in)
 {
-	rigidbody.form.radius = radius_in;
+	rigidbody.SetFormRadius(radius_in);
 }
 
 void Unit::SetTransformation(Transformation transformation_in)

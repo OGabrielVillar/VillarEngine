@@ -1,12 +1,12 @@
 #pragma once
 
-#ifndef IEMATH_H
-#define IEMATH_H
+//#ifndef IEMATH_H
+//#define IEMATH_H
 
 #include <cmath> // abs, sqrt
 #include <cassert> // assert
 #include <algorithm> // max, min
-/*/
+/*
 typedef float float;
 typedef double float64;
 typedef signed char	int8;
@@ -19,7 +19,6 @@ typedef __int64 int64;
 typedef unsigned __int64 uint64;
 typedef float f32;
 typedef double f64;
-/*/
 
 const float PI = 3.141592741f;
 const float EPSILON = 0.0001f;
@@ -300,3 +299,4 @@ const Vec2 gravity(0, 10.0f * gravityScale);
 const float dt = 1.0f / 60.0f;
 
 #endif
+*/

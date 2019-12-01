@@ -26,6 +26,11 @@ Transformation Form::GetTransformation()
 	return transformation;
 }
 
+Vec2 Form::GetPosition()
+{
+	return transformation.GetPosition();
+}
+
 float Form::GetRadius()
 {
 	return radius;

@@ -79,12 +79,47 @@ void Game::Update()
 	// update character
 	link.Update( ft.Mark() );
 	*/
+	float velocity_sum = 0.0f;
+	Transformation t;
+	float radius;
+	char i = 0;
+	Unit* pU;
+	while (i < UNITSLIMIT)
+	{
+		pU = &world.GetUnit(i);
+		if (!pU->GetName().empty())
+		{
+			pU = &world.GetUnit(i);
+			radius = pU->GetRadius();
+			t = pU->GetTransformation();
+			if (t.GetPosition().x < -radius)
+			{
+				t.position.x = gfx.ScreenWidth + radius;
+			}
+			else if (t.GetPosition().x > gfx.ScreenWidth + radius)
+			{
+				t.position.x = -radius;
+			}
+			if (t.GetPosition().y < -radius)
+			{
+				t.position.y = gfx.ScreenHeight + radius;
+			}
+			else if (t.GetPosition().y > gfx.ScreenHeight + radius)
+			{
+				t.position.y = -radius;
+			}
+			pU->SetTransformation(t);
+			velocity_sum += pU->rigidbody.velocity.Len();
+		}
+		i++;
+	}
+	i = 0;
 }
 
 void Game::ComposeFrame()		
 {
 	Color cx = Colors::Magenta;
-	if (world.GetPPhysicsSystem()->PointPointCollisionTest(&world.GetUnit(0).rigidbody, &world.GetUnit(1).rigidbody))
+	if (world.GetPPhysicsSystem()->PointPointCollisionTest(world.GetUnit(0).rigidbody.form, world.GetUnit(1).rigidbody.form))
 	{
 		cx = Colors::Red;
 	}
@@ -113,8 +148,9 @@ void Game::ComposeFrame()
 		}
 		i++;
 	}
-
-	gfx.DrawLine(world.GetUnit(0).rigidbody.GetTransformation().GetPosition(), world.GetUnit(1).rigidbody.GetTransformation().GetPosition(), cx);
+	Vec2 lineLink0 = world.GetUnit(0).rigidbody.GetTransformation().GetPosition();
+	Vec2 lineLink1 = world.GetUnit(1).rigidbody.GetTransformation().GetPosition();
+	gfx.DrawLine(lineLink0, lineLink1, cx);
 
 	/*
 	link.Draw( gfx );

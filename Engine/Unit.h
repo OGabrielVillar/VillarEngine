@@ -1,6 +1,6 @@
 #pragma once
 
-#define UNITSLIMIT 9
+#define UNITSLIMIT 99
 #define COMMANDCARDLENGHT 9
 
 #include "Transformation.h"
