@@ -98,7 +98,7 @@ float Vec2::Len() const
 
 float Vec2::LenSqr() const
 {
-	return std::sqrt(Len());
+	return (x * x + y * y);
 }
 
 Vec2& Vec2::Normalize()

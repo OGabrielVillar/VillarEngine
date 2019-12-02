@@ -53,6 +53,7 @@ private:
 	World world;
 	Control* defaultControl;
 	FrameTimer ft;
+	float velocity_sum;
 	/********************************/
 	/*  User Variables              
 	List<std::string> list;

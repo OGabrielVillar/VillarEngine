@@ -5,7 +5,7 @@ World::World() :
 	combatSystem(&units[0]),
 	control(combatSystem)
 {
-	float velocity = 8000.0f;
+	float velocity = 800.0f;
 	//testPorposes
 	AddUnit(Unit("esfera", Vec2(300.0f, 300.0f)));
 	GetCreatedUnit()->SetRadius(50.0f);

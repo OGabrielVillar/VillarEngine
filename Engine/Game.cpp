@@ -79,7 +79,7 @@ void Game::Update()
 	// update character
 	link.Update( ft.Mark() );
 	*/
-	float velocity_sum = 0.0f;
+	velocity_sum = 0.0f;
 	Transformation t;
 	float radius;
 	char i = 0;
