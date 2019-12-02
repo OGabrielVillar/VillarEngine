@@ -11,7 +11,7 @@ class World
 {
 public:
 	World();
-	void Go();
+	void Go(float ft_in);
 public:
 	void AddUnit(Unit unt_in);
 	void AddCommand(Unit* unit_in, unsigned char key_in, Effect effect_in);
@@ -28,5 +28,5 @@ private:
 	PhysicSystem physicSystem;
 	Control control;
 	Unit* newUnit = nullptr;
-	FrameTimer ft;
+	float ft;
 };

@@ -27,4 +27,5 @@ public:
 	float radius = 1.0f;
 	Vec2 vertices[3];
 	Transformation transformation;
+	bool inverted = false;
 };

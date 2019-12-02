@@ -5,10 +5,12 @@ World::World() :
 	combatSystem(&units[0]),
 	control(combatSystem)
 {
-	float velocity = 800.0f;
+	float velocity = 500.f;	//cm per second
+	float radius = 10.f;		//cm
 	//testPorposes
 	AddUnit(Unit("esfera", Vec2(300.0f, 300.0f)));
-	GetCreatedUnit()->SetRadius(50.0f);
+	GetCreatedUnit()->SetDensity(19.0f);
+	GetCreatedUnit()->SetRadius(radius);
 	control.SetSelectedUnit(*GetCreatedUnit());
 	GetCreatedUnit()->rigidbody.form.transformation.orientation = PI / 2;
 
@@ -53,20 +55,20 @@ World::World() :
 	AddCommand(GetCreatedUnit(), (char)32, spaceeffect);
 
 	AddUnit(Unit("bob",Vec2(600.0f,600.0f)));
-	GetCreatedUnit()->SetRadius(50.0f);
+	GetCreatedUnit()->SetRadius(radius);
 	GetCreatedUnit()->rigidbody.form.transformation.orientation = PI/2;
 
 	Effect spaceeffect2;
 	spaceeffect2.SetFunction(0, Function::Type::SetUnitPosition, Function::Unit::Source);
 	spaceeffect2.SetFunctionVec2(0, 0, Vec2(300.0f, 600.0f));
 	AddCommand(GetCreatedUnit(), (char)32, spaceeffect2);
-	/*
-	for (size_t i = 1; i < 6; i++)
+	// 25 UNIT SPAWN
+	for (size_t i = 1; i < 9; i++)
 	{
-		for (size_t j = 1; j < 6; j++)
+		for (size_t j = 1; j < 9; j++)
 		{
-			AddUnit(Unit("Steve", Vec2(120.0f * (float)i, 120.0f * (float)j)));
-			GetCreatedUnit()->SetRadius(50.0f);
+			AddUnit(Unit("Steve", Vec2(30.0f * (float)i, 30.0f * (float)j)));
+			GetCreatedUnit()->SetRadius(radius);
 			GetCreatedUnit()->rigidbody.form.transformation.orientation = PI / 2;
 			Effect spaceeffectx;
 			spaceeffectx.SetFunction(0, Function::Type::AddForce, Function::Unit::Source);
@@ -77,10 +79,10 @@ World::World() :
 	//testEnding/*/
 }
 
-void World::Go()
+void World::Go(float ft_in)
 {
-	combatSystem.Go(ft.Mark());
-	physicSystem.Go(ft.Mark());
+	combatSystem.Go(ft_in);
+	physicSystem.Go(ft_in);
 }
 
 void World::AddUnit(Unit unt_in)

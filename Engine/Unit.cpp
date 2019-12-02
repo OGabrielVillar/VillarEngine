@@ -31,6 +31,11 @@ void Unit::SetRadius(float radius_in)
 	rigidbody.SetFormRadius(radius_in);
 }
 
+void Unit::SetDensity(float density_in)
+{
+	rigidbody.SetDensity(density_in);
+}
+
 void Unit::SetTransformation(Transformation transformation_in)
 {
 	transformation = transformation_in;

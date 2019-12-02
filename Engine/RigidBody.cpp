@@ -42,8 +42,23 @@ void RigidBody::SetForm(Form Form_in)
 
 void RigidBody::SetFormRadius(float float_in)
 {
+	if (float_in < 0.1)
+	{
+		return;
+	}
 	form.SetRadius(float_in);
-	//mass = PI * form.radius * form.radius * density;
+	UpdateMass();
+}
+
+void RigidBody::SetDensity(float density_in)
+{
+	density = density_in;
+	UpdateMass();
+}
+
+void RigidBody::UpdateMass()
+{
+	mass = PI * (form.radius) * (form.radius) * density;
 }
 
 Transformation RigidBody::GetTransformation()

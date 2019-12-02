@@ -2,6 +2,7 @@
 
 const float PI = 3.141592741f;
 const float EPSILON = 0.0001f;
+const float FOURTHIRDS = 4.0f / 3.0f;
 
 #include "Vei2.h"
 #include <vector>

@@ -16,7 +16,9 @@ public: //SETTERS
 	void SetTransformation(Transformation transformation_in);
 	void SetVelocity(Vec2 velocity_in);
 	void SetForm(Form Form_in);
-	void SetFormRadius(float float_in);
+	void SetFormRadius(float radius_in);
+	void SetDensity(float density_in);
+	void UpdateMass();
 public: //GETTERS
 	Transformation GetTransformation();
 	Vec2 GetVelocity();
@@ -43,15 +45,14 @@ public://PHYSICS
 	Vec2 force;
 	Vec2 acceleration;
 
-	float mass = 1.0f;
-	float density = 0.3f;
+	float mass = 1.0f;			// Gram
+	float density = 9.97f;		// Gram per cm²
 	// Set by shape
 	float I;  // moment of inertia
 	float iI; // inverse inertia
 	float m;  // mass
 	float im; // inverse masee
 
-	// http://gamedev.tutsplus.com/tutorials/implementation/how-to-create-a-custom-2d-physics-engine-friction-scene-and-jump-table/
 	float staticFriction;
 	float dynamicFriction;
 	Material material;

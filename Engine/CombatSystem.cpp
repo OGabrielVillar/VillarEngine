@@ -36,7 +36,7 @@ void CombatSystem::CheckForEffects()
 	{
 		if (effects[i].isActive())
 		{
-			effects[i].ApplyFunctions();
+			effects[i].ApplyFunctions(ft);
 		}
 	}
 }

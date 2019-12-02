@@ -16,6 +16,7 @@ public:
 	void AddCommand(Command cmd);
 public: //SETTERS
 	void SetRadius(float radius_in);
+	void SetDensity(float density_in);
 	void SetTransformation(Transformation transformation_in);
 	void SetRigidBody(RigidBody rigidbody_in);
 public: //GETTERS

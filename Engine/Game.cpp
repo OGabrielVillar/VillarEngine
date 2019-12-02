@@ -42,7 +42,7 @@ void Game::Go()
 
 void Game::Update()
 {
-	world.Go();
+	world.Go(ft.Mark());
 
 	/*
 	// process key messages while any remain

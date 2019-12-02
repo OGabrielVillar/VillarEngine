@@ -47,7 +47,7 @@ void Effect::SetFunctionVec2(int index_in, int transf_index_in, Vec2 vec2_in)
 	functionslist[index_in].v[transf_index_in] = vec2_in;
 }
 
-void Effect::ApplyFunctions()
+void Effect::ApplyFunctions(float ft_in)
 {
 	Function* pFuncion = &functionslist[0];
 	while (pFuncion != &functionslist[FUNCTIONSLIMIT])
@@ -61,7 +61,7 @@ void Effect::ApplyFunctions()
 
 		switch (pFuncion->type){
 		case Function::Type::AddForce:
-			AddForce(pTarget,pFuncion->t[0]);break;
+			AddForce(pTarget,pFuncion->t[0], ft_in);break;
 		case Function::Type::AddUnitRadius:
 			AddUnitRadius(pTarget,pFuncion->f[0]);break;
 		case Function::Type::SetUnitPosition:
@@ -74,9 +74,14 @@ void Effect::ApplyFunctions()
 	active = false;
 }
 
-void Effect::AddForce(Unit* Punit, Transformation transformation_in)
+void Effect::AddForce(Unit* Punit, Transformation transformation_in, float ft_in)
 {
-	Punit->rigidbody.AddForce(transformation_in.position);
+	Punit->rigidbody.AddForce(transformation_in.position * ft_in);
+}
+
+void Effect::AddForce_CMperS(Unit * Punit, Transformation transformation_in, float ft_in)
+{
+	Punit->rigidbody.AddForce(transformation_in.position * Punit->rigidbody.mass * ft_in);
 }
 
 void Effect::AddUnitRadius(Unit* Punit, float float_in)

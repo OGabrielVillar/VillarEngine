@@ -31,8 +31,9 @@ public://FUNCTIONS SETTING
 	void SetFunctionVec2(int index_in, int transf_index_in, Vec2 vec2_in);
 
 public://FUNCTIONS EFFECTS
-	void ApplyFunctions();
-	void AddForce(Unit* Punit, Transformation transformation_in);
+	void ApplyFunctions(float ft_in);
+	void AddForce(Unit* Punit, Transformation transformation_in, float ft_in);
+	void AddForce_CMperS(Unit* Punit, Transformation transformation_in, float ft_in);
 	void AddUnitRadius(Unit * Punit, float float_in);
 	void SetUnitPosition(Unit * Punit, Vec2 position_in);
 
