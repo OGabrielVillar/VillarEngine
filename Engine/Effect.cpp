@@ -62,6 +62,8 @@ void Effect::ApplyFunctions(float ft_in)
 		switch (pFuncion->type){
 		case Function::Type::AddForce:
 			AddForce(pTarget,pFuncion->t[0], ft_in);break;
+		case Function::Type::AddForce_CMperS:
+			AddForce_CMperS(pTarget, pFuncion->t[0], ft_in); break;
 		case Function::Type::AddUnitRadius:
 			AddUnitRadius(pTarget,pFuncion->f[0]);break;
 		case Function::Type::SetUnitPosition:
@@ -81,7 +83,7 @@ void Effect::AddForce(Unit* Punit, Transformation transformation_in, float ft_in
 
 void Effect::AddForce_CMperS(Unit * Punit, Transformation transformation_in, float ft_in)
 {
-	Punit->rigidbody.AddForce(transformation_in.position * Punit->rigidbody.mass * ft_in);
+	Punit->rigidbody.AddForce(transformation_in.position * Punit->rigidbody.mass * (ft_in*ft_in));
 }
 
 void Effect::AddUnitRadius(Unit* Punit, float float_in)

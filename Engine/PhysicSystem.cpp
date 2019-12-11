@@ -65,7 +65,7 @@ void PhysicSystem::MoveBodys()
 				int x = 0;
 			}
 
-			Punit->rigidbody.velocity += Vec2(0.0f, 100.0f*ft);	//GRAVITY
+			//Punit->rigidbody.velocity += Vec2(0.0f, 100.0f*ft);	//GRAVITY
 			Punit->rigidbody.velocity += Punit->rigidbody.force / (Punit->rigidbody.mass*(ft*ft));
 			Punit->rigidbody.SetTransformation(Punit->rigidbody.GetTransformation() + Punit->rigidbody.GetVelocity()*ft);
 			Punit->rigidbody.force.Set(0.0f, 0.0f);

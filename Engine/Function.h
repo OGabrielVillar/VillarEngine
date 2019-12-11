@@ -9,6 +9,7 @@ public:
 	{
 		Non,
 		AddForce,
+		AddForce_CMperS,
 		SetUnitRadius,
 		AddUnitRadius,
 		SetUnitPosition,

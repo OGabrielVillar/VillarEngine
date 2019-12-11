@@ -1,7 +1,9 @@
 #pragma once
 
-#define UNITSLIMIT 99
+//#define UNITSLIMIT 9999
 #define COMMANDCARDLENGHT 9
+
+const int UNITSLIMIT = 99;
 
 #include "Transformation.h"
 #include "Command.h"

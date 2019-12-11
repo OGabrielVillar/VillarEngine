@@ -82,7 +82,7 @@ void Game::Update()
 	velocity_sum = 0.0f;
 	Transformation t;
 	float radius;
-	char i = 0;
+	int i = 0;
 	Unit* pU;
 	while (i < UNITSLIMIT)
 	{
@@ -123,7 +123,7 @@ void Game::ComposeFrame()
 	{
 		cx = Colors::Red;
 	}
-	char i = 0;
+	int i = 0;
 	Unit* pU;
 	while (i < UNITSLIMIT)
 	{
@@ -148,10 +148,6 @@ void Game::ComposeFrame()
 		}
 		i++;
 	}
-	Vec2 lineLink0 = world.GetUnit(0).rigidbody.GetTransformation().GetPosition();
-	Vec2 lineLink1 = world.GetUnit(1).rigidbody.GetTransformation().GetPosition();
-	gfx.DrawLine(lineLink0, lineLink1, cx);
-
 	/*
 	link.Draw( gfx );
 	gfx.PutPixel(500, 500, Colors::Magenta);
