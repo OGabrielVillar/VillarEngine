@@ -9,6 +9,13 @@ RigidBody::RigidBody(Transformation transformation_in)
 	SetTransformation(transformation_in);
 }
 
+RigidBody::RigidBody(Transformation transformation_in, Form form_in)
+	:
+	form(form_in)
+{
+	SetTransformation(transformation_in);
+}
+
 RigidBody::RigidBody(Form * form_in, unsigned int x, unsigned int y)
 //: form(form_in->Clone())
 {
@@ -26,7 +33,7 @@ RigidBody::RigidBody(Form * form_in, unsigned int x, unsigned int y)
 
 void RigidBody::SetTransformation(Transformation transformation_in)
 {
-	form.SetTransformation(transformation_in);
+	transformation = transformation_in;
 }
 
 
@@ -63,7 +70,12 @@ void RigidBody::UpdateMass()
 
 Transformation RigidBody::GetTransformation()
 {
-	return form.GetTransformation();
+	return transformation;
+}
+
+Vec2 RigidBody::GetVerticePos(int vertice_index)
+{
+	return form.vertices[vertice_index] + transformation.GetPosition();
 }
 
 

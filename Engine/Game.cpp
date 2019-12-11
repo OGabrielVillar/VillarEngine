@@ -119,7 +119,7 @@ void Game::Update()
 void Game::ComposeFrame()		
 {
 	Color cx = Colors::Magenta;
-	if (world.GetPPhysicsSystem()->PointPointCollisionTest(world.GetUnit(0).rigidbody.form, world.GetUnit(1).rigidbody.form))
+	if (world.GetPPhysicsSystem()->PointPointCollisionTest(world.GetUnit(0).rigidbody, world.GetUnit(1).rigidbody))
 	{
 		cx = Colors::Red;
 	}
@@ -130,21 +130,22 @@ void Game::ComposeFrame()
 		pU = &world.GetUnit(i);
 		if (!pU->GetName().empty())
 		{
-			gfx.DrawCircle(pU->GetTransformation().GetPosition(), pU->GetRadius(), cx);
-			gfx.DrawLine(pU->GetTransformation().GetPosition(), 
-				pU->GetTransformation().GetPosition() + 
-				Vec2(pU->GetRadius()*std::cos(pU->rigidbody.form.transformation.orientation),
-					pU->GetRadius()*std::sin(pU->rigidbody.form.transformation.orientation)),cx);
-		}
-		i++;
-	}
-	i = 0;
-	while (i < UNITSLIMIT)
-	{
-		pU = &world.GetUnit(i);
-		if (!pU->GetName().empty())
-		{
-			gfx.DrawCircle(pU->rigidbody.GetTransformation().GetPosition(), pU->GetRadius(), cx);
+			if (pU->rigidbody.form.type == Form::Type::Point) // DRAW CIRCLES
+			{
+				gfx.DrawCircle(pU->GetTransformation().GetPosition(), pU->GetRadius(), cx);
+				gfx.DrawLine(pU->GetTransformation().GetPosition(),
+					pU->GetTransformation().GetPosition() +
+					Vec2(pU->GetRadius()*std::cos(pU->rigidbody.transformation.orientation),
+					pU->GetRadius()*std::sin(pU->rigidbody.transformation.orientation)), cx);
+				gfx.DrawLine(pU->GetTransformation().GetPosition(), world.GetPPhysicsSystem()->x_projection, cx);
+				gfx.DrawLine(pU->GetTransformation().GetPosition(), world.GetPPhysicsSystem()->y_projection, cx);
+				gfx.DrawLine(pU->GetTransformation().GetPosition(), world.GetPPhysicsSystem()->contact_point, cx);
+				gfx.DrawCircle(world.GetPPhysicsSystem()->contact_point, 12.0f, cx);
+			}
+			if (pU->rigidbody.form.type == Form::Type::Line) // DRAW LINES
+			{
+				gfx.DrawLine(pU->GetTransformation().GetPosition(), pU->rigidbody.GetVerticePos(0), cx);
+			}
 		}
 		i++;
 	}

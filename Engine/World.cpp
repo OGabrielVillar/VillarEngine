@@ -11,7 +11,7 @@ World::World() :
 	AddUnit(Unit("esfera", Vec2(900.0f, 300.0f)));
 	GetCreatedUnit()->SetRadius(radius);
 	control.SetSelectedUnit(*GetCreatedUnit());
-	GetCreatedUnit()->rigidbody.form.transformation.orientation = PI / 2;
+	GetCreatedUnit()->rigidbody.transformation.orientation = PI / 2;
 
 	Effect xeffect;
 	xeffect.SetFunction(0, Function::Type::AddForce, Function::Unit::Source);
@@ -53,20 +53,26 @@ World::World() :
 	spaceeffect.SetFunctionVec2(0, 0, Vec2(300.0f,300.0f));
 	AddCommand(GetCreatedUnit(), (char)32, spaceeffect);
 
-	// 25 UNIT SPAWN
+	/*/ 25 UNIT SPAWN
 	for (size_t i = 1; i < 6; i++)
 	{
 		for (size_t j = 1; j < 6; j++)
 		{
 			AddUnit(Unit("Steve", Vec2(23.1f * (float)i + 200.0f, 23.1f * (float)j + 200.0f)));
 			GetCreatedUnit()->SetRadius(radius);
-			GetCreatedUnit()->rigidbody.form.transformation.orientation = PI / 2;
+			GetCreatedUnit()->rigidbody.transformation.orientation = PI / 2;
 			Effect spaceeffectx;
 			spaceeffectx.SetFunction(0, Function::Type::AddForce, Function::Unit::Source);
 			spaceeffectx.SetFunctionTransformation(0, 0, Transformation(Vec2(0.0f, velocity)));
 			AddCommand(GetCreatedUnit(), 'X', spaceeffectx);
 		}
 	}
+	//Line/*/
+	AddUnit(Unit("esfera", Vec2(300.0f, 100.0f)));
+	GetCreatedUnit()->SetRadius(radius);
+	GetCreatedUnit()->SetRigidBodyForm(Form(radius, Form::Type::Line));
+	GetCreatedUnit()->rigidbody.form.vertices[0] = Vec2(100.0f,100.0f);
+	GetCreatedUnit()->rigidbody.transformation.orientation = PI / 2;
 	//testEnding/*/
 }
 

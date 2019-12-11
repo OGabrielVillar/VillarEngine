@@ -47,6 +47,11 @@ void Unit::SetRigidBody(RigidBody rigidbody_in)
 	rigidbody = rigidbody_in;
 }
 
+void Unit::SetRigidBodyForm(Form form_in)
+{
+	rigidbody.form = form_in;
+}
+
 Command & Unit::GetCommand(char index)
 {
 	if (index > COMMANDCARDLENGHT)
@@ -74,6 +79,6 @@ Transformation Unit::GetTransformation()
 void Unit::CreateDefaultRigidBody()
 {
 	rigidbody = RigidBody(transformation);
-	rigidbody.SetForm(Form(transformation, radius));
+	rigidbody.SetForm(Form(radius));
 	isDefautBody = 1;
 }

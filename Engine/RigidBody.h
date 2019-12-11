@@ -11,6 +11,7 @@ class RigidBody
 public:
 	RigidBody();
 	RigidBody(Transformation transformation_in);
+	RigidBody(Transformation transformation_in, Form form_in);
 	RigidBody(Form *form_in, unsigned int x, unsigned int y);
 public: //SETTERS
 	void SetTransformation(Transformation transformation_in);
@@ -21,6 +22,7 @@ public: //SETTERS
 	void UpdateMass();
 public: //GETTERS
 	Transformation GetTransformation();
+	Vec2 GetVerticePos(int vertice_index);
 	Vec2 GetVelocity();
 	Vec2 GetForce();
 public: //FUNCTIONS
@@ -37,6 +39,7 @@ public:
 	Form form;
 	bool uses_gravity;
 public://PHYSICS
+	Transformation transformation;
 	Vec2 velocity;
 	float angularVelocity;
 	float torque;

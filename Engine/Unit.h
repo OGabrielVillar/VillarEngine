@@ -21,6 +21,7 @@ public: //SETTERS
 	void SetDensity(float density_in);
 	void SetTransformation(Transformation transformation_in);
 	void SetRigidBody(RigidBody rigidbody_in);
+	void SetRigidBodyForm(Form form_in);
 public: //GETTERS
 	Command& GetCommand(char index);
 	std::string& GetName();
