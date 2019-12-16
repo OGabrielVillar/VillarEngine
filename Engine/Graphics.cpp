@@ -409,6 +409,44 @@ void Graphics::DrawLine(Vec2& a, Vec2& b, Color c)
 	}
 }
 
+void Graphics::DrawCircleLine(Vec2 & start, Vec2 & end, float radius_in, Color c)
+{
+	Vec2 upline_slop = (GetRotated90((start - end).GetNormalized()) * radius_in)-0.5f;
+	DrawLine(start + upline_slop, end + upline_slop, c);
+	DrawLine(start - upline_slop, end - upline_slop, c);
+	for (int x_a = (int)-radius_in; x_a < (int)radius_in; x_a++)
+	{
+		for (int y_a = (int)-radius_in; y_a < (int)radius_in; y_a++)
+		{
+			if ((x_a * x_a) + (y_a * y_a) < radius_in*radius_in)
+			{
+				if ((x_a * x_a) + (y_a * y_a) > (radius_in - 5.5f) * (radius_in - 5.5f))
+				{
+					int x_b;
+					int y_b;
+					if (Dot((start - end), Vec2( x_a, y_a )) > 0.0f)
+					{
+						x_b = x_a + (int)start.x;
+						y_b = y_a + (int)start.y;
+					}
+					else
+					{
+						x_b = x_a + (int)end.x;
+						y_b = y_a + (int)end.y;
+					}
+					if (!(x_b < 0 || x_b >= Graphics::ScreenWidth))
+					{
+						if (!(y_b < 0 || y_b >= Graphics::ScreenHeight))
+						{
+							PutPixel(x_b, y_b, c);
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
 void Graphics::DrawSpriteNonChroma( int x,int y,const Surface& s )
 {
 	DrawSpriteNonChroma( x,y,s.GetRect(),s );

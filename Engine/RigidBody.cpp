@@ -65,6 +65,11 @@ void RigidBody::SetDensity(float density_in)
 
 void RigidBody::UpdateMass()
 {
+	if (form.type == Form::Type::Line)
+	{
+		mass = (PI * (form.radius) * (form.radius) * density) + form.radius * form.vertices[0].Len();
+		return;
+	}
 	mass = PI * (form.radius) * (form.radius) * density;
 }
 

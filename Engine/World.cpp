@@ -53,7 +53,7 @@ World::World() :
 	spaceeffect.SetFunctionVec2(0, 0, Vec2(300.0f,300.0f));
 	AddCommand(GetCreatedUnit(), (char)32, spaceeffect);
 
-	/*/ 25 UNIT SPAWN
+	// 25 UNIT SPAWN
 	for (size_t i = 1; i < 6; i++)
 	{
 		for (size_t j = 1; j < 6; j++)
@@ -68,11 +68,16 @@ World::World() :
 		}
 	}
 	//Line/*/
-	AddUnit(Unit("esfera", Vec2(300.0f, 100.0f)));
-	GetCreatedUnit()->SetRadius(radius);
-	GetCreatedUnit()->SetRigidBodyForm(Form(radius, Form::Type::Line));
-	GetCreatedUnit()->rigidbody.form.vertices[0] = Vec2(100.0f,100.0f);
+	//
+	AddUnit(Unit("linha", Vec2(100.0f, 600.0f)));
+	GetCreatedUnit()->SetRadius(radius*2.5f);
+	GetCreatedUnit()->SetRigidBodyForm(Form(radius*2.5f, Form::Type::Line));
+	GetCreatedUnit()->rigidbody.form.vertices[0] = Vec2(5000.0f, 0.0f);
+	GetCreatedUnit()->rigidbody.UpdateMass();
 	GetCreatedUnit()->rigidbody.transformation.orientation = PI / 2;
+
+	spaceeffect.SetFunctionVec2(0, 0, Vec2(500.0f, 300.0f));
+	AddCommand(GetCreatedUnit(), (char)32, spaceeffect);
 	//testEnding/*/
 }
 

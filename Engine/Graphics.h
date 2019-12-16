@@ -63,6 +63,7 @@ public:
 	void PutPixelInCanvas(int x, int y, Color c);
 	void DrawCircle( Vec2 position, float radius, Color c);
 	void DrawLine( Vec2& start, Vec2& end, Color c);
+	void DrawCircleLine(Vec2& start, Vec2& end, float radius_in, Color c);
 	void DrawSpriteNonChroma( int x,int y,const Surface& s );
 	void DrawSpriteNonChroma( int x,int y,const RectI& srcRect,const Surface& s );
 	void DrawSpriteNonChroma( int x,int y,RectI srcRect,const RectI& clip,const Surface& s );

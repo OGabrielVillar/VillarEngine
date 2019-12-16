@@ -137,14 +137,14 @@ void Game::ComposeFrame()
 					pU->GetTransformation().GetPosition() +
 					Vec2(pU->GetRadius()*std::cos(pU->rigidbody.transformation.orientation),
 					pU->GetRadius()*std::sin(pU->rigidbody.transformation.orientation)), cx);
-				gfx.DrawLine(pU->GetTransformation().GetPosition(), world.GetPPhysicsSystem()->x_projection, cx);
-				gfx.DrawLine(pU->GetTransformation().GetPosition(), world.GetPPhysicsSystem()->y_projection, cx);
-				gfx.DrawLine(pU->GetTransformation().GetPosition(), world.GetPPhysicsSystem()->contact_point, cx);
-				gfx.DrawCircle(world.GetPPhysicsSystem()->contact_point, 12.0f, cx);
+				//gfx.DrawLine(pU->GetTransformation().GetPosition(), world.GetPPhysicsSystem()->x_projection, cx);
+				//gfx.DrawLine(pU->GetTransformation().GetPosition(), world.GetPPhysicsSystem()->y_projection, cx);
+				//gfx.DrawLine(pU->GetTransformation().GetPosition(), world.GetPPhysicsSystem()->contact_point, cx);
+				//gfx.DrawCircle(world.GetPPhysicsSystem()->contact_point, 12.0f, cx);
 			}
 			if (pU->rigidbody.form.type == Form::Type::Line) // DRAW LINES
 			{
-				gfx.DrawLine(pU->GetTransformation().GetPosition(), pU->rigidbody.GetVerticePos(0), cx);
+				gfx.DrawCircleLine(pU->GetTransformation().GetPosition(), pU->rigidbody.GetVerticePos(0), pU->GetRadius(), Colors::Cyan);
 			}
 		}
 		i++;
