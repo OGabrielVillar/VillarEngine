@@ -411,7 +411,7 @@ void Graphics::DrawLine(Vec2& a, Vec2& b, Color c)
 
 void Graphics::DrawCircleLine(Vec2 & start, Vec2 & end, float radius_in, Color c)
 {
-	Vec2 upline_slop = (GetRotated90((start - end).GetNormalized()) * radius_in)-0.5f;
+	Vec2 upline_slop = (GetRotated90((start - end).GetNormalized()) * radius_in);
 	DrawLine(start + upline_slop, end + upline_slop, c);
 	DrawLine(start - upline_slop, end - upline_slop, c);
 	for (int x_a = (int)-radius_in; x_a < (int)radius_in; x_a++)
@@ -420,7 +420,7 @@ void Graphics::DrawCircleLine(Vec2 & start, Vec2 & end, float radius_in, Color c
 		{
 			if ((x_a * x_a) + (y_a * y_a) < radius_in*radius_in)
 			{
-				if ((x_a * x_a) + (y_a * y_a) > (radius_in - 5.5f) * (radius_in - 5.5f))
+				if ((x_a * x_a) + (y_a * y_a) > (radius_in - 1.0f) * (radius_in - 1.0f))
 				{
 					int x_b;
 					int y_b;

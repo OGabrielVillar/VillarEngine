@@ -362,6 +362,12 @@ void PhysicSystem::Collision(RigidBody * rbP0, RigidBody * rbP1)
 
 Vec2 PhysicSystem::GetReflectedForce(Vec2 v_in, Vec2 w_in)
 {
+	//v_in = velocity;
+	//w_in = angle;
+
+	//NORMALIZE THE ANGLE
 	Vec2 wN = w_in.GetNormalized();
+
+	//GET REFLECTED ANGLE FORMULA
 	return v_in - Dot(v_in, wN)*wN;
 }

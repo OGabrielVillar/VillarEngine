@@ -13,10 +13,15 @@ World::World() :
 	control.SetSelectedUnit(*GetCreatedUnit());
 	GetCreatedUnit()->rigidbody.transformation.orientation = PI / 2;
 
-	Effect xeffect;
-	xeffect.SetFunction(0, Function::Type::AddForce, Function::Unit::Source);
-	xeffect.SetFunctionTransformation(0,0,Transformation(Vec2(-velocity,0.0f)));
-	AddCommand(GetCreatedUnit(), 'A', xeffect);
+	Effect aeffect;
+	aeffect.SetFunction(0, Function::Type::AddForce, Function::Unit::Source);
+	aeffect.SetFunctionTransformation(0,0,Transformation(Vec2(-velocity,0.0f)));
+	AddCommand(GetCreatedUnit(), 'A', aeffect);
+
+	Effect ueffect;
+	ueffect.SetFunction(0, Function::Type::AddForce, Function::Unit::Source);
+	ueffect.SetFunctionTransformation(0, 0, Transformation(Vec2(-velocity*3.0f, 0.0f)));
+	AddCommand(GetCreatedUnit(), 'U', ueffect);
 
 	Effect deffect;
 	deffect.SetFunction(0, Function::Type::AddForce, Function::Unit::Source);
@@ -54,9 +59,9 @@ World::World() :
 	AddCommand(GetCreatedUnit(), (char)32, spaceeffect);
 
 	// 25 UNIT SPAWN
-	for (size_t i = 1; i < 6; i++)
+	for (size_t i = 1; i < 5; i++)
 	{
-		for (size_t j = 1; j < 6; j++)
+		for (size_t j = 1; j < 10; j++)
 		{
 			AddUnit(Unit("Steve", Vec2(23.1f * (float)i + 200.0f, 23.1f * (float)j + 200.0f)));
 			GetCreatedUnit()->SetRadius(radius);
@@ -69,14 +74,14 @@ World::World() :
 	}
 	//Line/*/
 	//
-	AddUnit(Unit("linha", Vec2(100.0f, 600.0f)));
+	AddUnit(Unit("linha", Vec2(300.0f, 600.0f)));
 	GetCreatedUnit()->SetRadius(radius*2.5f);
-	GetCreatedUnit()->SetRigidBodyForm(Form(radius*2.5f, Form::Type::Line));
-	GetCreatedUnit()->rigidbody.form.vertices[0] = Vec2(5000.0f, 0.0f);
+	GetCreatedUnit()->SetRigidBodyForm(Form(radius*20.5f, Form::Type::Line));
+	GetCreatedUnit()->rigidbody.form.vertices[0] = Vec2(500.0f, 0.0f);
 	GetCreatedUnit()->rigidbody.UpdateMass();
 	GetCreatedUnit()->rigidbody.transformation.orientation = PI / 2;
 
-	spaceeffect.SetFunctionVec2(0, 0, Vec2(500.0f, 300.0f));
+	spaceeffect.SetFunctionVec2(0, 0, Vec2(600.0f, 300.0f));
 	AddCommand(GetCreatedUnit(), (char)32, spaceeffect);
 	//testEnding/*/
 }

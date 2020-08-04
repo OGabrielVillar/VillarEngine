@@ -94,19 +94,19 @@ void Game::Update()
 			t = pU->GetTransformation();
 			if (t.GetPosition().x < -radius)
 			{
-				t.position.x = gfx.ScreenWidth + radius;
+				t.position.x = gfx.ScreenWidth + (radius + 1.0f);
 			}
 			else if (t.GetPosition().x > gfx.ScreenWidth + radius)
 			{
-				t.position.x = -radius;
+				t.position.x = -(radius + 1.0f);
 			}
 			if (t.GetPosition().y < -radius)
 			{
-				t.position.y = gfx.ScreenHeight + radius;
+				t.position.y = gfx.ScreenHeight + (radius + 1.0f);
 			}
 			else if (t.GetPosition().y > gfx.ScreenHeight + radius)
 			{
-				t.position.y = -radius;
+				t.position.y = -(radius+1.0f);
 			}
 			pU->SetTransformation(t);
 			velocity_sum += pU->rigidbody.velocity.Len();
