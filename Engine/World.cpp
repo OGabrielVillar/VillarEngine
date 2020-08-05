@@ -72,12 +72,30 @@ World::World() :
 			AddCommand(GetCreatedUnit(), 'X', spaceeffectx);
 		}
 	}
+	//Line3/*/
+	//
+	AddUnit(Unit("linha", Vec2(600.0f, 600.0f)));
+	GetCreatedUnit()->SetRadius(radius*2.5f);
+	GetCreatedUnit()->SetRigidBodyForm(Form(radius*1.5f, Form::Type::Line));
+	GetCreatedUnit()->rigidbody.form.vertices[0] = Vec2(-2000.0f, 100.0f);
+	GetCreatedUnit()->rigidbody.UpdateMass();
+	GetCreatedUnit()->rigidbody.transformation.orientation = PI / 2;
+
+	//Line2/*/
+	//
+	AddUnit(Unit("linha", Vec2(600.0f, 600.0f)));
+	GetCreatedUnit()->SetRadius(radius*2.5f);
+	GetCreatedUnit()->SetRigidBodyForm(Form(150.5f, Form::Type::Line));
+	GetCreatedUnit()->rigidbody.form.vertices[0] = Vec2(-20.0f, 100.0f);
+	GetCreatedUnit()->rigidbody.UpdateMass();
+	GetCreatedUnit()->rigidbody.transformation.orientation = PI / 2;
+
 	//Line/*/
 	//
 	AddUnit(Unit("linha", Vec2(300.0f, 600.0f)));
 	GetCreatedUnit()->SetRadius(radius*2.5f);
-	GetCreatedUnit()->SetRigidBodyForm(Form(radius*20.5f, Form::Type::Line));
-	GetCreatedUnit()->rigidbody.form.vertices[0] = Vec2(500.0f, 0.0f);
+	GetCreatedUnit()->SetRigidBodyForm(Form(radius*1.5f, Form::Type::Line));
+	GetCreatedUnit()->rigidbody.form.vertices[0] = Vec2(200.0f, 200.0f);
 	GetCreatedUnit()->rigidbody.UpdateMass();
 	GetCreatedUnit()->rigidbody.transformation.orientation = PI / 2;
 

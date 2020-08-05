@@ -94,7 +94,22 @@ inline float GetAngle(const Vec2& v1)
 inline Vec2 GetRotated90(Vec2 vec_in) {
 	return Vec2(vec_in.y, -vec_in.x);
 }
-inline Vec2 GetRotated90ByAxis(Vec2 vec_in,Vec2 axis_in) {
+inline Vec2 GetRotated90OnAxis(Vec2 vec_in,Vec2 axis_in) {
 	Vec2 line_section = vec_in-axis_in;
 	return Vec2(line_section.y+axis_in.x, -line_section.x+ axis_in.y);
+}
+inline Vec2 GetRotated(const Vec2& vec_in, float rad_in) {
+	float cs = cos(rad_in);
+	float sn = sin(rad_in);
+
+	//float nx1 = vec_in.x * cs;
+	//float nx2 = vec_in.y * sn;
+	//float nx = nx1 - nx2;
+	//float ny = vec_in.x * sn + vec_in.y * cs;
+	//return Vec2(
+	//	nx,
+	//	ny);
+	return Vec2(
+		vec_in.x * cs - vec_in.y * sn, 
+		vec_in.x * sn + vec_in.y * cs);
 }
