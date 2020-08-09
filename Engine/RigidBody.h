@@ -20,9 +20,12 @@ public: //SETTERS
 	void SetFormRadius(float radius_in);
 	void SetDensity(float density_in);
 	void UpdateMass();
+	void MoveVerticeTo(int index, Vec2 position_in);
 public: //GETTERS
 	Transformation GetTransformation();
 	Vec2 GetVerticePos(int vertice_index);
+	Vec2 GetVerticeOri(int vertice_index);
+	Transformation GetVertice(int vertice_index) const;
 	Vec2 GetVelocity();
 	Vec2 GetForce();
 public: //FUNCTIONS
@@ -43,7 +46,6 @@ public://PHYSICS
 	Vec2 velocity;
 	float angularVelocity;
 	float torque;
-	float orient; // radians
 
 	Vec2 force;
 	Vec2 acceleration;

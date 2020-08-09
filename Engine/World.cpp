@@ -5,13 +5,14 @@ World::World() :
 	combatSystem(&units[0]),
 	control(combatSystem)
 {
-	float velocity = 300.0f;		//cm per second
+	float velocity = 900.0f;		//cm per second
 	float radius = 10.f;		//cm
 	//testPorposes
 	AddUnit(Unit("esfera", Vec2(900.0f, 300.0f)));
 	GetCreatedUnit()->SetRadius(radius);
 	control.SetSelectedUnit(*GetCreatedUnit());
-	GetCreatedUnit()->rigidbody.transformation.orientation = PI / 2;
+	GetCreatedUnit()->rigidbody.transformation.SetOrientationRad(PI / 2);
+	bolinha = GetCreatedUnit();
 
 	Effect aeffect;
 	aeffect.SetFunction(0, Function::Type::AddForce, Function::Unit::Source);
@@ -65,7 +66,7 @@ World::World() :
 		{
 			AddUnit(Unit("Steve", Vec2(23.1f * (float)i + 200.0f, 23.1f * (float)j + 200.0f)));
 			GetCreatedUnit()->SetRadius(radius);
-			GetCreatedUnit()->rigidbody.transformation.orientation = PI / 2;
+			GetCreatedUnit()->rigidbody.transformation.SetOrientationRad(PI / 2);
 			Effect spaceeffectx;
 			spaceeffectx.SetFunction(0, Function::Type::AddForce, Function::Unit::Source);
 			spaceeffectx.SetFunctionTransformation(0, 0, Transformation(Vec2(0.0f, velocity)));
@@ -74,30 +75,31 @@ World::World() :
 	}
 	//Line3/*/
 	//
-	AddUnit(Unit("linha", Vec2(600.0f, 600.0f)));
+	AddUnit(Unit("linha", Vec2(600.0f, 60.0f)));
 	GetCreatedUnit()->SetRadius(radius*2.5f);
 	GetCreatedUnit()->SetRigidBodyForm(Form(radius*1.5f, Form::Type::Line));
-	GetCreatedUnit()->rigidbody.form.vertices[0] = Vec2(-2000.0f, 100.0f);
+	GetCreatedUnit()->rigidbody.form.PushVertice(Vec2(-200.0f, 800.0f));
 	GetCreatedUnit()->rigidbody.UpdateMass();
-	GetCreatedUnit()->rigidbody.transformation.orientation = PI / 2;
+	GetCreatedUnit()->rigidbody.transformation.SetOrientationRad(PI / 2);
+	linhagrande = GetCreatedUnit();
 
 	//Line2/*/
-	//
+	/*/
 	AddUnit(Unit("linha", Vec2(600.0f, 600.0f)));
 	GetCreatedUnit()->SetRadius(radius*2.5f);
-	GetCreatedUnit()->SetRigidBodyForm(Form(150.5f, Form::Type::Line));
-	GetCreatedUnit()->rigidbody.form.vertices[0] = Vec2(-20.0f, 100.0f);
+	GetCreatedUnit()->SetRigidBodyForm(Form(1.5f, Form::Type::Line));
+	GetCreatedUnit()->rigidbody.form.GetVertice(1) = Vec2(-20.0f, 100.0f);
 	GetCreatedUnit()->rigidbody.UpdateMass();
-	GetCreatedUnit()->rigidbody.transformation.orientation = PI / 2;
+	GetCreatedUnit()->rigidbody.transformation.SetOrientationRad(PI / 2);
 
 	//Line/*/
 	//
 	AddUnit(Unit("linha", Vec2(300.0f, 600.0f)));
 	GetCreatedUnit()->SetRadius(radius*2.5f);
 	GetCreatedUnit()->SetRigidBodyForm(Form(radius*1.5f, Form::Type::Line));
-	GetCreatedUnit()->rigidbody.form.vertices[0] = Vec2(200.0f, 200.0f);
+	GetCreatedUnit()->rigidbody.form.PushVertice(Vec2(200.0f, 200.0f));
 	GetCreatedUnit()->rigidbody.UpdateMass();
-	GetCreatedUnit()->rigidbody.transformation.orientation = PI / 2;
+	GetCreatedUnit()->rigidbody.transformation.SetOrientationRad(PI / 2);
 
 	spaceeffect.SetFunctionVec2(0, 0, Vec2(600.0f, 300.0f));
 	AddCommand(GetCreatedUnit(), (char)32, spaceeffect);
@@ -106,6 +108,7 @@ World::World() :
 
 void World::Go(float ft_in)
 {
+	//linhagrande->rigidbody.MoveVerticeTo(1,bolinha->rigidbody.GetVerticePos(0) + Vec2(0.0f, -100.0f));
 	combatSystem.Go(ft_in);
 	physicSystem.Go(ft_in);
 }

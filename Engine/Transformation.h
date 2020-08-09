@@ -15,10 +15,28 @@ public:
 	Transformation& operator*=(float rhs);
 	Transformation operator-(const Transformation& rhs) const;
 	Transformation& operator-=(const Transformation& rhs);
-	Vec2 GetPosition();
-	void SetOrientation();
+	void SetPosition(const Vec2& rhs);
+	Vec2 GetPosition() const;
+	Vec2 GetOrientation();
+	void SetOrientation(Vec2 orientation_in);
+	void SetOrientationRad(float orientation_in);
 public:
 	Vec2 position;
 	Vec2 scale = Vec2(1.0f, 1.0f);
-	float orientation = 0.0f; // radians
+	float orientation_rad = 0.0f; // radians
+	Vec2 orientation = Vec2(1.0f,0.0f); //(cos,sin)
 };
+inline Vec2 GetRotated(const Vec2& vec_in, const Vec2& sincos_in) {
+	return Vec2(
+		vec_in.x * sincos_in.x - vec_in.y * sincos_in.y,
+		vec_in.x * sincos_in.y + vec_in.y * sincos_in.x);
+}
+inline Vec2 GetRotated(const float float_in, const Vec2& sincos_in) {
+	return GetRotated(Vec2(float_in, 0.0f), sincos_in);
+}
+inline Vec2 GetYInvertedAngle(const Vec2& sincos_in) {
+	return Vec2(sincos_in.x,-sincos_in.y);
+}
+inline Vec2 GetXInvertedAngle(const Vec2& sincos_in) {
+	return Vec2(-sincos_in.x, sincos_in.y);
+}

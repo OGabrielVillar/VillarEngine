@@ -76,9 +76,9 @@ void PhysicSystem::MoveBodys()
 
 bool PhysicSystem::IsCollinding(RigidBody * rb_a, RigidBody * rb_b)
 {
-	if (rb_a->form.type == Form::Type::Point)
+	if (rb_a->form.GetType() == Form::Type::Point)
 	{
-		if (rb_b->form.type == Form::Type::Point)
+		if (rb_b->form.GetType() == Form::Type::Point)
 		{
 
 		}
@@ -88,10 +88,10 @@ bool PhysicSystem::IsCollinding(RigidBody * rb_a, RigidBody * rb_b)
 
 bool PhysicSystem::PointPointCollisionTest(RigidBody& rb_a, RigidBody& rb_b)
 {
-	float radius_sum = rb_a.form.radius + rb_b.form.radius;
-	if (SqrdDistance(rb_a.transformation.GetPosition(), rb_b.transformation.GetPosition()) <= radius_sum*radius_sum)
+	float radius_sum = rb_a.form.GetRadius() + rb_b.form.GetRadius();
+	if (SqrdDistance(rb_a.GetVerticePos(0), rb_b.GetVerticePos(0)) <= radius_sum*radius_sum)
 	{
-		contact_point = rb_b.transformation.GetPosition();
+		contact_point = rb_b.GetVerticePos(0);
 		return true;
 	}
 	return false;
@@ -99,99 +99,47 @@ bool PhysicSystem::PointPointCollisionTest(RigidBody& rb_a, RigidBody& rb_b)
 
 bool PhysicSystem::PointLineCollisionTest(RigidBody & rb_a, RigidBody & line_in)
 {
-	Vec2 c0 = rb_a.transformation.GetPosition();;
-	Vec2 p0 = line_in.transformation.GetPosition();
-	Vec2 p1 = line_in.GetVerticePos(0);
+	Vec2 c0 = rb_a.GetVerticePos(0);
+	Vec2 p0 = line_in.GetVerticePos(0);
+	Vec2 p1 = line_in.GetVerticePos(1);
 
-	//new:
-	float angleFromP0toP1 = GetAngleBetween(p0, p1);
-	Vec2 c0_normalized = GetRotated( c0 - p0 , angleFromP0toP1);
-	Vec2 p1_normalized = GetRotated( p1 - p0, angleFromP0toP1);
+	//Make an Matrix, inverted rotating the entire elements on the p0 axis
+	Vec2 angleFromP0toP1 = line_in.GetVerticeOri(0);
+	Vec2 c0_inMatrix = GetRotated( c0 - p0 , GetYInvertedAngle(angleFromP0toP1));
+	Vec2 p1_inMatrix = GetRotated( p1 - p0, GetYInvertedAngle(angleFromP0toP1));
 	
-	float radius_sum = rb_a.form.radius + line_in.form.radius;
-	if (!(c0_normalized.x*c0_normalized.x <= radius_sum * radius_sum))
+	float radius_sum = rb_a.form.GetRadius() + line_in.form.GetRadius();
+	//RETURN IF THE CIRCLE ISN'T IN THE LINE:
+	if (!(c0_inMatrix.y*c0_inMatrix.y <= radius_sum * radius_sum))
 	{
 		return false;
 	}
 
-	if (c0_normalized.y < 0.0f)
+	//CHECK IF CIRCLE IS IN THE LINE SECTION, RETURN IF IT DOESN'T:
+	if (c0_inMatrix.x < 0.0f) //IF IS BEFORE THE SECTION
 	{
-		if (SqrdDistance(c0_normalized, Vec2() ) <= radius_sum * radius_sum)
+		if (SqrdDistance(c0_inMatrix, Vec2()) <= radius_sum * radius_sum)
 		{
 			contact_point = p0;
 			return true;
 		}
 		return false;
-	} 
-	else if (c0_normalized.y > p1_normalized.y)
+	}
+	else if (c0_inMatrix.x > p1_inMatrix.x) //IF IS AFTER THE SECTION
 	{
-		if (SqrdDistance(c0_normalized, p1_normalized) <= radius_sum * radius_sum)
+		if (SqrdDistance(c0_inMatrix, p1_inMatrix) <= radius_sum * radius_sum)
 		{
 			contact_point = p1;
 			return true;
 		}
 		return false;
 	}
-	else
+	else		//TRANSFERS THE DATA BACK TO NON-MATRIX
 	{
-		contact_point = p0 + GetRotated(Vec2(0, c0_normalized.y),-angleFromP0toP1);
-	}
-	return true;
-}
 
-bool PhysicSystem::PointLineCollisionTestOLD(RigidBody & rb_a, RigidBody & line_in)
-{
-	Vec2 c0 = rb_a.transformation.GetPosition();;
-	Vec2 p0 = line_in.transformation.GetPosition();
-	Vec2 p1 = line_in.GetVerticePos(0);
-	Vec2 distFromP0toP1 = p1 - p0;
-	float angleFromP0toP1 = GetAngleBetween(p1,p0);
-	if (distFromP0toP1.y == 0.0f)
-	{
-		contact_point = Vec2(c0.x, p0.y);
-	}
-	else if (distFromP0toP1.x == 0.0f)
-	{
-		contact_point = Vec2(p0.x, c0.y);
-	}
-	else {
-		x_projection = p0 + (distFromP0toP1 * ((c0.y - p0.y) / distFromP0toP1.y));
-		y_projection = p0 + (distFromP0toP1 * ((c0.x - p0.x) / distFromP0toP1.x));
-		Vec2 x_dist = x_projection - c0;
-		float x_Ldist = x_dist.LenSqr();
-		Vec2 y_dist = y_projection - c0;
-		float y_Ldist = y_dist.LenSqr();
-		if (x_Ldist > y_Ldist) {
-			float factor = 1.0f - (y_Ldist / x_Ldist) / 2.0f;
-			Vec2 distFromXtoY = y_projection - x_projection;
-			contact_point = x_projection + (distFromXtoY*factor);
-		}
-		else {
-			float factor = 1.0f - (x_Ldist / y_Ldist) / 2.0f;
-			Vec2 distFromYtoX = x_projection - y_projection;
-			contact_point = y_projection + (distFromYtoX*factor);
-		}
-	}
-	if (Dot(contact_point - p0, distFromP0toP1) <= 0.0f)
-	{
-		contact_point = p0;
-	}
-	if (Dot(contact_point - p1, p0 - p1) <= 0.0f)
-	{
-		contact_point = p1;
-	}
-	float test = Dot((contact_point - c0).GetNormalized(), (p1 - p0).GetNormalized());
-	if (test == 0.0f)
-	{
-		int a = 0;
-	}
-
-	float radius_sum = rb_a.form.radius + line_in.form.radius;
-	if (SqrdDistance(rb_a.transformation.GetPosition(), contact_point) <= radius_sum * radius_sum)
-	{
+		contact_point = p0 + GetRotated(Vec2(c0_inMatrix.x, 0.0f), angleFromP0toP1);
 		return true;
 	}
-	return false;
 }
 
 float PhysicSystem::SqrdDistance(Vec2 vec2_a, Vec2 vec2_b)
@@ -211,11 +159,11 @@ void PhysicSystem::Collision(RigidBody * rbP0, RigidBody * rbP1)
 		if (rbP1->form.IsCircle()) {
 			if (!PointPointCollisionTest(*rbP0, *rbP1)) { return; }
 		}
-		if (rbP1->form.type == Form::Type::Line) {
+		if (rbP1->form.GetType() == Form::Type::Line) {
 			if (!PointLineCollisionTest(*rbP0, *rbP1)) { return; }
 		}
 		//RETURN IF VELOCITY ISEN'T IN RB1 DIRECTION
-		if (Dot(rbP0->velocity, contact_point - rbP0->transformation.GetPosition()) <= 0) { return; }
+		if (Dot(rbP0->velocity, contact_point - rbP0->GetVerticePos(0)) <= 0) { return; }
 
 		float mass_factor = rbP1->mass / rbP0->mass;
 		if (mass_factor > 1.0f)
@@ -223,7 +171,7 @@ void PhysicSystem::Collision(RigidBody * rbP0, RigidBody * rbP1)
 			mass_factor = 1.0f;
 		}
 		Vec2 velocity = rbP0->velocity*(rbP0->mass*(ft*ft));
-		Vec2 force = GetReflectedForce(velocity, GetRotated90(rbP0->transformation.GetPosition() - contact_point));
+		Vec2 force = GetReflectedForce(velocity, GetRotated90(rbP0->GetVerticePos(0) - contact_point));
 		//How much of rb0.velocity is going to the rb1 direction.
 		rbP0->AddForce(-force * mass_factor);
 		//Remove that force from rb0.
@@ -304,16 +252,16 @@ void PhysicSystem::Collision(RigidBody * rbP0, RigidBody * rbP1)
 					//TestEnd*/
 
 	}
-	if (rbP0->form.type == Form::Type::Line)
+	if (rbP0->form.GetType() == Form::Type::Line)
 	{
 		if (rbP1->form.IsCircle()) {
 			if (!PointLineCollisionTest(*rbP1, *rbP0)) { return; }
 		}
-		if (rbP1->form.type == Form::Type::Line) {
+		if (rbP1->form.GetType() == Form::Type::Line) {
 			return;
 		}
 		//RETURN IF VELOCITY ISEN'T IN RB1 DIRECTION
-		if (Dot(rbP0->velocity, rbP1->transformation.GetPosition() - contact_point) <= 0) { return; }
+		if (Dot(rbP0->velocity, rbP1->GetVerticePos(0) - contact_point) <= 0) { return; }
 
 		float mass_factor = rbP1->mass / rbP0->mass;
 		if (mass_factor > 1.0f)
@@ -321,7 +269,7 @@ void PhysicSystem::Collision(RigidBody * rbP0, RigidBody * rbP1)
 			mass_factor = 1.0f;
 		}
 		Vec2 velocity = rbP0->velocity*(rbP0->mass*(ft*ft));
-		Vec2 force = GetReflectedForce(velocity, GetRotated90(contact_point - rbP1->transformation.GetPosition()));
+		Vec2 force = GetReflectedForce(velocity, GetRotated90(contact_point - rbP1->GetVerticePos(0)));
 		//How much of rb0.velocity is going to the rb1 direction.
 		rbP0->AddForce(-force * mass_factor);
 		//Remove that force from rb0.

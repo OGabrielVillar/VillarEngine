@@ -22,6 +22,8 @@ public: //GETTERS
 	Unit* GetCreatedUnit();
 	PhysicSystem* GetPPhysicsSystem();
 	CombatSystem* GetPCombatSystem();
+	Unit* bolinha = nullptr;
+	Unit* linhagrande = nullptr;
 private:
 	Unit units[UNITSLIMIT];
 	CombatSystem combatSystem;

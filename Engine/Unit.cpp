@@ -68,7 +68,7 @@ std::string & Unit::GetName()
 
 float Unit::GetRadius()
 {
-	return rigidbody.form.radius;
+	return rigidbody.form.GetRadius();
 }
 
 Transformation Unit::GetTransformation()

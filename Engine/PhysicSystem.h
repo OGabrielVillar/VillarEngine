@@ -14,7 +14,6 @@ public:
 	bool IsCollinding(RigidBody* rb_a, RigidBody* rb_b);
 	bool PointPointCollisionTest(RigidBody& rb_a, RigidBody& rb_b);
 	bool PointLineCollisionTest(RigidBody& rb_a, RigidBody& rb_b);
-	bool PointLineCollisionTestOLD(RigidBody & rb_a, RigidBody & line_in);
 	float SqrdDistance(Vec2 vec2_a, Vec2 vec2_b); 
 	void Collision(RigidBody* rbP0, RigidBody* rbP1); 
 	Vec2 GetReflectedForce(Vec2 v_in, Vec2 w_in);

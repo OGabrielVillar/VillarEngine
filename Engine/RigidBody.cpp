@@ -65,12 +65,17 @@ void RigidBody::SetDensity(float density_in)
 
 void RigidBody::UpdateMass()
 {
-	if (form.type == Form::Type::Line)
+	if (form.GetType() == Form::Type::Line)
 	{
-		mass = (PI * (form.radius) * (form.radius) * density) + form.radius * form.vertices[0].Len();
+		mass = (PI * (form.GetRadius()) * (form.GetRadius()) * density) + form.GetRadius() * form.GetVertice(1).GetPosition().Len();
 		return;
 	}
-	mass = PI * (form.radius) * (form.radius) * density;
+	mass = PI * (form.GetRadius()) * (form.GetRadius()) * density;
+}
+
+void RigidBody::MoveVerticeTo(int index, Vec2 position_in)
+{
+	form.MoveVerticeTo(index, position_in - transformation.GetPosition());
 }
 
 Transformation RigidBody::GetTransformation()
@@ -80,9 +85,18 @@ Transformation RigidBody::GetTransformation()
 
 Vec2 RigidBody::GetVerticePos(int vertice_index)
 {
-	return form.vertices[vertice_index] + transformation.GetPosition();
+	return form.GetVertice(vertice_index).GetPosition() + transformation.GetPosition();
 }
 
+Vec2 RigidBody::GetVerticeOri(int vertice_index)
+{
+	return GetRotated(form.GetVertice(vertice_index).GetOrientation(),transformation.GetOrientation());
+}
+
+Transformation RigidBody::GetVertice(int vertice_index) const
+{
+	return form.GetVertice(vertice_index);
+}
 
 Vec2 RigidBody::GetVelocity()
 {
@@ -125,6 +139,4 @@ void RigidBody::SetStatic(void)
 
 void RigidBody::SetOrientation(float radians)
 {
-	orient = radians;
-	//form.SetOrientation(radians);
 }

@@ -6,6 +6,13 @@ Vec2::Vec2()
 	y = 0.0f;
 }
 
+Vec2::Vec2(float in)
+	:
+	x(in),
+	y(in)
+{
+}
+
 Vec2::Vec2( float x_in,float y_in )
 	:
 	x( x_in ),

@@ -130,21 +130,28 @@ void Game::ComposeFrame()
 		pU = &world.GetUnit(i);
 		if (!pU->GetName().empty())
 		{
-			if (pU->rigidbody.form.type == Form::Type::Point) // DRAW CIRCLES
+			cx = Colors::Magenta;
+			if (pU == world.bolinha)
 			{
-				gfx.DrawCircle(pU->GetTransformation().GetPosition(), pU->GetRadius(), cx);
-				gfx.DrawLine(pU->GetTransformation().GetPosition(),
-					pU->GetTransformation().GetPosition() +
-					Vec2(pU->GetRadius()*std::cos(pU->rigidbody.transformation.orientation),
-					pU->GetRadius()*std::sin(pU->rigidbody.transformation.orientation)), cx);
-				//gfx.DrawLine(pU->GetTransformation().GetPosition(), world.GetPPhysicsSystem()->x_projection, cx);
-				//gfx.DrawLine(pU->GetTransformation().GetPosition(), world.GetPPhysicsSystem()->y_projection, cx);
-				//gfx.DrawLine(pU->GetTransformation().GetPosition(), world.GetPPhysicsSystem()->contact_point, cx);
-				//gfx.DrawCircle(world.GetPPhysicsSystem()->contact_point, 12.0f, cx);
+				cx = Colors::Yellow;
 			}
-			if (pU->rigidbody.form.type == Form::Type::Line) // DRAW LINES
+			if (pU->rigidbody.form.GetType() == Form::Type::Point) // DRAW CIRCLES
 			{
-				gfx.DrawCircleLine(pU->GetTransformation().GetPosition(), pU->rigidbody.GetVerticePos(0), pU->GetRadius(), Colors::Cyan);
+				gfx.DrawCircle(pU->rigidbody.GetVerticePos(0), pU->GetRadius(), cx);
+				gfx.DrawLine(pU->rigidbody.GetVerticePos(0),
+					pU->rigidbody.GetVerticePos(0) + GetRotated(pU->rigidbody.form.GetRadius(), pU->rigidbody.GetVerticeOri(0)), cx);
+				//gfx.DrawLine(pU->rigidbody.GetVerticePos(0), world.GetPPhysicsSystem()->x_projection, cx);
+				//gfx.DrawLine(pU->rigidbody.GetVerticePos(0), world.GetPPhysicsSystem()->y_projection, cx);
+				//gfx.DrawLine(pU->rigidbody.GetVerticePos(0), world.GetPPhysicsSystem()->contact_point, cx);
+				//gfx.DrawCircle(world.GetPPhysicsSystem()->x_projection, 12.0f, cx);
+			}
+			if (pU->rigidbody.form.GetType() == Form::Type::Line) // DRAW LINES
+			{
+				gfx.DrawCircleLine(pU->rigidbody.GetVerticePos(0), pU->rigidbody.GetVerticePos(1), pU->GetRadius(), Colors::Cyan);
+				gfx.DrawLine(pU->rigidbody.GetVerticePos(0),
+					pU->rigidbody.GetVerticePos(0) + GetRotated(pU->rigidbody.form.GetRadius(), pU->rigidbody.GetVerticeOri(0)), cx);
+				gfx.DrawLine(pU->rigidbody.GetVerticePos(1),
+					pU->rigidbody.GetVerticePos(1) + GetRotated(pU->rigidbody.form.GetRadius(), pU->rigidbody.GetVerticeOri(1)), cx);
 			}
 		}
 		i++;

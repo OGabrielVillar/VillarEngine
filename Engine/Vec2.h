@@ -11,6 +11,7 @@ class Vec2
 {
 public:
 	Vec2();
+	Vec2( float in );
 	Vec2( float x_in,float y_in );
 public://OPERATORS
 		// +
@@ -83,13 +84,14 @@ inline float Mag(const Vec2& a)
 {
 	return std::sqrt(a.x * a.x + a.y * a.y);
 }
-inline float GetAngleBetween(const Vec2& v1, const Vec2& v2)
-{
-	return atan2(v2.x-v1.x, v2.y-v1.y);
-}
 inline float GetAngle(const Vec2& v1)
 {
 	return atan2(v1.y, v1.x);
+}
+inline float GetAngleBetween(const Vec2& v1, const Vec2& v2)
+{
+	return GetAngle(v2-v1);
+	//return atan2(v2.x-v1.x, v2.y-v1.y);
 }
 inline Vec2 GetRotated90(Vec2 vec_in) {
 	return Vec2(vec_in.y, -vec_in.x);
@@ -99,16 +101,8 @@ inline Vec2 GetRotated90OnAxis(Vec2 vec_in,Vec2 axis_in) {
 	return Vec2(line_section.y+axis_in.x, -line_section.x+ axis_in.y);
 }
 inline Vec2 GetRotated(const Vec2& vec_in, float rad_in) {
-	float cs = cos(rad_in);
 	float sn = sin(rad_in);
-
-	//float nx1 = vec_in.x * cs;
-	//float nx2 = vec_in.y * sn;
-	//float nx = nx1 - nx2;
-	//float ny = vec_in.x * sn + vec_in.y * cs;
-	//return Vec2(
-	//	nx,
-	//	ny);
+	float cs = cos(rad_in);
 	return Vec2(
 		vec_in.x * cs - vec_in.y * sn, 
 		vec_in.x * sn + vec_in.y * cs);
