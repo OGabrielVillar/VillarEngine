@@ -8,14 +8,16 @@ class Transformation
 public:
 	Transformation() = default;
 	Transformation(Vec2 position_in);
-	Transformation(Vec2 position_in, Vec2 scale_in, float orientation_in);
+	Transformation(Vec2 position_in, Vec2 scale_in, Vec2 orientation_in);
+	Transformation(Vec2 position_in, Vec2 scale_in, float orientationrad_in);
+private: Transformation(Vec2 position_in, Vec2 scale_in, Vec2 orientation_in, float orientationrad_in);
+public:
 	Transformation operator+(const Transformation& rhs) const;
 	Transformation& operator+=(const Transformation& rhs);
 	Transformation operator*(float rhs) const;
 	Transformation& operator*=(float rhs);
-	Transformation operator-(const Transformation& rhs) const;
-	Transformation& operator-=(const Transformation& rhs);
 	void SetPosition(const Vec2& rhs);
+	void RotatesBy(const Vec2& rhs);
 	Vec2 GetPosition() const;
 	Vec2 GetOrientation();
 	void SetOrientation(Vec2 orientation_in);

@@ -20,19 +20,24 @@ public:
 	Form(float radius_in, Type type_in);
 public: //SETTERS
 	void PushVertice(Transformation vertice_in);
-	void MoveVerticeTo(int index,Vec2 position_in);
+	void SetVerticePosition(int index,Vec2 position_in);
+	void UpdateCentralPoint(Vec2& const position_in);
 	void SetRadius(float radius_in);
 	bool IsCircle();
 public: //GETTERS
 	float GetRadius() const;
 	Type GetType() const;
+	Vec2 GetCentralPoint() const;
 	Transformation GetVertice(int index) const;
+	int GetNumberOfVertices() const;
 private: //PRIVATE FUNCTIONS
 	void UpdateVertice(int index);
 private:
 	Type type = Type::Point;
 	float radius = 1.0f;
-	Transformation vertices[MAX_VERTICES];
+	Transformation vertices[MAX_VERTICES+1];
+	Vec2 central_point;
+	float total_radius = 1.0f;
 	bool inverted = false;
 	int current_vert = 0;
 };

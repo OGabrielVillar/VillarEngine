@@ -73,9 +73,14 @@ void RigidBody::UpdateMass()
 	mass = PI * (form.GetRadius()) * (form.GetRadius()) * density;
 }
 
+void RigidBody::UpdateTransformation()
+{
+
+}
+
 void RigidBody::MoveVerticeTo(int index, Vec2 position_in)
 {
-	form.MoveVerticeTo(index, position_in - transformation.GetPosition());
+	form.SetVerticePosition(index, position_in - transformation.GetPosition());
 }
 
 Transformation RigidBody::GetTransformation()
@@ -85,7 +90,7 @@ Transformation RigidBody::GetTransformation()
 
 Vec2 RigidBody::GetVerticePos(int vertice_index)
 {
-	return form.GetVertice(vertice_index).GetPosition() + transformation.GetPosition();
+	return (transformation + form.GetVertice(vertice_index)).GetPosition();
 }
 
 Vec2 RigidBody::GetVerticeOri(int vertice_index)

@@ -18,6 +18,16 @@ void PhysicSystem::MoveBodys()
 	Unit* Punit;
 	Punit = Punitgroup;
 
+	Unit* Punitb;
+	Punitb = Punitgroup;
+	while (Punitb != Punitgroup + UNITSLIMIT - 1)
+	{
+		if (!Punitb->GetName().empty()){
+			Punitb->rigidbody.arecolliding = false;
+			Punitb->rigidbody.arebeinghit = false;
+		}
+		Punitb++;
+	}
 	while (Punit != Punitgroup + UNITSLIMIT - 1)
 	{
 		if (!Punit->GetName().empty())
@@ -67,7 +77,7 @@ void PhysicSystem::MoveBodys()
 
 			//Punit->rigidbody.velocity += Vec2(0.0f, 100.0f*ft);	//GRAVITY
 			Punit->rigidbody.velocity += Punit->rigidbody.force / (Punit->rigidbody.mass*(ft*ft));
-			Punit->rigidbody.SetTransformation(Punit->rigidbody.GetTransformation() + Punit->rigidbody.GetVelocity()*ft);
+			Punit->rigidbody.SetTransformation(Transformation(Punit->rigidbody.GetVelocity()*ft) + Punit->rigidbody.GetTransformation());
 			Punit->rigidbody.force.Set(0.0f, 0.0f);
 		}
 		Punit++;
@@ -164,27 +174,10 @@ void PhysicSystem::Collision(RigidBody * rbP0, RigidBody * rbP1)
 		}
 		//RETURN IF VELOCITY ISEN'T IN RB1 DIRECTION
 		if (Dot(rbP0->velocity, contact_point - rbP0->GetVerticePos(0)) <= 0) { return; }
+		
+		ForceTransmission2(*rbP0, *rbP1);
 
-		float mass_factor = rbP1->mass / rbP0->mass;
-		if (mass_factor > 1.0f)
-		{
-			mass_factor = 1.0f;
-		}
-		Vec2 velocity = rbP0->velocity*(rbP0->mass*(ft*ft));
-		Vec2 force = GetReflectedForce(velocity, GetRotated90(rbP0->GetVerticePos(0) - contact_point));
-		//How much of rb0.velocity is going to the rb1 direction.
-		rbP0->AddForce(-force * mass_factor);
-		//Remove that force from rb0.
-		float velocityL = velocity.Len();
-		float final_velL = (velocity - force).Len();
-		//The rb0 velocity lenght after the collision.
-		float factor = (velocityL - final_velL) / force.Len();
-		//0.0 to 1.0, how much of force was transfered.
-		rbP1->AddForce(force * factor * mass_factor);
-		//Add the force that was transfered.
-		ThereWasCollision = true;
-
-		/*/TestPorposes
+		/* /*TestPorposes
 
 					Vec2 _vel[2];
 					float _velL[2];
@@ -263,24 +256,7 @@ void PhysicSystem::Collision(RigidBody * rbP0, RigidBody * rbP1)
 		//RETURN IF VELOCITY ISEN'T IN RB1 DIRECTION
 		if (Dot(rbP0->velocity, rbP1->GetVerticePos(0) - contact_point) <= 0) { return; }
 
-		float mass_factor = rbP1->mass / rbP0->mass;
-		if (mass_factor > 1.0f)
-		{
-			mass_factor = 1.0f;
-		}
-		Vec2 velocity = rbP0->velocity*(rbP0->mass*(ft*ft));
-		Vec2 force = GetReflectedForce(velocity, GetRotated90(contact_point - rbP1->GetVerticePos(0)));
-		//How much of rb0.velocity is going to the rb1 direction.
-		rbP0->AddForce(-force * mass_factor);
-		//Remove that force from rb0.
-		float velocityL = velocity.Len();
-		float final_velL = (velocity - force).Len();
-		//The rb0 velocity lenght after the collision.
-		float factor = (velocityL - final_velL) / force.Len();
-		//0.0 to 1.0, how much of force was transfered.
-		rbP1->AddForce(force * factor * mass_factor);
-		//Add the force that was transfered.
-		ThereWasCollision = true;
+		ForceTransmission2(*rbP0, *rbP1);
 
 		/*/TestPorposes
 
@@ -349,6 +325,67 @@ void PhysicSystem::Collision(RigidBody * rbP0, RigidBody * rbP1)
 					}
 					//TestEnd*/
 	}
+}
+
+void PhysicSystem::ForceTransmission(RigidBody & rbP0, RigidBody & rbP1)
+{
+	float mass_factor = rbP1.mass / rbP0.mass;
+	if (mass_factor > 1.0f)
+	{
+		mass_factor = 1.0f;
+	}
+	Vec2 force;
+	Vec2 velocity = rbP0.velocity*(rbP0.mass*(ft*ft));
+	if (rbP0.form.GetType() == Form::Type::Point) {
+		force = GetReflectedForce(velocity, GetRotated90(rbP0.GetVerticePos(0) - contact_point));
+	}
+	else
+	{
+		force = GetReflectedForce(velocity, GetRotated90(contact_point - rbP1.GetVerticePos(0)));
+	}
+	//How much of rb0.velocity is going to the rb1 direction.
+	rbP0.AddForce(-force * mass_factor);
+	//Remove that force from rb0.
+	float velocityL = velocity.Len();
+	float final_velL = (velocity - force).Len();
+	//The rb0 velocity lenght after the collision.
+	float factor = (velocityL - final_velL) / force.Len();
+	//0.0 to 1.0, how much of force was transfered.
+	rbP1.AddForce(force * factor * mass_factor);
+	//Add the force that was transfered.
+	ThereWasCollision = true;
+}
+
+void PhysicSystem::ForceTransmission2(RigidBody & rbP0, RigidBody & rbP1)
+{
+
+	float mass_factor = rbP1.mass / rbP0.mass;
+	if (mass_factor > 1.0f)
+	{
+		mass_factor = 1.0f;
+	}
+	Vec2 force;
+	Vec2 velocity = rbP0.velocity*(rbP0.mass*(ft*ft));
+	if (rbP0.form.GetType() == Form::Type::Point) {
+		force = GetReflectedForce(velocity, GetRotated90(rbP0.GetVerticePos(0) - contact_point));
+	}
+	else
+	{
+		force = GetReflectedForce(velocity, GetRotated90(contact_point - rbP1.GetVerticePos(0)));
+	}
+	//How much of rb0.velocity is going to the rb1 direction.
+	rbP0.AddForce(-force * mass_factor);
+	//Remove that force from rb0.
+	float velocityL = velocity.Len();
+	float final_velL = (velocity - force).Len();
+	//The rb0 velocity lenght after the collision.
+	float factor = (velocityL - final_velL) / force.Len();
+	//0.0 to 1.0, how much of force was transfered.
+	rbP1.AddForce(force * factor * mass_factor);
+	//Add the force that was transfered.
+	rbP0.arecolliding = true;
+	rbP1.arebeinghit = true;
+	ThereWasCollision = true;
 }
 
 Vec2 PhysicSystem::GetReflectedForce(Vec2 v_in, Vec2 w_in)

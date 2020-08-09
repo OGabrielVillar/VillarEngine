@@ -119,10 +119,6 @@ void Game::Update()
 void Game::ComposeFrame()		
 {
 	Color cx = Colors::Magenta;
-	if (world.GetPPhysicsSystem()->PointPointCollisionTest(world.GetUnit(0).rigidbody, world.GetUnit(1).rigidbody))
-	{
-		cx = Colors::Red;
-	}
 	int i = 0;
 	Unit* pU;
 	while (i < UNITSLIMIT)
@@ -134,6 +130,14 @@ void Game::ComposeFrame()
 			if (pU == world.bolinha)
 			{
 				cx = Colors::Yellow;
+			}
+			if (pU->rigidbody.arecolliding)
+			{
+				cx = Colors::Red;
+			}
+			if (pU->rigidbody.arebeinghit)
+			{
+				cx = Colors::Blue;
 			}
 			if (pU->rigidbody.form.GetType() == Form::Type::Point) // DRAW CIRCLES
 			{
@@ -147,7 +151,7 @@ void Game::ComposeFrame()
 			}
 			if (pU->rigidbody.form.GetType() == Form::Type::Line) // DRAW LINES
 			{
-				gfx.DrawCircleLine(pU->rigidbody.GetVerticePos(0), pU->rigidbody.GetVerticePos(1), pU->GetRadius(), Colors::Cyan);
+				gfx.DrawCircleLine(pU->rigidbody.GetVerticePos(0), pU->rigidbody.GetVerticePos(1), pU->GetRadius(), cx);
 				gfx.DrawLine(pU->rigidbody.GetVerticePos(0),
 					pU->rigidbody.GetVerticePos(0) + GetRotated(pU->rigidbody.form.GetRadius(), pU->rigidbody.GetVerticeOri(0)), cx);
 				gfx.DrawLine(pU->rigidbody.GetVerticePos(1),

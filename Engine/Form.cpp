@@ -24,10 +24,26 @@ void Form::PushVertice(Transformation vertice_in)
 	UpdateVertice(current_vert);
 }
 
-void Form::MoveVerticeTo(int index, Vec2 position_in)
+void Form::SetVerticePosition(int index, Vec2 position_in)
 {
+	central_point += vertices[index].GetPosition()/(current_vert+1);
 	vertices[index].SetPosition(position_in);
 	UpdateVertice(index);
+}
+
+void Form::UpdateCentralPoint(Vec2& const position_in)
+{
+	central_point = 0.0f;
+	for (size_t i = 0; i < current_vert; i++)
+	{
+		central_point += vertices[i].GetPosition();
+	}
+	central_point /= current_vert+1;
+}
+
+Vec2 Form::GetCentralPoint() const
+{
+	return central_point;
 }
 
 void Form::SetRadius(float radius_in)
@@ -53,6 +69,11 @@ Form::Type Form::GetType() const
 Transformation Form::GetVertice(int index) const
 {
 	return Transformation(vertices[index]);
+}
+
+int Form::GetNumberOfVertices() const
+{
+	return current_vert+1;
 }
 
 void Form::UpdateVertice(int index)

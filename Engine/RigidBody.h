@@ -15,11 +15,13 @@ public:
 	RigidBody(Form *form_in, unsigned int x, unsigned int y);
 public: //SETTERS
 	void SetTransformation(Transformation transformation_in);
+	void SetPosition(Transformation transformation_in);
 	void SetVelocity(Vec2 velocity_in);
 	void SetForm(Form Form_in);
 	void SetFormRadius(float radius_in);
 	void SetDensity(float density_in);
 	void UpdateMass();
+	void UpdateTransformation();
 	void MoveVerticeTo(int index, Vec2 position_in);
 public: //GETTERS
 	Transformation GetTransformation();
@@ -40,6 +42,7 @@ public: //FUNCTIONS
 
 public:
 	Form form;
+	Vec2 form_offset;
 	bool uses_gravity;
 public://PHYSICS
 	Transformation transformation;
@@ -61,5 +64,10 @@ public://PHYSICS
 	float staticFriction;
 	float dynamicFriction;
 	Material material;
+
+	bool arecolliding = false;
+	bool arebeinghit = false;
+private:
+
 };
 
