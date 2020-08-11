@@ -8,15 +8,6 @@ World::World() :
 	float velocity = 2000.0f;		//cm per second
 	float radius = 20.f;		//cm
 	//testPorposes
-	AddUnit(Unit("curva", Vec2(900.0f, 300.0f)));
-	GetCreatedUnit()->SetRadius(radius);
-	GetCreatedUnit()->SetRigidBodyForm(Form(radius*1.0f, Form::Type::Curve3P));
-	GetCreatedUnit()->rigidbody.form.PushVertice(Vec2(-200.0f, 300.0f));
-	GetCreatedUnit()->rigidbody.form.PushVertice(Vec2(0.0f, 600.0f));
-	GetCreatedUnit()->rigidbody.UpdateMass();
-	control.SetSelectedUnit(*GetCreatedUnit());
-	GetCreatedUnit()->rigidbody.transformation.SetOrientationRad(PI / 3.8f);
-	curva = GetCreatedUnit();
 	/*
 	AddUnit(Unit("linha", Vec2(600.0f, 60.0f)));
 	GetCreatedUnit()->SetRadius(radius*1.5f);
@@ -31,6 +22,16 @@ World::World() :
 	control.SetSelectedUnit(*GetCreatedUnit());
 	GetCreatedUnit()->rigidbody.transformation.SetOrientationRad(PI / 3.8f);
 	bolinha = GetCreatedUnit();
+
+	AddUnit(Unit("curva", Vec2(900.0f, 300.0f)));
+	GetCreatedUnit()->SetRadius(radius);
+	GetCreatedUnit()->SetRigidBodyForm(Form(radius*1.0f, Form::Type::Curve3P));
+	GetCreatedUnit()->rigidbody.form.PushVertice(Vec2(-200.0f, 300.0f));
+	GetCreatedUnit()->rigidbody.form.PushVertice(Vec2(0.0f, 600.0f));
+	GetCreatedUnit()->rigidbody.UpdateMass();
+	control.SetSelectedUnit(*GetCreatedUnit());
+	GetCreatedUnit()->rigidbody.transformation.SetOrientationRad(PI / 3.8f);
+	curva = GetCreatedUnit();
 
 	Effect aeffect;
 	aeffect.SetFunction(0, Function::Type::AddForce, Function::Unit::Source);

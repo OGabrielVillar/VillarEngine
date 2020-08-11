@@ -114,6 +114,11 @@ void Game::Update()
 		i++;
 	}
 	i = 0;
+
+	if (mouse)
+	{
+
+	}
 }
 
 void Game::ComposeFrame()		
@@ -160,10 +165,6 @@ void Game::ComposeFrame()
 			if (pU->rigidbody.form.GetType() == Form::Type::Curve3P) // DRAW CURVES3P
 			{
 				gfx.DrawCircleCurve3P(pU->rigidbody.GetVerticePos(0), pU->rigidbody.GetVerticePos(1), pU->rigidbody.GetVerticePos(2), pU->GetRadius(), cx);
-				gfx.DrawLine(pU->rigidbody.GetVerticePos(0),
-					pU->rigidbody.GetVerticePos(0) + GetRotated(pU->rigidbody.form.GetRadius(), pU->rigidbody.GetVerticeOri(0)), cx);
-				gfx.DrawLine(pU->rigidbody.GetVerticePos(2),
-					pU->rigidbody.GetVerticePos(2) + GetRotated(pU->rigidbody.form.GetRadius(), pU->rigidbody.GetVerticeOri(2)), cx);
 			}
 		}
 		i++;

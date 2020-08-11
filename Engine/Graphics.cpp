@@ -473,9 +473,11 @@ void Graphics::DrawCircleLine(Vec2 & start, Vec2 & end, float radius_in, Color c
 
 void Graphics::DrawCircleCurve3P(Vec2 & start, Vec2 & mid, Vec2 & end, float radius_in, Color c)
 {
-	Vec2 upline_slop = (GetRotated90((start - end).GetNormalized()) * radius_in);
-	DrawCurve3P(start + upline_slop, mid + upline_slop, end + upline_slop, c);
-	DrawCurve3P(start - upline_slop, mid - upline_slop, end - upline_slop, c);
+	Vec2 upline_slop0 = (GetRotated90((start - mid).GetNormalized()) * radius_in);
+	Vec2 upline_slop2 = (GetRotated90((mid - end).GetNormalized()) * radius_in);
+	Vec2 upline_slop1 = (upline_slop0 + upline_slop2) / 2.0f;
+	DrawCurve3P(start + upline_slop0, mid + upline_slop1, end + upline_slop2, c);
+	DrawCurve3P(start - upline_slop0, mid - upline_slop1, end - upline_slop2, c);
 	for (int x_a = (int)-radius_in; x_a < (int)radius_in; x_a++)
 	{
 		for (int y_a = (int)-radius_in; y_a < (int)radius_in; y_a++)
@@ -486,17 +488,18 @@ void Graphics::DrawCircleCurve3P(Vec2 & start, Vec2 & mid, Vec2 & end, float rad
 				{
 					int x_b;
 					int y_b;
-					if (Dot((start - end), Vec2(x_a, y_a)) > 0.0f)
+					if (Dot((start - mid), Vec2(x_a, y_a)) > 0.0f)
 					{
 						x_b = x_a + (int)start.x;
 						y_b = y_a + (int)start.y;
+						PutPixelInCanvas(x_b, y_b, c);
 					}
-					else
+					if (Dot((end - mid), Vec2(x_a, y_a)) > 0.0f)
 					{
 						x_b = x_a + (int)end.x;
 						y_b = y_a + (int)end.y;
+						PutPixelInCanvas(x_b, y_b, c);
 					}
-					PutPixelInCanvas(x_b, y_b, c);
 				}
 			}
 		}
