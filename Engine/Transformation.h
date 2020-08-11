@@ -16,6 +16,10 @@ public:
 	Transformation& operator+=(const Transformation& rhs);
 	Transformation operator*(float rhs) const;
 	Transformation& operator*=(float rhs);
+	Transformation operator-(const Vec2& position_rhs) const;
+	Transformation& operator-=(const Vec2& position_rhs);
+	Transformation operator+(const Vec2& position_rhs) const;
+	Transformation& operator+=(const Vec2& position_rhs);
 	void SetPosition(const Vec2& rhs);
 	void RotatesBy(const Vec2& rhs);
 	Vec2 GetPosition() const;

@@ -14,7 +14,8 @@ public:
 	bool IsCollinding(RigidBody* rb_a, RigidBody* rb_b);
 	bool PointPointCollisionTest(RigidBody& rb_a, RigidBody& rb_b);
 	bool PointLineCollisionTest(RigidBody& rb_a, RigidBody& rb_b);
-	float SqrdDistance(Vec2 vec2_a, Vec2 vec2_b); 
+	bool PointCurve3PCollisionTest(RigidBody & rb_a, RigidBody & curve3p_in);
+	float SqrdDistance(Vec2 vec2_a, Vec2 vec2_b);
 	void Collision(RigidBody* rbP0, RigidBody* rbP1); 
 	void ForceTransmission(RigidBody& rbP0, RigidBody& rbP1);
 	void ForceTransmission2(RigidBody & rbP0, RigidBody & rbP1);

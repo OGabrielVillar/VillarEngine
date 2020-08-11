@@ -39,12 +39,32 @@ Transformation & Transformation::operator+=(const Transformation & rhs)
 
 Transformation Transformation::operator*(float rhs) const
 {
-	return Transformation(position * rhs), scale*rhs, orientation;
+	return Transformation(position * rhs, scale*rhs, orientation);
 }
 
 Transformation & Transformation::operator*=(float rhs)
 {
 	return *this = *this * rhs;
+}
+
+Transformation Transformation::operator-(const Vec2 & position_rhs) const
+{
+	return Transformation(position - position_rhs, scale, orientation);
+}
+
+Transformation & Transformation::operator-=(const Vec2 & position_rhs)
+{
+	return *this = *this - position_rhs;
+}
+
+Transformation Transformation::operator+(const Vec2 & position_rhs) const
+{
+	return Transformation(position + position_rhs, scale, orientation);
+}
+
+Transformation & Transformation::operator+=(const Vec2 & position_rhs)
+{
+	return *this = *this + position_rhs;
 }
 
 void Transformation::SetPosition(const Vec2 & rhs)
@@ -77,5 +97,5 @@ void Transformation::SetOrientation(Vec2 orientation_in)
 void Transformation::SetOrientationRad(float orientation_in)
 {
 	orientation_rad = orientation_in;
-	//orientation = Vec2(std::cos(orientation_in), std::sin(orientation_in));
+	orientation = Vec2(std::cos(orientation_in), std::sin(orientation_in));
 }

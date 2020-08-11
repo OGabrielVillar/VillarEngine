@@ -8,21 +8,34 @@ World::World() :
 	float velocity = 2000.0f;		//cm per second
 	float radius = 20.f;		//cm
 	//testPorposes
+	AddUnit(Unit("curva", Vec2(900.0f, 300.0f)));
+	GetCreatedUnit()->SetRadius(radius);
+	GetCreatedUnit()->SetRigidBodyForm(Form(radius*1.0f, Form::Type::Curve3P));
+	GetCreatedUnit()->rigidbody.form.PushVertice(Vec2(-200.0f, 300.0f));
+	GetCreatedUnit()->rigidbody.form.PushVertice(Vec2(0.0f, 600.0f));
+	GetCreatedUnit()->rigidbody.UpdateMass();
+	control.SetSelectedUnit(*GetCreatedUnit());
+	GetCreatedUnit()->rigidbody.transformation.SetOrientationRad(PI / 3.8f);
+	curva = GetCreatedUnit();
+	/*
+	AddUnit(Unit("linha", Vec2(600.0f, 60.0f)));
+	GetCreatedUnit()->SetRadius(radius*1.5f);
+	GetCreatedUnit()->SetRigidBodyForm(Form(radius*1.0f, Form::Type::Line));
+	GetCreatedUnit()->rigidbody.form.PushVertice(Vec2(-200.0f, 300.0f));
+	GetCreatedUnit()->rigidbody.UpdateMass();
+	GetCreatedUnit()->rigidbody.transformation.SetOrientation(Vec2(-1.0f, 0.0f));
+	linhagrande = GetCreatedUnit();
+	*/
 	AddUnit(Unit("esfera", Vec2(900.0f, 300.0f)));
 	GetCreatedUnit()->SetRadius(radius);
 	control.SetSelectedUnit(*GetCreatedUnit());
-	GetCreatedUnit()->rigidbody.transformation.SetOrientationRad(PI / 2);
+	GetCreatedUnit()->rigidbody.transformation.SetOrientationRad(PI / 3.8f);
 	bolinha = GetCreatedUnit();
 
 	Effect aeffect;
 	aeffect.SetFunction(0, Function::Type::AddForce, Function::Unit::Source);
 	aeffect.SetFunctionTransformation(0,0,Transformation(Vec2(-velocity,0.0f)));
 	AddCommand(GetCreatedUnit(), 'A', aeffect);
-
-	Effect ueffect;
-	ueffect.SetFunction(0, Function::Type::AddForce, Function::Unit::Source);
-	ueffect.SetFunctionTransformation(0, 0, Transformation(Vec2(-velocity*3.0f, 0.0f)));
-	AddCommand(GetCreatedUnit(), 'U', ueffect);
 
 	Effect deffect;
 	deffect.SetFunction(0, Function::Type::AddForce, Function::Unit::Source);
@@ -39,11 +52,6 @@ World::World() :
 	seffect.SetFunctionTransformation(0, 0, Transformation(Vec2(0.0f, velocity)));
 	AddCommand(GetCreatedUnit(), 'S', seffect);
 
-	Effect veffect;
-	veffect.SetFunction(0, Function::Type::AddForce, Function::Unit::Source);
-	veffect.SetFunctionTransformation(0, 0, Transformation(Vec2(velocity, velocity)));
-	AddCommand(GetCreatedUnit(), 'V', veffect);
-
 	Effect qeffect;
 	qeffect.SetFunction(0, Function::Type::AddUnitRadius, Function::Unit::Source);
 	qeffect.SetFunctionFloat(0, 0, 1.0);
@@ -59,10 +67,20 @@ World::World() :
 	spaceeffect.SetFunctionVec2(0, 0, Vec2(300.0f,300.0f));
 	AddCommand(GetCreatedUnit(), (char)32, spaceeffect);
 
-	/*/ 25 UNIT SPAWN
+	Effect righteffect;
+	righteffect.SetFunction(0, Function::Type::RotatesByRad, Function::Unit::Source);
+	righteffect.SetFunctionFloat(0, 0, 2.8f);
+	AddCommand(GetCreatedUnit(), (char)39, righteffect);
+
+	Effect lefteffect;
+	lefteffect.SetFunction(0, Function::Type::RotatesByRad, Function::Unit::Source);
+	lefteffect.SetFunctionFloat(0, 0, -2.8f);
+	AddCommand(GetCreatedUnit(), (char)37, lefteffect);
+
+	// 25 UNIT SPAWN
 	for (size_t i = 1; i < 5; i++)
 	{
-		for (size_t j = 1; j < 10; j++)
+		for (size_t j = 1; j < 5; j++)
 		{
 			AddUnit(Unit("Steve", Vec2(2.2f * radius * (float)i + 200.0f, 2.2f * radius * (float)j + 200.0f)));
 			GetCreatedUnit()->SetRadius(radius);
@@ -75,13 +93,6 @@ World::World() :
 	}
 	//Line3/*/
 	//
-	AddUnit(Unit("linha", Vec2(600.0f, 60.0f)));
-	GetCreatedUnit()->SetRadius(radius*1.5f);
-	GetCreatedUnit()->SetRigidBodyForm(Form(radius*1.5f, Form::Type::Line));
-	GetCreatedUnit()->rigidbody.form.PushVertice(Vec2(-200.0f, 300.0f));
-	GetCreatedUnit()->rigidbody.UpdateMass();
-	GetCreatedUnit()->rigidbody.transformation.SetOrientation(Vec2(-1.0f,0.0f));
-	linhagrande = GetCreatedUnit();
 
 	//Line2/*/
 	/*/
@@ -109,10 +120,10 @@ World::World() :
 void World::Go(float ft_in)
 {
 	ft = ft_in;
-	Vec2 orientationX = Vec2(std::cos(1.0f*ft), std::sin(1.0f*ft));
-	float orientationXx = GetAngle(orientationX);
+	//Vec2 orientationX = Vec2(std::cos(1.0f*ft), std::sin(1.0f*ft));
+	//float orientationXx = GetAngle(orientationX);
 	//linhagrande->rigidbody.MoveVerticeTo(1,bolinha->rigidbody.GetVerticePos(0) + Vec2(0.0f, -100.0f));
-	linhagrande->rigidbody.transformation.RotatesBy(orientationX);
+	//linhagrande->rigidbody.transformation.RotatesBy(orientationX);
 	combatSystem.Go(ft_in);
 	physicSystem.Go(ft_in);
 }

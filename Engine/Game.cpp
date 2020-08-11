@@ -92,7 +92,7 @@ void Game::Update()
 			pU = &world.GetUnit(i);
 			radius = pU->GetRadius();
 			t = pU->GetTransformation();
-			if (t.GetPosition().x < -radius)
+			if (t.GetPosition().x <= -radius)
 			{
 				t.position.x = gfx.ScreenWidth + (radius + 1.0f);
 			}
@@ -100,7 +100,7 @@ void Game::Update()
 			{
 				t.position.x = -(radius + 1.0f);
 			}
-			if (t.GetPosition().y < -radius)
+			if (t.GetPosition().y <= -radius)
 			{
 				t.position.y = gfx.ScreenHeight + (radius + 1.0f);
 			}
@@ -157,9 +157,20 @@ void Game::ComposeFrame()
 				gfx.DrawLine(pU->rigidbody.GetVerticePos(1),
 					pU->rigidbody.GetVerticePos(1) + GetRotated(pU->rigidbody.form.GetRadius(), pU->rigidbody.GetVerticeOri(1)), cx);
 			}
+			if (pU->rigidbody.form.GetType() == Form::Type::Curve3P) // DRAW CURVES3P
+			{
+				gfx.DrawCircleCurve3P(pU->rigidbody.GetVerticePos(0), pU->rigidbody.GetVerticePos(1), pU->rigidbody.GetVerticePos(2), pU->GetRadius(), cx);
+				gfx.DrawLine(pU->rigidbody.GetVerticePos(0),
+					pU->rigidbody.GetVerticePos(0) + GetRotated(pU->rigidbody.form.GetRadius(), pU->rigidbody.GetVerticeOri(0)), cx);
+				gfx.DrawLine(pU->rigidbody.GetVerticePos(2),
+					pU->rigidbody.GetVerticePos(2) + GetRotated(pU->rigidbody.form.GetRadius(), pU->rigidbody.GetVerticeOri(2)), cx);
+			}
 		}
 		i++;
 	}
+	gfx.DrawCurve3P(Vec2(0.0f, 0.0f), Vec2(500.0f, 0.0f), Vec2(1000.0f, 0.0f), cx);
+	//gfx.DrawCurve3P(world.bolinha->rigidbody.GetVerticePos(0), world.linhagrande->rigidbody.GetVerticePos(0), world.linhagrande->rigidbody.GetVerticePos(1), cx);
+	//gfx.DrawCurve3P(Vec2(0.0f), world.linhagrande->rigidbody.GetVerticePos(0), world.linhagrande->rigidbody.GetVerticePos(1), cx);
 	/*
 	link.Draw( gfx );
 	gfx.PutPixel(500, 500, Colors::Magenta);

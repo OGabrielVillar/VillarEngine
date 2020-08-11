@@ -13,6 +13,7 @@ public:
 		SetUnitRadius,
 		AddUnitRadius,
 		SetUnitPosition,
+		RotatesByRad,
 	};
 	enum class Unit
 	{

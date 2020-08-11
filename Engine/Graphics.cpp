@@ -409,6 +409,36 @@ void Graphics::DrawLine(Vec2& a, Vec2& b, Color c)
 	}
 }
 
+void Graphics::DrawCurve3P(Vec2 & p0, Vec2 & p1, Vec2 & p2, Color c)
+{
+	//Belzier Curve:
+	float tpixels_by_pdistances = 1.0f / (p2 - p0).Len();
+	float t = 0.0f;					//0.0f~1.0f run paramiter
+	Vec2 p0_to_p1 = p1 - p0;
+	Vec2 p1_to_p2 = p2 - p1;
+	Vec2 ip0;						//p0_to_p1 interpollation point
+	Vec2 ip1;						//p1_to_p2 interpollation point
+	Vec2 ip0_to_ip1;
+	Vec2 ultimopixel = 0.0f;
+	float mediadeespaçamento = 0.0f;
+	float umdivididoporME = 0.0f;
+	for (; t < 1.0f;)
+	{
+		//float newt = std::sqrt(t);
+		float newt = t;
+		ip0 = p0_to_p1 * newt;
+		ip1 = p1_to_p2 * newt;
+		ip0_to_ip1 = (ip1+p1) - (ip0+p0);
+		Vec2 final = (ip0_to_ip1 * newt)+ip0+p0;
+		PutPixelInCanvas(final.x, final.y,c);
+		t += tpixels_by_pdistances;
+		mediadeespaçamento += (final - ultimopixel).Len() * tpixels_by_pdistances;
+		umdivididoporME = 1 / mediadeespaçamento;
+		ultimopixel = final;
+	}
+	return;
+}
+
 void Graphics::DrawCircleLine(Vec2 & start, Vec2 & end, float radius_in, Color c)
 {
 	Vec2 upline_slop = (GetRotated90((start - end).GetNormalized()) * radius_in);
@@ -434,13 +464,39 @@ void Graphics::DrawCircleLine(Vec2 & start, Vec2 & end, float radius_in, Color c
 						x_b = x_a + (int)end.x;
 						y_b = y_a + (int)end.y;
 					}
-					if (!(x_b < 0 || x_b >= Graphics::ScreenWidth))
+					PutPixelInCanvas(x_b, y_b, c);
+				}
+			}
+		}
+	}
+}
+
+void Graphics::DrawCircleCurve3P(Vec2 & start, Vec2 & mid, Vec2 & end, float radius_in, Color c)
+{
+	Vec2 upline_slop = (GetRotated90((start - end).GetNormalized()) * radius_in);
+	DrawCurve3P(start + upline_slop, mid + upline_slop, end + upline_slop, c);
+	DrawCurve3P(start - upline_slop, mid - upline_slop, end - upline_slop, c);
+	for (int x_a = (int)-radius_in; x_a < (int)radius_in; x_a++)
+	{
+		for (int y_a = (int)-radius_in; y_a < (int)radius_in; y_a++)
+		{
+			if ((x_a * x_a) + (y_a * y_a) < radius_in*radius_in)
+			{
+				if ((x_a * x_a) + (y_a * y_a) > (radius_in - 1.0f) * (radius_in - 1.0f))
+				{
+					int x_b;
+					int y_b;
+					if (Dot((start - end), Vec2(x_a, y_a)) > 0.0f)
 					{
-						if (!(y_b < 0 || y_b >= Graphics::ScreenHeight))
-						{
-							PutPixel(x_b, y_b, c);
-						}
+						x_b = x_a + (int)start.x;
+						y_b = y_a + (int)start.y;
 					}
+					else
+					{
+						x_b = x_a + (int)end.x;
+						y_b = y_a + (int)end.y;
+					}
+					PutPixelInCanvas(x_b, y_b, c);
 				}
 			}
 		}

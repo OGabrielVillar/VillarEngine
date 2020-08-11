@@ -22,23 +22,29 @@ void Form::PushVertice(Transformation vertice_in)
 	current_vert++;
 	vertices[current_vert] = vertice_in;
 	UpdateVertice(current_vert);
+	UpdateCentralPoint(vertice_in.GetPosition() - central_point);
 }
 
 void Form::SetVerticePosition(int index, Vec2 position_in)
 {
-	central_point += vertices[index].GetPosition()/(current_vert+1);
+	UpdateCentralPoint(position_in - vertices[index].GetPosition());
 	vertices[index].SetPosition(position_in);
 	UpdateVertice(index);
 }
 
-void Form::UpdateCentralPoint(Vec2& const position_in)
+void Form::UpdateCentralPoint()
 {
 	central_point = 0.0f;
-	for (size_t i = 0; i < current_vert; i++)
+	for (size_t i = 0; i <= current_vert; i++)
 	{
 		central_point += vertices[i].GetPosition();
 	}
-	central_point /= current_vert+1;
+	central_point /= (current_vert+1);
+}
+
+void Form::UpdateCentralPoint(Vec2 const vertice_movement)
+{
+	central_point += vertice_movement/(current_vert + 1);
 }
 
 Vec2 Form::GetCentralPoint() const

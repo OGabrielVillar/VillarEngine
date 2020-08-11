@@ -90,7 +90,7 @@ Transformation RigidBody::GetTransformation()
 
 Vec2 RigidBody::GetVerticePos(int vertice_index)
 {
-	return (transformation + form.GetVertice(vertice_index)).GetPosition();
+	return (transformation + (form.GetVertice(vertice_index)-form.GetCentralPoint())).GetPosition();
 }
 
 Vec2 RigidBody::GetVerticeOri(int vertice_index)

@@ -68,6 +68,8 @@ void Effect::ApplyFunctions(float ft_in)
 			AddUnitRadius(pTarget,pFuncion->f[0]);break;
 		case Function::Type::SetUnitPosition:
 			SetUnitPosition(pTarget, pFuncion->v[0]); break;
+		case Function::Type::RotatesByRad:
+			RotatesByRad(&pTarget->rigidbody.transformation, pFuncion->f[0], ft_in); break;
 		default:break;}
 
 		pFuncion++;
@@ -96,4 +98,10 @@ void Effect::SetUnitPosition(Unit * Punit, Vec2 position_in)
 	Transformation t = Punit->GetTransformation();
 	t.position = position_in;
 	Punit->SetTransformation(t);
+}
+
+void Effect::RotatesByRad(Transformation * Ptransformation, float rad_in, float ft_in)
+{
+	Vec2 orientation = Vec2(std::cos(rad_in*ft_in), std::sin(rad_in*ft_in));
+	Ptransformation->RotatesBy(orientation);
 }

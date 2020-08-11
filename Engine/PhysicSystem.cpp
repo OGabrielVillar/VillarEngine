@@ -152,6 +152,68 @@ bool PhysicSystem::PointLineCollisionTest(RigidBody & rb_a, RigidBody & line_in)
 	}
 }
 
+bool PhysicSystem::PointCurve3PCollisionTest(RigidBody & rb_a, RigidBody & curve3p_in)
+{
+	float radius_sum = rb_a.form.GetRadius() + curve3p_in.form.GetRadius();
+	Vec2 p0 = curve3p_in.GetVerticePos(0);
+	Vec2 p1 = curve3p_in.GetVerticePos(1);
+	Vec2 p2 = curve3p_in.GetVerticePos(2);
+	int number_of_trys = 100;
+	float t0 = 0.0f;					//0.0f~1.0f run paramiter
+	float t1 = 0.0f;					//0.0f~1.0f run paramiter
+	Vec2 p0_to_p1 = p1 - p0;
+	Vec2 p1_to_p2 = p2 - p1;
+	Vec2 ip0;						//p0_to_p1 interpollation point
+	Vec2 ip1;						//p1_to_p2 interpollation point
+	Vec2 ip0_to_ip1;
+	Vec2 final;
+	Vec2 finalt0;
+	Vec2 finalt1;
+	if (SqrdDistance(rb_a.GetVerticePos(0), curve3p_in.GetVerticePos(0)) < SqrdDistance(rb_a.GetVerticePos(0), curve3p_in.GetVerticePos(2)))
+	{
+		t0 = 0.0f;
+		t1 = 0.5f;
+	}
+	else
+	{
+		t0 = 0.5f;
+		t1 = 1.0f;
+	}
+	for (int i = 0; i < number_of_trys; i++)
+	{
+		ip0 = p0_to_p1 * t0;
+		ip1 = p1_to_p2 * t0;
+		ip0_to_ip1 = (ip1 + p1) - (ip0 + p0);
+		finalt0 = (ip0_to_ip1 * t0) + ip0 + p0;
+
+		ip0 = p0_to_p1 * t1;
+		ip1 = p1_to_p2 * t1;
+		ip0_to_ip1 = (ip1 + p1) - (ip0 + p0);
+		finalt1 = (ip0_to_ip1 * t1) + ip0 + p0;
+
+		float t = (t0 + t1) / 2.0f;
+		if (SqrdDistance(rb_a.GetVerticePos(0), finalt0) < SqrdDistance(rb_a.GetVerticePos(0), finalt1))
+		{
+			t1 = t;
+		}
+		else
+		{
+			t0 = t;
+		}
+		i++;
+	}
+	float t = (t0 + t1) / 2.0f;
+	ip0 = p0_to_p1 * t;
+	ip1 = p1_to_p2 * t;
+	ip0_to_ip1 = (ip1 + p1) - (ip0 + p0);
+	final = (ip0_to_ip1 * t) + ip0 + p0;
+	contact_point = final;
+	if (SqrdDistance(rb_a.GetVerticePos(0), final) <= radius_sum * radius_sum)
+	{
+		return true;
+	}
+	return false;
+}
 float PhysicSystem::SqrdDistance(Vec2 vec2_a, Vec2 vec2_b)
 {
 	float xdist = vec2_a.x - vec2_b.x;
@@ -172,77 +234,12 @@ void PhysicSystem::Collision(RigidBody * rbP0, RigidBody * rbP1)
 		if (rbP1->form.GetType() == Form::Type::Line) {
 			if (!PointLineCollisionTest(*rbP0, *rbP1)) { return; }
 		}
+		if (rbP1->form.GetType() == Form::Type::Curve3P)
+		{
+			if (!PointCurve3PCollisionTest(*rbP0, *rbP1)) { return; }
+		}
 		//RETURN IF VELOCITY ISEN'T IN RB1 DIRECTION
 		if (Dot(rbP0->velocity, contact_point - rbP0->GetVerticePos(0)) <= 0) { return; }
-		
-		ForceTransmission2(*rbP0, *rbP1);
-
-		/* /*TestPorposes
-
-					Vec2 _vel[2];
-					float _velL[2];
-					Vec2 _vel_f[2];
-					float _vel_fL[2];
-					float _eficL[2];
-					float _eficL2[2];
-					float _forceL			= force.Len();				//Force lenght.
-					float _force_transfL	= (force * factor).Len();	//Force * Transferation Factor lenght.
-					_vel[0]			= velocity;							//RigidBody0 velocity.
-					_velL[0]		= _vel[0].Len();					//RigidBody0 velocity lenght.
-					_vel_f[0]		= (_vel[0] - force);				//RigidBody0 final velocity(after the collision).
-					_vel_fL[0]		= _vel_f[0].Len();					//RigidBody0 final velocity lenght.
-					_eficL[0]		= _vel_fL[0] / _velL[0];			//Rigidbody0 eficience(how much force has changed after the collision).
-					_eficL2[0]		= (_velL[0] - _vel_fL[0])/_forceL;	//x
-					_vel[1]			= rbP1->velocity;					//RigidBody1 velocity.
-					_velL[1]		= _vel[1].Len();					//RigidBody1 velocity lenght.
-					_vel_f[1]		= (_vel[1] + (force * factor));		//RigidBody1 final velocity.
-					_vel_fL[1]		= _vel_f[1].Len();					//RigidBody1 final velocity lenght.
-					_eficL[1]		= _vel_fL[1] / _velL[1];			//Rigidbody0 eficience(how much force has changed after the collision).
-					_eficL2[1]		= (_velL[1] - _vel_fL[1])/_forceL;	//x
-					float _energy_lost = _velL[0] - (_vel_fL[0] + _force_transfL);
-					log.push_back("Lost Energy: ");
-					log.back() += std::to_string(_energy_lost);
-					//Store in Log
-					for (size_t i = 0; i <= 1; i++)
-					{
-						log.push_back("    [");
-						log.back() += std::to_string(i);
-						log.back() += "]Initial Velocity = ";
-						log.back() += std::to_string(_vel[i].x);
-						log.back() += ", ";
-						log.back() += std::to_string(_vel[i].y);
-						log.back() += "(";
-						log.back() += std::to_string(_velL[i]);
-						log.back() += "); ";
-
-						log.push_back("    Final Velocity = ");
-						log.back() += std::to_string(_vel_f[i].x);
-						log.back() += ", ";
-						log.back() += std::to_string(_vel_f[i].y);
-						log.back() += "(";
-						log.back() += std::to_string(_vel_fL[i]);
-						log.back() += "); ";
-
-						log.back() += "  Eficience = ";
-						log.back() += std::to_string(_eficL[i]);
-						log.back() += ";";
-
-						log.back() += "  Factor = ";
-						log.back() += std::to_string(_eficL2[i]);
-						log.back() += ";";
-					}
-					log.push_back("Total Eficiente = ");
-					log.back() += std::to_string(_energy_lost);
-					log.back() += "; Force: ";
-					log.back() += std::to_string(_forceL);
-					log.back() += "; Force Transfered: ";
-					log.back() += std::to_string(_force_transfL);
-					log.back() += ";";
-					if (_energy_lost!=0.0f)
-					{
-						int x = 0;
-					}
-					//TestEnd*/
 
 	}
 	if (rbP0->form.GetType() == Form::Type::Line)
@@ -253,78 +250,29 @@ void PhysicSystem::Collision(RigidBody * rbP0, RigidBody * rbP1)
 		if (rbP1->form.GetType() == Form::Type::Line) {
 			return;
 		}
+		if (rbP1->form.GetType() == Form::Type::Curve3P)
+		{
+			return;
+		}
 		//RETURN IF VELOCITY ISEN'T IN RB1 DIRECTION
 		if (Dot(rbP0->velocity, rbP1->GetVerticePos(0) - contact_point) <= 0) { return; }
-
-		ForceTransmission2(*rbP0, *rbP1);
-
-		/*/TestPorposes
-
-					Vec2 _vel[2];
-					float _velL[2];
-					Vec2 _vel_f[2];
-					float _vel_fL[2];
-					float _eficL[2];
-					float _eficL2[2];
-					float _forceL			= force.Len();				//Force lenght.
-					float _force_transfL	= (force * factor).Len();	//Force * Transferation Factor lenght.
-					_vel[0]			= velocity;							//RigidBody0 velocity.
-					_velL[0]		= _vel[0].Len();					//RigidBody0 velocity lenght.
-					_vel_f[0]		= (_vel[0] - force);				//RigidBody0 final velocity(after the collision).
-					_vel_fL[0]		= _vel_f[0].Len();					//RigidBody0 final velocity lenght.
-					_eficL[0]		= _vel_fL[0] / _velL[0];			//Rigidbody0 eficience(how much force has changed after the collision).
-					_eficL2[0]		= (_velL[0] - _vel_fL[0])/_forceL;	//x
-					_vel[1]			= rbP1->velocity;					//RigidBody1 velocity.
-					_velL[1]		= _vel[1].Len();					//RigidBody1 velocity lenght.
-					_vel_f[1]		= (_vel[1] + (force * factor));		//RigidBody1 final velocity.
-					_vel_fL[1]		= _vel_f[1].Len();					//RigidBody1 final velocity lenght.
-					_eficL[1]		= _vel_fL[1] / _velL[1];			//Rigidbody0 eficience(how much force has changed after the collision).
-					_eficL2[1]		= (_velL[1] - _vel_fL[1])/_forceL;	//x
-					float _energy_lost = _velL[0] - (_vel_fL[0] + _force_transfL);
-					log.push_back("Lost Energy: ");
-					log.back() += std::to_string(_energy_lost);
-					//Store in Log
-					for (size_t i = 0; i <= 1; i++)
-					{
-						log.push_back("    [");
-						log.back() += std::to_string(i);
-						log.back() += "]Initial Velocity = ";
-						log.back() += std::to_string(_vel[i].x);
-						log.back() += ", ";
-						log.back() += std::to_string(_vel[i].y);
-						log.back() += "(";
-						log.back() += std::to_string(_velL[i]);
-						log.back() += "); ";
-
-						log.push_back("    Final Velocity = ");
-						log.back() += std::to_string(_vel_f[i].x);
-						log.back() += ", ";
-						log.back() += std::to_string(_vel_f[i].y);
-						log.back() += "(";
-						log.back() += std::to_string(_vel_fL[i]);
-						log.back() += "); ";
-
-						log.back() += "  Eficience = ";
-						log.back() += std::to_string(_eficL[i]);
-						log.back() += ";";
-
-						log.back() += "  Factor = ";
-						log.back() += std::to_string(_eficL2[i]);
-						log.back() += ";";
-					}
-					log.push_back("Total Eficiente = ");
-					log.back() += std::to_string(_energy_lost);
-					log.back() += "; Force: ";
-					log.back() += std::to_string(_forceL);
-					log.back() += "; Force Transfered: ";
-					log.back() += std::to_string(_force_transfL);
-					log.back() += ";";
-					if (_energy_lost!=0.0f)
-					{
-						int x = 0;
-					}
-					//TestEnd*/
 	}
+	if (rbP0->form.GetType() == Form::Type::Curve3P)
+	{
+		if (rbP1->form.IsCircle()) {
+			if (!PointCurve3PCollisionTest(*rbP1, *rbP0)) { return; }
+		}
+		if (rbP1->form.GetType() == Form::Type::Line) {
+			return;
+		}
+		if (rbP1->form.GetType() == Form::Type::Curve3P)
+		{
+			return;
+		}
+		//RETURN IF VELOCITY ISEN'T IN RB1 DIRECTION
+		if (Dot(rbP0->velocity, rbP1->GetVerticePos(0) - contact_point) <= 0) { return; }
+	}
+	ForceTransmission2(*rbP0, *rbP1);
 }
 
 void PhysicSystem::ForceTransmission(RigidBody & rbP0, RigidBody & rbP1)
@@ -386,6 +334,73 @@ void PhysicSystem::ForceTransmission2(RigidBody & rbP0, RigidBody & rbP1)
 	rbP0.arecolliding = true;
 	rbP1.arebeinghit = true;
 	ThereWasCollision = true;
+
+	/* /*TestPorposes
+
+				Vec2 _vel[2];
+				float _velL[2];
+				Vec2 _vel_f[2];
+				float _vel_fL[2];
+				float _eficL[2];
+				float _eficL2[2];
+				float _forceL			= force.Len();				//Force lenght.
+				float _force_transfL	= (force * factor).Len();	//Force * Transferation Factor lenght.
+				_vel[0]			= velocity;							//RigidBody0 velocity.
+				_velL[0]		= _vel[0].Len();					//RigidBody0 velocity lenght.
+				_vel_f[0]		= (_vel[0] - force);				//RigidBody0 final velocity(after the collision).
+				_vel_fL[0]		= _vel_f[0].Len();					//RigidBody0 final velocity lenght.
+				_eficL[0]		= _vel_fL[0] / _velL[0];			//Rigidbody0 eficience(how much force has changed after the collision).
+				_eficL2[0]		= (_velL[0] - _vel_fL[0])/_forceL;	//x
+				_vel[1]			= rbP1->velocity;					//RigidBody1 velocity.
+				_velL[1]		= _vel[1].Len();					//RigidBody1 velocity lenght.
+				_vel_f[1]		= (_vel[1] + (force * factor));		//RigidBody1 final velocity.
+				_vel_fL[1]		= _vel_f[1].Len();					//RigidBody1 final velocity lenght.
+				_eficL[1]		= _vel_fL[1] / _velL[1];			//Rigidbody0 eficience(how much force has changed after the collision).
+				_eficL2[1]		= (_velL[1] - _vel_fL[1])/_forceL;	//x
+				float _energy_lost = _velL[0] - (_vel_fL[0] + _force_transfL);
+				log.push_back("Lost Energy: ");
+				log.back() += std::to_string(_energy_lost);
+				//Store in Log
+				for (size_t i = 0; i <= 1; i++)
+				{
+					log.push_back("    [");
+					log.back() += std::to_string(i);
+					log.back() += "]Initial Velocity = ";
+					log.back() += std::to_string(_vel[i].x);
+					log.back() += ", ";
+					log.back() += std::to_string(_vel[i].y);
+					log.back() += "(";
+					log.back() += std::to_string(_velL[i]);
+					log.back() += "); ";
+
+					log.push_back("    Final Velocity = ");
+					log.back() += std::to_string(_vel_f[i].x);
+					log.back() += ", ";
+					log.back() += std::to_string(_vel_f[i].y);
+					log.back() += "(";
+					log.back() += std::to_string(_vel_fL[i]);
+					log.back() += "); ";
+
+					log.back() += "  Eficience = ";
+					log.back() += std::to_string(_eficL[i]);
+					log.back() += ";";
+
+					log.back() += "  Factor = ";
+					log.back() += std::to_string(_eficL2[i]);
+					log.back() += ";";
+				}
+				log.push_back("Total Eficiente = ");
+				log.back() += std::to_string(_energy_lost);
+				log.back() += "; Force: ";
+				log.back() += std::to_string(_forceL);
+				log.back() += "; Force Transfered: ";
+				log.back() += std::to_string(_force_transfL);
+				log.back() += ";";
+				if (_energy_lost!=0.0f)
+				{
+					int x = 0;
+				}
+				//TestEnd*/
 }
 
 Vec2 PhysicSystem::GetReflectedForce(Vec2 v_in, Vec2 w_in)

@@ -36,6 +36,7 @@ public://FUNCTIONS EFFECTS
 	void AddForce_CMperS(Unit* Punit, Transformation transformation_in, float ft_in);
 	void AddUnitRadius(Unit * Punit, float float_in);
 	void SetUnitPosition(Unit * Punit, Vec2 position_in);
+	void RotatesByRad(Transformation * Ptransformation, float rad_in, float ft_in);
 
 private://VARIABLES
 	Type type = Type::Non;

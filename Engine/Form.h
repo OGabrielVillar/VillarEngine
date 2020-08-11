@@ -13,6 +13,7 @@ public:
 		Point,
 		Line,
 		Polygon,
+		Curve3P,
 	};
 public:
 	Form() = default;
@@ -21,7 +22,8 @@ public:
 public: //SETTERS
 	void PushVertice(Transformation vertice_in);
 	void SetVerticePosition(int index,Vec2 position_in);
-	void UpdateCentralPoint(Vec2& const position_in);
+	void UpdateCentralPoint();
+	void UpdateCentralPoint(Vec2 const vertice_movement);
 	void SetRadius(float radius_in);
 	bool IsCircle();
 public: //GETTERS
