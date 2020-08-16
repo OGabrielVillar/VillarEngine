@@ -22,6 +22,7 @@ public:
 public: //SETTERS
 	void PushVertice(Transformation vertice_in);
 	void SetVerticePosition(int index,Vec2 position_in);
+	void MoveVerticeTo(int index, Vec2 position_in);
 	void UpdateCentralPoint();
 	void UpdateCentralPoint(Vec2 const vertice_movement);
 	void SetRadius(float radius_in);

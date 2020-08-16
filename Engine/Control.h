@@ -10,8 +10,8 @@ public:
 	void CheckForKeys();
 	void SetSelectedUnit(Unit &unt);
 	void BindKeyboard(Keyboard& kbd_in);
+	Keyboard* kbd = nullptr;
 private:
 	Unit* selectedUnit = nullptr;
-	Keyboard* kbd = nullptr;
 	CombatSystem* Pcombatsystem;
 };

@@ -29,12 +29,17 @@ Transformation::Transformation(Vec2 position_in, Vec2 scale_in, Vec2 orientation
 
 Transformation Transformation::operator+(const Transformation & rhs) const
 {
-	return Transformation(position + GetRotated(rhs.position,orientation),scale*rhs.scale,GetRotated(rhs.orientation,orientation));
+	return Transformation(GetRotated(rhs.position,orientation) + position,scale*rhs.scale,GetRotated(rhs.orientation,orientation));
 }
 
 Transformation & Transformation::operator+=(const Transformation & rhs)
 {
 	return *this = *this + rhs;
+}
+
+Transformation Transformation::operator-(const Transformation & rhs) const
+{
+	return Transformation(GetRotated((rhs.position - position), GetInvertedAngle(orientation)), scale*rhs.scale, GetRotated(rhs.orientation, GetInvertedAngle(orientation)));
 }
 
 Transformation Transformation::operator*(float rhs) const
@@ -91,7 +96,6 @@ void Transformation::SetOrientation(Vec2 orientation_in)
 {
 	//x=cos, y=sin
 	orientation = orientation_in;
-	orientation_rad = GetAngle(orientation_in);
 }
 
 void Transformation::SetOrientationRad(float orientation_in)

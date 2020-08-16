@@ -67,10 +67,10 @@ void RigidBody::UpdateMass()
 {
 	if (form.GetType() == Form::Type::Line)
 	{
-		mass = (PI * (form.GetRadius()) * (form.GetRadius()) * density) + form.GetRadius() * form.GetVertice(1).GetPosition().Len();
+		mass = ((PI * (form.GetRadius()) * (form.GetRadius()) * density) + form.GetRadius() * form.GetVertice(1).GetPosition().Len()) * MASSFACTOR;
 		return;
 	}
-	mass = PI * (form.GetRadius()) * (form.GetRadius()) * density;
+	mass = PI * (form.GetRadius()) * (form.GetRadius()) * density * MASSFACTOR;
 }
 
 void RigidBody::UpdateTransformation()
@@ -80,7 +80,7 @@ void RigidBody::UpdateTransformation()
 
 void RigidBody::MoveVerticeTo(int index, Vec2 position_in)
 {
-	form.SetVerticePosition(index, position_in - transformation.GetPosition());
+	form.MoveVerticeTo(index, (transformation - Transformation(position_in)).GetPosition() + form.GetCentralPoint());
 }
 
 Transformation RigidBody::GetTransformation()
@@ -115,6 +115,7 @@ Vec2 RigidBody::GetForce()
 
 void RigidBody::AddForce(Vec2 force_in)
 {
+	//if (is_immovable){return;}
 	force += force_in;
 }
 

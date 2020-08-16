@@ -1,6 +1,7 @@
 #pragma once
 
 #define NFORCESLIMIT 9
+#define MASSFACTOR 0.001
 
 #include "Form.h"
 #include "Material.h"
@@ -42,24 +43,26 @@ public: //FUNCTIONS
 
 public:
 	Form form;
+
+	Vec2 velocity;
+	Vec2 force;
+	Vec2 acceleration;
+
 	Vec2 form_offset;
 	bool uses_gravity;
 public://PHYSICS
 	Transformation transformation;
-	Vec2 velocity;
 	float angularVelocity;
 	float torque;
 
-	Vec2 force;
-	Vec2 acceleration;
 
-	float mass = 1.0f;			// Gram
+	float mass = 1.0f;			// Kilogram
 	float density = 9.97f;		// Gram per cm²
 	// Set by shape
 	float I;  // moment of inertia
 	float iI; // inverse inertia
 	float m;  // mass
-	float im; // inverse masee
+	float im; // inverse mass
 
 	float staticFriction;
 	float dynamicFriction;
@@ -67,6 +70,11 @@ public://PHYSICS
 
 	bool arecolliding = false;
 	bool arebeinghit = false;
+
+	bool is_inverted = false;
+	bool is_immovable = false;
+
+	int howmanyhits = 0;
 private:
 
 };

@@ -32,6 +32,11 @@ void Form::SetVerticePosition(int index, Vec2 position_in)
 	UpdateVertice(index);
 }
 
+void Form::MoveVerticeTo(int index, Vec2 position_in)
+{
+	SetVerticePosition(index, position_in);
+}
+
 void Form::UpdateCentralPoint()
 {
 	central_point = 0.0f;

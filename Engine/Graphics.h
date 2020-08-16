@@ -27,6 +27,7 @@
 #include "Surface.h"
 #include "RectI.h"
 #include "Vec2.h"
+#include "Transformation.h"
 
 class Graphics
 {
@@ -63,6 +64,7 @@ public:
 	void PutPixelInCanvas(int x, int y, Color c);
 	void DrawCircle( Vec2 position, float radius, Color c);
 	void DrawLine( Vec2& start, Vec2& end, Color c);
+	void DrawCurve3Ptestes(Vec2 & p0, Vec2 & p1, Vec2 & p2, float radius_in, Color c);
 	void DrawCurve3P(Vec2& start, Vec2& end, Vec2& mid, Color c);
 	void DrawCircleLine(Vec2& start, Vec2& end, float radius_in, Color c);
 	void DrawCircleCurve3P(Vec2& start, Vec2& end, Vec2& mid, float radius_in, Color c);

@@ -14,6 +14,7 @@ private: Transformation(Vec2 position_in, Vec2 scale_in, Vec2 orientation_in, fl
 public:
 	Transformation operator+(const Transformation& rhs) const;
 	Transformation& operator+=(const Transformation& rhs);
+	Transformation operator-(const Transformation& rhs) const;
 	Transformation operator*(float rhs) const;
 	Transformation& operator*=(float rhs);
 	Transformation operator-(const Vec2& position_rhs) const;
@@ -40,9 +41,9 @@ inline Vec2 GetRotated(const Vec2& vec_in, const Vec2& sincos_in) {
 inline Vec2 GetRotated(const float float_in, const Vec2& sincos_in) {
 	return GetRotated(Vec2(float_in, 0.0f), sincos_in);
 }
-inline Vec2 GetYInvertedAngle(const Vec2& sincos_in) {
+inline Vec2 GetInvertedAngle(const Vec2& sincos_in) {
 	return Vec2(sincos_in.x,-sincos_in.y);
 }
-inline Vec2 GetXInvertedAngle(const Vec2& sincos_in) {
+inline Vec2 GetReflectedAngle(const Vec2& sincos_in) {
 	return Vec2(-sincos_in.x, sincos_in.y);
 }

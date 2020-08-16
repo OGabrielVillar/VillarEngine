@@ -115,9 +115,8 @@ void Game::Update()
 	}
 	i = 0;
 
-	if (mouse)
-	{
-
+	if (defaultControl->kbd->KeyIsPressed(98)){	
+		world.curva->rigidbody.MoveVerticeTo(1.0f, Vec2(wnd.mouse.GetPosX(), wnd.mouse.GetPosY()));
 	}
 }
 
@@ -136,14 +135,8 @@ void Game::ComposeFrame()
 			{
 				cx = Colors::Yellow;
 			}
-			if (pU->rigidbody.arecolliding)
-			{
-				cx = Colors::Red;
-			}
-			if (pU->rigidbody.arebeinghit)
-			{
-				cx = Colors::Blue;
-			}
+			//if (pU->rigidbody.arecolliding){cx = Colors::Red;}
+			//if (pU->rigidbody.arebeinghit){cx = Colors::Blue;}
 			if (pU->rigidbody.form.GetType() == Form::Type::Point) // DRAW CIRCLES
 			{
 				gfx.DrawCircle(pU->rigidbody.GetVerticePos(0), pU->GetRadius(), cx);
@@ -151,7 +144,8 @@ void Game::ComposeFrame()
 					pU->rigidbody.GetVerticePos(0) + GetRotated(pU->rigidbody.form.GetRadius(), pU->rigidbody.GetVerticeOri(0)), cx);
 				//gfx.DrawLine(pU->rigidbody.GetVerticePos(0), world.GetPPhysicsSystem()->x_projection, cx);
 				//gfx.DrawLine(pU->rigidbody.GetVerticePos(0), world.GetPPhysicsSystem()->y_projection, cx);
-				//gfx.DrawLine(pU->rigidbody.GetVerticePos(0), world.GetPPhysicsSystem()->contact_point, cx);
+				gfx.DrawLine(world.GetPPhysicsSystem()->contact_point, world.GetPPhysicsSystem()->collision_point, cx);
+				gfx.DrawLine(pU->rigidbody.GetVerticePos(0), pU->rigidbody.GetVerticePos(0)+(-pU->rigidbody.velocity * ft.Get()), Colors::Cyan);
 				//gfx.DrawCircle(world.GetPPhysicsSystem()->x_projection, 12.0f, cx);
 			}
 			if (pU->rigidbody.form.GetType() == Form::Type::Line) // DRAW LINES
@@ -164,7 +158,9 @@ void Game::ComposeFrame()
 			}
 			if (pU->rigidbody.form.GetType() == Form::Type::Curve3P) // DRAW CURVES3P
 			{
+				//gfx.DrawCurve3Ptestes(pU->rigidbody.GetVerticePos(0), pU->rigidbody.GetVerticePos(1), pU->rigidbody.GetVerticePos(2), pU->GetRadius(), Colors::Blue);
 				gfx.DrawCircleCurve3P(pU->rigidbody.GetVerticePos(0), pU->rigidbody.GetVerticePos(1), pU->rigidbody.GetVerticePos(2), pU->GetRadius(), cx);
+				gfx.DrawCurve3P(pU->rigidbody.GetVerticePos(0), pU->rigidbody.GetVerticePos(1), pU->rigidbody.GetVerticePos(2), cx);
 			}
 		}
 		i++;

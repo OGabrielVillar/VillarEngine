@@ -409,20 +409,45 @@ void Graphics::DrawLine(Vec2& a, Vec2& b, Color c)
 	}
 }
 
-void Graphics::DrawCurve3P(Vec2 & p0, Vec2 & p1, Vec2 & p2, Color c)
+void Graphics::DrawCurve3Ptestes(Vec2 & p0, Vec2 & p1, Vec2 & p2, float radius_in, Color c)
 {
 	//Belzier Curve:
-	float tpixels_by_pdistances = 1.0f / (p2 - p0).Len();
+	float tpixels_by_pdistances = 10.0f / (p2 - p0).Len();
 	float t = 0.0f;					//0.0f~1.0f run paramiter
 	Vec2 p0_to_p1 = p1 - p0;
 	Vec2 p1_to_p2 = p2 - p1;
 	Vec2 ip0;						//p0_to_p1 interpollation point
 	Vec2 ip1;						//p1_to_p2 interpollation point
 	Vec2 ip0_to_ip1;
-	Vec2 ultimopixel = 0.0f;
-	float mediadeespaçamento = 0.0f;
-	float umdivididoporME = 0.0f;
 	for (; t < 1.0f;)
+	{
+		//float newt = std::sqrt(t);
+		float newt = t;
+		ip0 = p0_to_p1 * newt;
+		ip1 = p1_to_p2 * newt;
+		ip0_to_ip1 = (ip1 + p1) - (ip0 + p0);
+		Vec2 final = (ip0_to_ip1 * newt) + ip0 + p0;
+		DrawCircle(final, radius_in, c);
+		t += tpixels_by_pdistances;
+	}
+	return;
+}
+
+void Graphics::DrawCurve3P(Vec2 & p0, Vec2 & p1, Vec2 & p2, Color c)
+{
+	//Belzier Curve:
+	float tpixels_by_pdistances = 10.0f / (p2 - p0).Len();
+	float t = 0.0f;//0.0f~1.0f run paramiter
+	Vec2 p0_to_p1 = p1 - p0;
+	Vec2 p1_to_p2 = p2 - p1;
+	Vec2 ip0;						//p0_to_p1 interpollation point
+	Vec2 ip1;						//p1_to_p2 interpollation point
+	Vec2 ip0_to_ip1;
+	//float mediadeespaçamento = 0.0f;
+	//float umdivididoporME = 0.0f;
+	Vec2 lastpixel = p0;
+
+	for (; t <= 1.0f;)
 	{
 		//float newt = std::sqrt(t);
 		float newt = t;
@@ -430,12 +455,13 @@ void Graphics::DrawCurve3P(Vec2 & p0, Vec2 & p1, Vec2 & p2, Color c)
 		ip1 = p1_to_p2 * newt;
 		ip0_to_ip1 = (ip1+p1) - (ip0+p0);
 		Vec2 final = (ip0_to_ip1 * newt)+ip0+p0;
-		PutPixelInCanvas(final.x, final.y,c);
+		DrawLine(final, lastpixel,c);
 		t += tpixels_by_pdistances;
-		mediadeespaçamento += (final - ultimopixel).Len() * tpixels_by_pdistances;
-		umdivididoporME = 1 / mediadeespaçamento;
-		ultimopixel = final;
+		//mediadeespaçamento += (final - lastpixel).Len() * tpixels_by_pdistances;
+		//umdivididoporME = 1 / mediadeespaçamento;
+		lastpixel = final;
 	}
+	DrawLine(lastpixel, p2,c);
 	return;
 }
 
@@ -473,9 +499,16 @@ void Graphics::DrawCircleLine(Vec2 & start, Vec2 & end, float radius_in, Color c
 
 void Graphics::DrawCircleCurve3P(Vec2 & start, Vec2 & mid, Vec2 & end, float radius_in, Color c)
 {
-	Vec2 upline_slop0 = (GetRotated90((start - mid).GetNormalized()) * radius_in);
-	Vec2 upline_slop2 = (GetRotated90((mid - end).GetNormalized()) * radius_in);
-	Vec2 upline_slop1 = (upline_slop0 + upline_slop2) / 2.0f;
+	Vec2 angleOfMatrix = (end - start).GetNormalized();
+	Vec2 angleOfMatrix2 = (mid - start).GetNormalized();
+	float scalar = Dot(angleOfMatrix, angleOfMatrix2);
+	Vec2 xx = (GetRotated(mid, GetInvertedAngle(angleOfMatrix)));
+	Vec2 upline_slop1 = (mid - GetRotated((GetRotated(mid, GetInvertedAngle(angleOfMatrix)) + Vec2(0.0f, -radius_in)),angleOfMatrix));
+	PutPixelInCanvas((mid + upline_slop1).x, (mid + upline_slop1).y, Colors::Yellow);
+	PutPixelInCanvas((mid - upline_slop1).x, (mid - upline_slop1).y, Colors::Yellow);
+	PutPixelInCanvas((mid).x, (mid).y, Colors::Yellow);
+	Vec2 upline_slop0 = GetRotated90((start - mid).GetNormalized()) * radius_in;
+	Vec2 upline_slop2 = GetRotated90((mid - end).GetNormalized()) * radius_in;
 	DrawCurve3P(start + upline_slop0, mid + upline_slop1, end + upline_slop2, c);
 	DrawCurve3P(start - upline_slop0, mid - upline_slop1, end - upline_slop2, c);
 	for (int x_a = (int)-radius_in; x_a < (int)radius_in; x_a++)
