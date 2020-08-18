@@ -1,5 +1,7 @@
 #pragma once
 
+#define AIRDENSITY 1.2f
+#define AIRRESISTENCE 0.99f
 
 #include "Unit.h"
 #include <string>
@@ -31,4 +33,13 @@ public:
 	Vec2 y_projection;
 	Vec2 contact_point;
 	Vec2 collision_point;
+
+	float penetration;     // Depth of penetration from collision
+	Vec2 normal;          // From A to B
+	Vec2 rb0contacts[2];     // Points of contact during collision
+	Vec2 rb1contacts[2];     // Points of contact during collision
+	int contact_count; // Number of contacts that occured during collision
+	float e;               // Mixed restitution
+	float df;              // Mixed dynamic friction
+	float sf;              // Mixed static friction
 };

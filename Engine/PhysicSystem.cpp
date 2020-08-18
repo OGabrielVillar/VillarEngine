@@ -59,11 +59,18 @@ void PhysicSystem::MoveBodys()
 		{
 			_totalenergybefore += Punit->rigidbody.velocity.Len()*Punit->rigidbody.mass;
 
-			//Punit->rigidbody.velocity += Vec2(0.0f, 100.0f*ft);	//GRAVITY
-			//Punit->rigidbody.velocity += Punit->rigidbody.force / (Punit->rigidbody.mass*(ft*ft));
-			Punit->rigidbody.velocity += Punit->rigidbody.force;
-			Punit->rigidbody.SetTransformation(Transformation(Punit->rigidbody.GetVelocity()*ft) + Punit->rigidbody.GetTransformation());
-			Punit->rigidbody.force.Set(0.0f, 0.0f);
+			if (!Punit->rigidbody.is_immovable)
+			{
+				Punit->rigidbody.velocity += Vec2(0.0f, 1000.0f*ft);	//GRAVITY
+				Punit->rigidbody.velocity += Punit->rigidbody.force;
+				Punit->rigidbody.angularVelocity += Punit->rigidbody.torque;
+				Punit->rigidbody.velocity *= AIRRESISTENCE;				//DRAG
+				Transformation movement = Transformation(Punit->rigidbody.velocity*ft);
+				Vec2 rotation = (Vec2(std::cos(Punit->rigidbody.angularVelocity*ft), std::sin(Punit->rigidbody.angularVelocity*ft)));
+				Punit->rigidbody.SetTransformation(movement + Punit->rigidbody.GetTransformation());
+				Punit->rigidbody.transformation.orientation = GetRotated(Punit->rigidbody.transformation.orientation, rotation);
+				Punit->rigidbody.force.Set(0.0f, 0.0f);
+			}
 
 			_totalenergyafter += Punit->rigidbody.velocity.Len()*Punit->rigidbody.mass;
 			if (Punit->rigidbody.howmanyhits >= 1)
@@ -98,29 +105,32 @@ bool PhysicSystem::PointPointCollisionTest(RigidBody& rb0, RigidBody& rb1)
 	{
 		contact_point = rb0.GetVerticePos(0);
 		collision_point = rb1.GetVerticePos(0);
+		rb0contacts[0] = (contact_point - collision_point).Normalize()*rb1.form.GetRadius( )+ collision_point;
+		rb1contacts[0] = (collision_point - contact_point).Normalize()*rb0.form.GetRadius() + contact_point;
+		contact_count = 1;
 		return true;
 	}
 	return false;
 }
 
-bool PhysicSystem::PointLineCollisionTest(RigidBody & rb_a, RigidBody & rb_b)
+bool PhysicSystem::PointLineCollisionTest(RigidBody & rb0, RigidBody & rb1)
 {
 	RigidBody* point_in;
 	RigidBody* line_in;
-	if (rb_a.form.GetType() == Form::Type::Point)
+	if (rb0.form.GetType() == Form::Type::Point)
 	{
-		point_in = &rb_a;
-		line_in = &rb_b;
-		if (rb_b.form.GetType() != Form::Type::Line)
+		point_in = &rb0;
+		line_in = &rb1;
+		if (rb1.form.GetType() != Form::Type::Line)
 		{
 			//ERROR PointLineCollision with non line circle rbs
 			return false;
 		}
-	} else if (rb_a.form.GetType() == Form::Type::Line)
+	} else if (rb0.form.GetType() == Form::Type::Line)
 	{
-		point_in = &rb_b;
-		line_in = &rb_a;
-		if (rb_b.form.GetType() != Form::Type::Point)
+		point_in = &rb1;
+		line_in = &rb0;
+		if (rb1.form.GetType() != Form::Type::Point)
 		{
 			//ERROR PointLineCollision with non line circle rbs
 			return false;
@@ -167,16 +177,24 @@ bool PhysicSystem::PointLineCollisionTest(RigidBody & rb_a, RigidBody & rb_b)
 	}
 	if (SqrdDistance(point_final_point, line_final_point) <= radius_sum_sqrd)
 	{
-		if (point_in == &rb_a)
+		if (point_in == &rb0)
 		{
 			contact_point = point_final_point;
 			collision_point = line_final_point;
+
+			rb0contacts[0] = (contact_point - collision_point).Normalize()*rb1.form.GetRadius() + collision_point;
+			rb1contacts[0] = (collision_point - contact_point).Normalize()*rb0.form.GetRadius() + contact_point;
+			contact_count = 1;
 			return true;
 		}
 		else
 		{
 			contact_point = line_final_point;
 			collision_point = point_final_point;
+
+			rb0contacts[0] = (contact_point - collision_point).Normalize()*rb1.form.GetRadius() + collision_point;
+			rb1contacts[0] = (collision_point - contact_point).Normalize()*rb0.form.GetRadius() + contact_point;
+			contact_count = 1;
 			return true;
 		}
 	}
@@ -245,214 +263,173 @@ bool PhysicSystem::PointCurve3PCollisionTest(RigidBody & rb_a, RigidBody & curve
 	return false;
 }
 
-void PhysicSystem::Collision(RigidBody * rbP0, RigidBody * rbP1)
+void PhysicSystem::Collision(RigidBody * rb0, RigidBody * rb1)
 {
+
+	contact_count = 0;
+
 	//RETURN IF RIGID BODY 0 IS STOPPED
-	if (rbP0->velocity.LenSqr() <= 0.0f) { return; }
+	if (rb0->velocity.LenSqr() <= 0.0f) { return; }
 
-	if (rbP0->form.IsCircle())
+	if (rb0->form.IsCircle())
 	{
-		if (rbP1->form.IsCircle()) {
-			if (!PointPointCollisionTest(*rbP0, *rbP1)) { return; }
+		if (rb1->form.IsCircle()) {
+			if (!PointPointCollisionTest(*rb0, *rb1)) { return; }
 		}
-		if (rbP1->form.GetType() == Form::Type::Line) {
-			if (!PointLineCollisionTest(*rbP0, *rbP1)) { return; }
+		if (rb1->form.GetType() == Form::Type::Line) {
+			if (!PointLineCollisionTest(*rb0, *rb1)) { return; }
 		}
-		if (rbP1->form.GetType() == Form::Type::Curve3P)
+		if (rb1->form.GetType() == Form::Type::Curve3P)
 		{
 			return;
-			if (!PointCurve3PCollisionTest(*rbP0, *rbP1)) { return; }
+			if (!PointCurve3PCollisionTest(*rb0, *rb1)) { return; }
 		}
-		//RETURN IF VELOCITY ISEN'T IN RB1 DIRECTION
-		if (Dot(rbP0->velocity, collision_point - contact_point) <= 0) { return; }
 
 	}
-	if (rbP0->form.GetType() == Form::Type::Line)
+	if (rb0->form.GetType() == Form::Type::Line)
 	{
-		if (rbP1->form.IsCircle()) {
-			if (!PointLineCollisionTest(*rbP0, *rbP1)) { return; }
+		if (rb1->form.IsCircle()) {
+			if (!PointLineCollisionTest(*rb0, *rb1)) { return; }
 		}
-		if (rbP1->form.GetType() == Form::Type::Line) {
+		if (rb1->form.GetType() == Form::Type::Line) {
 			return;
 		}
-		if (rbP1->form.GetType() == Form::Type::Curve3P)
+		if (rb1->form.GetType() == Form::Type::Curve3P)
 		{
 			return;
 		}
-		//RETURN IF VELOCITY ISEN'T IN RB1 DIRECTION
-		if (Dot(rbP0->velocity, collision_point - contact_point) <= 0) { return; }
 	}
-	if (rbP0->form.GetType() == Form::Type::Curve3P)
+	if (rb0->form.GetType() == Form::Type::Curve3P)
 	{
 		return;
-		if (rbP1->form.IsCircle()) {
-			if (!PointCurve3PCollisionTest(*rbP1, *rbP0)) { return; }
+		if (rb1->form.IsCircle()) {
+			if (!PointCurve3PCollisionTest(*rb1, *rb0)) { return; }
 		}
-		if (rbP1->form.GetType() == Form::Type::Line) {
+		if (rb1->form.GetType() == Form::Type::Line) {
 			return;
 		}
-		if (rbP1->form.GetType() == Form::Type::Curve3P)
+		if (rb1->form.GetType() == Form::Type::Curve3P)
 		{
 			return;
 		}
-		//RETURN IF VELOCITY ISEN'T IN RB1 DIRECTION
-		if (Dot(rbP0->velocity, collision_point - contact_point) <= 0) { return; }
 	}
-	ForceTransmission(*rbP0, *rbP1);
+	//RETURN IF VELOCITY ISEN'T IN RB1 DIRECTION
+	if (Dot(rb0->velocity, collision_point - contact_point) <= 0) { return; }
+
+	ForceTransmission(*rb0, *rb1);
 }
 
-void PhysicSystem::InvertedForceTransmission(RigidBody & rbP0, RigidBody & rbP1)
+void PhysicSystem::InvertedForceTransmission(RigidBody & rb0, RigidBody & rb1)
 {
-	float energy_transference = rbP1.mass / rbP0.mass;
+	float energy_transference = rb1.mass / rb0.mass;
 	if (energy_transference > 1.0f)
 	{
 		energy_transference = 1.0f;
 	}
 	Vec2 force;
-	Vec2 velocity = rbP0.velocity*(rbP0.mass*(ft*ft));
-	if (rbP0.form.GetType() == Form::Type::Point) {
-		force = GetReflectedForce(velocity, GetRotated90(rbP0.GetVerticePos(0) - collision_point));
+	Vec2 velocity = rb0.velocity*(rb0.mass*(ft*ft));
+	if (rb0.form.GetType() == Form::Type::Point) {
+		force = GetReflectedForce(velocity, GetRotated90(rb0.GetVerticePos(0) - collision_point));
 	}
 	else
 	{
-		force = GetReflectedForce(velocity, GetRotated90(collision_point - rbP1.GetVerticePos(0)));
+		force = GetReflectedForce(velocity, GetRotated90(collision_point - rb1.GetVerticePos(0)));
 	}
 	//How much of rb0.velocity is going to the rb1 direction.
-	rbP0.AddForce(force * energy_transference);
+	rb0.AddForce(force * energy_transference);
 	//Remove that force from rb0.
 	float velocityL = velocity.Len();
 	float final_velL = (velocity - force).Len();
 	//The rb0 velocity lenght after the collision.
 	float factor = (velocityL - final_velL) / force.Len();
 	//0.0 to 1.0, how much of force was transfered.
-	rbP1.AddForce(force * factor * energy_transference);
+	rb1.AddForce(force * factor * energy_transference);
 	//Add the force that was transfered.
 	ThereWasCollision = true;
 }
 
-void PhysicSystem::ForceTransmission(RigidBody & rbP0, RigidBody & rbP1)
+void PhysicSystem::ForceTransmission(RigidBody & rb0, RigidBody & rb1)
 {
-	if (rbP0.howmanyhits > 0 ||	rbP1.howmanyhits > 0)
-	{
-		return;
-	}
-	/*float energy_transference = rbP1.mass / rbP0.mass;
-	//float energy_reflection = 0.0f;
-	if (energy_transference > 1.0f)
-	{
-		energy_reflection = 1.0f - rbP0.mass / rbP1.mass;
-		energy_transference = 1.0f;
-	}
-	if (rbP1.is_immovable == true)
-	{
-		energy_transference = 1.0f;
-		energy_reflection = 1.0f;
-	}*/
-	//Vec2 velocity = rbP0.velocity*(rbP0.mass*(ft*ft));
-	//Vec2 p0_to_p1 = collision_point - contact_point;
-	Vec2 p0_to_p1 =  contact_point - collision_point;
+	//Corrects the penetration
+	Vec2 position_slope = (rb0contacts[0] - rb1contacts[0]);
+	rb0.SetPosition(rb0.GetPosition() + position_slope);
+
+	Vec2 p0_to_p1 = collision_point - contact_point;
 	Vec2 normal_angle = p0_to_p1.GetNormalized();
 	Vec2 tangent_angle = GetRotated90(normal_angle);
-	//Vec2 force_in_matrix = GetRotated(rbP0.velocity, GetInvertedAngle(normal_angle));
-	//float force_in_matrix_x = force_in_matrix.x*(rbP0.mass);
-	//Vec2 force = GetRotated(force_in_matrix_x, normal_angle);
-	//rbP0.AddForce(-(force * energy_transference) - (force * energy_reflection));
-	//rbP1.AddForce(force * energy_transference - (force * energy_reflection));
+	
+	// Calculate average restitution
+	e = std::fmin(rb0.restitution, rb1.restitution);
 
-	float dpTan1 = Dot(rbP0.velocity, tangent_angle);
-	float dpNorm1 = Dot(rbP0.velocity, normal_angle);
-	float m1 = (rbP0.mass - rbP1.mass) / (rbP0.mass + rbP1.mass)*dpNorm1;
-	float m2 = (2.0f*rbP0.mass) / (rbP0.mass + rbP1.mass)*dpNorm1;
+	// Calculate static and dynamic friction
+	sf = std::sqrt(rb0.staticFriction * rb0.staticFriction);
+	df = std::sqrt(rb0.dynamicFriction * rb0.dynamicFriction);
 
-	Vec2 final_force0 = tangent_angle * dpTan1 + normal_angle * m1;
-	Vec2 final_force1 = normal_angle * m2;
 
-	//rbP0.velocity = final_force0;
-	//rbP1.velocity = final_force1;
+	for (int i = 0; i < contact_count; i++)
+	{
+		// Calculate radii from COM to contact
+		Vec2 ra = rb0contacts[i] - rb0.GetCOM();
+		Vec2 rb = rb0contacts[i] - rb1.GetCOM();
 
-	rbP0.AddForce(final_force0 - rbP0.velocity);
-	rbP1.AddForce(final_force1);
+		// Relative velocity
+		Vec2 rv = rb1.velocity + Cross(rb1.angularVelocity, rb) -
+			rb0.velocity - Cross(rb0.angularVelocity, ra);
 
-	float inicialvelocity0 = rbP0.velocity.Len()*rbP0.mass;
-	float inicialvelocity1 = rbP1.velocity.Len()*rbP1.mass;
+		// Relative velocity along the normal_angle
+		float contactVel = Dot(rv, normal_angle);
 
-	float finalvelocity0 = final_force0.Len()*rbP0.mass;
-	float finalvelocity1 = final_force1.Len()*rbP1.mass;
+		// Do not resolve if velocities are separating
+		if (contactVel > 0)
+			return;
 
-	rbP0.arecolliding = true;
-	rbP1.arebeinghit = true;
+		float raCrossN = Cross(ra, normal_angle);
+		float rbCrossN = Cross(rb, normal_angle);
+		float invMassSum = rb0.inv_mass + rb1.inv_mass + Sqr(raCrossN) * rb0.inv_inertia + Sqr(rbCrossN) * rb1.inv_inertia;
 
-	rbP0.howmanyhits++;
-	rbP1.howmanyhits++;
-	ThereWasCollision = true;
+		// Calculate impulse scalar
+		float j = -(1.0f + e) * contactVel;
+		j /= invMassSum;
+		j /= (float)contact_count;
 
-	/*/ TestPorposes
+		// Apply impulse
+		Vec2 impulse = normal_angle * j;
+		rb0.AddForce(-impulse, ra);
+		rb1.AddForce(impulse, rb);
 
-				Vec2 _vel[2];
-				float _velL[2];
-				Vec2 _vel_f[2];
-				float _vel_fL[2];
-				float _eficL[2];
-				float _eficL2[2];
-				Vec2 _force				= force/rbP0.mass;
-				float _forceL			= _force.Len();				//Force lenght.
-				float _force_transfL	= (_force * energy_transference).Len();	//Force * Transferation Factor lenght.
-				_vel[0]			= rbP0.velocity;					//RigidBody0 velocity.
-				_velL[0]		= _vel[0].Len();					//RigidBody0 velocity lenght.
-				_vel_f[0]		= (_vel[0] - _force * energy_transference);				//RigidBody0 final velocity(after the collision).
-				_vel_fL[0]		= _vel_f[0].Len();					//RigidBody0 final velocity lenght.
-				_eficL[0]		= _vel_fL[0] / _velL[0];			//Rigidbody0 eficience(how much force has changed after the collision).
-				_eficL2[0]		= (_velL[0] - _vel_fL[0])/_forceL;	//x
-				_vel[1]			= rbP1.velocity;					//RigidBody1 velocity.
-				_velL[1]		= _vel[1].Len();					//RigidBody1 velocity lenght.
-				_vel_f[1]		= (_vel[1] + (_force * energy_transference));		//RigidBody1 final velocity.
-				_vel_fL[1]		= _vel_f[1].Len();					//RigidBody1 final velocity lenght.
-				_eficL[1]		= _vel_fL[1] / _velL[1];			//Rigidbody0 eficience(how much force has changed after the collision).
-				_eficL2[1]		= (_velL[1] - _vel_fL[1])/_forceL;	//x
-				float _energy_lost = _velL[0] - (_vel_fL[0] + _force_transfL);
-				log.push_back("Lost Energy: ");
-				log.back() += std::to_string(_energy_lost);
-				//Store in Log
-				for (size_t i = 0; i <= 1; i++)
-				{
-					log.push_back("    [");
-					log.back() += std::to_string(i);
-					log.back() += "]Initial Velocity = ";
-					log.back() += std::to_string(_vel[i].x);
-					log.back() += ", ";
-					log.back() += std::to_string(_vel[i].y);
-					log.back() += "(";
-					log.back() += std::to_string(_velL[i]);
-					log.back() += "); ";
+		// Friction impulse
+		rv = rb1.velocity + Cross(rb1.angularVelocity, rb) -
+			rb0.velocity - Cross(rb0.angularVelocity, ra);
 
-					log.push_back("    Final Velocity = ");
-					log.back() += std::to_string(_vel_f[i].x);
-					log.back() += ", ";
-					log.back() += std::to_string(_vel_f[i].y);
-					log.back() += "(";
-					log.back() += std::to_string(_vel_fL[i]);
-					log.back() += "); ";
+		Vec2 t = rv - (normal_angle * Dot(rv, normal_angle));
+		t.Normalize();
 
-					log.back() += "  Eficience = ";
-					log.back() += std::to_string(_eficL[i]);
-					log.back() += ";";
+		// j tangent magnitude
+		float jt = -Dot(rv, t);
+		jt /= invMassSum;
+		jt /= (float)contact_count;
 
-					log.back() += "  Factor = ";
-					log.back() += std::to_string(_eficL2[i]);
-					log.back() += ";";
-				}
-				log.push_back("Total Eficiente = ");
-				log.back() += std::to_string(_energy_lost);
-				log.back() += "; Force: ";
-				log.back() += std::to_string(_forceL);
-				log.back() += "; Force Transfered: ";
-				log.back() += std::to_string(_force_transfL);
-				log.back() += ";";
-				if (_energy_lost>=0.1f)
-				{
-					int x = 0;
-				}
-				//TestEnd*/
+		// Don't apply tiny friction impulses
+		if (jt == 0.0f)
+			return;
+
+		// Coulumb's law
+		Vec2 tangentImpulse;
+		if (std::abs(jt) < j * sf)
+			tangentImpulse = t * jt;
+		else
+			tangentImpulse = t * -j * df;
+
+		// Apply friction impulse
+		rb0.AddForce(-tangentImpulse, ra);
+		rb1.AddForce(tangentImpulse, rb);
+	}
+
+	rb0.arecolliding = true;
+	rb1.arebeinghit = true;
+
+	rb0.howmanyhits++;
+	rb1.howmanyhits++;
 }
 
 Vec2 PhysicSystem::GetReflectedForce(Vec2 v_in, Vec2 w_in)

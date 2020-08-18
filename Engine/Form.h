@@ -29,6 +29,7 @@ public: //SETTERS
 	bool IsCircle();
 public: //GETTERS
 	float GetRadius() const;
+	float GetPerimeter() const;
 	Type GetType() const;
 	Vec2 GetCentralPoint() const;
 	Transformation GetVertice(int index) const;

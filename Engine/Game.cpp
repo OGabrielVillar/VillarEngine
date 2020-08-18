@@ -131,7 +131,7 @@ void Game::ComposeFrame()
 		if (!pU->GetName().empty())
 		{
 			cx = Colors::Magenta;
-			if (pU == world.bolinha)
+			if (pU == world.userunit)
 			{
 				cx = Colors::Yellow;
 			}
@@ -144,8 +144,8 @@ void Game::ComposeFrame()
 					pU->rigidbody.GetVerticePos(0) + GetRotated(pU->rigidbody.form.GetRadius(), pU->rigidbody.GetVerticeOri(0)), cx);
 				//gfx.DrawLine(pU->rigidbody.GetVerticePos(0), world.GetPPhysicsSystem()->x_projection, cx);
 				//gfx.DrawLine(pU->rigidbody.GetVerticePos(0), world.GetPPhysicsSystem()->y_projection, cx);
-				gfx.DrawLine(world.GetPPhysicsSystem()->contact_point, world.GetPPhysicsSystem()->collision_point, cx);
-				gfx.DrawLine(pU->rigidbody.GetVerticePos(0), pU->rigidbody.GetVerticePos(0)+(-pU->rigidbody.velocity * ft.Get()), Colors::Cyan);
+				//gfx.DrawLine(world.GetPPhysicsSystem()->contact_point, world.GetPPhysicsSystem()->collision_point, cx);
+				//gfx.DrawLine(pU->rigidbody.GetVerticePos(0), pU->rigidbody.GetVerticePos(0)+(-pU->rigidbody.velocity * ft.Get()), Colors::Cyan);
 				//gfx.DrawCircle(world.GetPPhysicsSystem()->x_projection, 12.0f, cx);
 			}
 			if (pU->rigidbody.form.GetType() == Form::Type::Line) // DRAW LINES
@@ -162,6 +162,7 @@ void Game::ComposeFrame()
 				gfx.DrawCircleCurve3P(pU->rigidbody.GetVerticePos(0), pU->rigidbody.GetVerticePos(1), pU->rigidbody.GetVerticePos(2), pU->GetRadius(), cx);
 				gfx.DrawCurve3P(pU->rigidbody.GetVerticePos(0), pU->rigidbody.GetVerticePos(1), pU->rigidbody.GetVerticePos(2), cx);
 			}
+			//gfx.DrawCircle(world.GetPPhysicsSystem()->contacts[0],10.0f,Colors::Red);
 		}
 		i++;
 	}

@@ -5,7 +5,7 @@ World::World() :
 	combatSystem(&units[0]),
 	control(combatSystem)
 {
-	float velocity = 200.0f;			//cm per second
+	float velocity = 1100.0f;			//cm per second
 	float radius = 20.f;		        //cm
 	//testPorposes
 	/*/ */ /*
@@ -20,71 +20,78 @@ World::World() :
 	GetCreatedUnit()->rigidbody.transformation.SetOrientationRad(PI / 3.8f);
 	curva = GetCreatedUnit();
 	// */
-	/*
+	//
 	AddUnit(Unit("linha", Vec2(500.0f, 660.0f)));
 	GetCreatedUnit()->SetRadius(radius*1.5f);
 	GetCreatedUnit()->SetRigidBodyForm(Form(radius*1.0f, Form::Type::Line));
-	GetCreatedUnit()->rigidbody.form.PushVertice(Vec2(200.0f, 0.0f));
-	GetCreatedUnit()->rigidbody.UpdateMass();
+	GetCreatedUnit()->rigidbody.form.PushVertice(Vec2(2300.0f, 0.0f));
 	GetCreatedUnit()->rigidbody.is_immovable = true;
+	GetCreatedUnit()->rigidbody.UpdateMass();
 	GetCreatedUnit()->rigidbody.transformation.SetOrientation(Vec2(-1.0f, 0.0f));
-	linhagrande = GetCreatedUnit();*/
+	linhagrande = GetCreatedUnit();
+
+	AddUnit(Unit("linha", Vec2(500.0f, 160.0f)));
+	GetCreatedUnit()->SetRadius(radius*1.5f);
+	GetCreatedUnit()->SetRigidBodyForm(Form(radius*1.0f, Form::Type::Line));
+	GetCreatedUnit()->rigidbody.form.PushVertice(Vec2(300.0f, 0.0f));
+	GetCreatedUnit()->rigidbody.UpdateMass();
+	GetCreatedUnit()->rigidbody.transformation.SetOrientation(Vec2(-1.0f, 0.0f));
+	userunit = GetCreatedUnit();
 
 	AddUnit(Unit("esfera", Vec2(100, 200.0f)));
 	GetCreatedUnit()->SetRadius(radius);
 	control.SetSelectedUnit(*GetCreatedUnit());
 	GetCreatedUnit()->rigidbody.transformation.SetOrientationRad(PI / 3.8f);
-	bolinha = GetCreatedUnit();
 
 	Effect aeffect;
 	aeffect.SetFunction(0, Function::Type::AddForce, Function::Unit::Source);
 	aeffect.SetFunctionTransformation(0,0,Transformation(Vec2(-velocity,0.0f)));
-	AddCommand(GetCreatedUnit(), 'A', aeffect);
+	AddCommand(userunit, 'A', aeffect);
 
 	Effect deffect;
 	deffect.SetFunction(0, Function::Type::AddForce, Function::Unit::Source);
 	deffect.SetFunctionTransformation(0, 0, Transformation(Vec2(velocity, 0.0f)));
-	AddCommand(GetCreatedUnit(), 'D', deffect);
+	AddCommand(userunit, 'D', deffect);
 
 	Effect weffect;
 	weffect.SetFunction(0, Function::Type::AddForce, Function::Unit::Source);
 	weffect.SetFunctionTransformation(0, 0, Transformation(Vec2(0.0f, -velocity)));
-	AddCommand(GetCreatedUnit(), 'W', weffect);
+	AddCommand(userunit, 'W', weffect);
 
 	Effect seffect;
 	seffect.SetFunction(0, Function::Type::AddForce, Function::Unit::Source);
 	seffect.SetFunctionTransformation(0, 0, Transformation(Vec2(0.0f, velocity)));
-	AddCommand(GetCreatedUnit(), 'S', seffect);
+	AddCommand(userunit, 'S', seffect);
 
 	Effect qeffect;
 	qeffect.SetFunction(0, Function::Type::AddUnitRadius, Function::Unit::Source);
 	qeffect.SetFunctionFloat(0, 0, 1.0);
-	AddCommand(GetCreatedUnit(), 'Q', qeffect);
+	AddCommand(userunit, 'Q', qeffect);
 
 	Effect eeffect;
 	eeffect.SetFunction(0, Function::Type::AddUnitRadius, Function::Unit::Source);
 	eeffect.SetFunctionFloat(0, 0, -1.0);
-	AddCommand(GetCreatedUnit(), 'E', eeffect);
+	AddCommand(userunit, 'E', eeffect);
 
 	Effect spaceeffect;
 	spaceeffect.SetFunction(0, Function::Type::SetUnitPosition, Function::Unit::Source);
 	spaceeffect.SetFunctionVec2(0, 0, Vec2(300.0f,300.0f));
-	AddCommand(GetCreatedUnit(), (char)32, spaceeffect);
+	AddCommand(userunit, (char)32, spaceeffect);
 
 	Effect righteffect;
 	righteffect.SetFunction(0, Function::Type::RotatesByRad, Function::Unit::Source);
-	righteffect.SetFunctionFloat(0, 0, 2.8f);
-	AddCommand(GetCreatedUnit(), (char)39, righteffect);
+	righteffect.SetFunctionFloat(0, 0, 0.8f);
+	AddCommand(linhagrande, (char)39, righteffect);
 
 	Effect lefteffect;
 	lefteffect.SetFunction(0, Function::Type::RotatesByRad, Function::Unit::Source);
-	lefteffect.SetFunctionFloat(0, 0, -2.8f);
-	AddCommand(GetCreatedUnit(), (char)37, lefteffect);
+	lefteffect.SetFunctionFloat(0, 0, -0.8f);
+	AddCommand(linhagrande, (char)37, lefteffect);
 
 	// 25 UNIT SPAWN
-	for (size_t i = 0; i < 10; i++)
+	for (size_t i = 0; i < 5; i++)
 	{
-		for (size_t j = 0; j < 10 ; j++)
+		for (size_t j = 0; j < 1 ; j++)
 		{
 			AddUnit(Unit("Steve", Vec2(2.2f * radius * (float)i + 200.0f, 2.2f * radius * (float)j + 200.0f)));
 			GetCreatedUnit()->SetRadius(radius);

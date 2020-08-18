@@ -22,7 +22,7 @@ public: //GETTERS
 	Unit* GetCreatedUnit();
 	PhysicSystem* GetPPhysicsSystem();
 	CombatSystem* GetPCombatSystem();
-	Unit* bolinha = nullptr;
+	Unit* userunit = nullptr;
 	Unit* linhagrande = nullptr;
 	Unit* curva = nullptr;
 private:

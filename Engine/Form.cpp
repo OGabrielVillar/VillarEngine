@@ -72,6 +72,19 @@ float Form::GetRadius() const
 	return radius;
 }
 
+float Form::GetPerimeter() const
+{
+	if (type==Type::Point)
+	{
+		return	PI * radius * 2.0f;
+	}
+	else if (type == Type::Line)
+	{
+		return	PI * radius * 2.0f + Vec2(vertices[0].position - vertices[1].position).Len() * 2.0f;
+	}
+	return 0.0f;
+}
+
 Form::Type Form::GetType() const
 {
 	return type;

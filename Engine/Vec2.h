@@ -107,3 +107,6 @@ inline Vec2 GetRotated(const Vec2& vec_in, float rad_in) {
 		vec_in.x * cs - vec_in.y * sn, 
 		vec_in.x * sn + vec_in.y * cs);
 }
+inline float Sqr(float a) {
+	return a * a;
+}

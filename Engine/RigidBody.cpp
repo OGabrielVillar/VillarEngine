@@ -31,18 +31,23 @@ RigidBody::RigidBody(Form * form_in, unsigned int x, unsigned int y)
 	//form->Initialize();
 }
 
-void RigidBody::SetTransformation(Transformation transformation_in)
+void RigidBody::SetTransformation(const Transformation& transformation_in)
 {
 	transformation = transformation_in;
 }
 
+void RigidBody::SetPosition(const Vec2& position_in)
+{
+	transformation.SetPosition(position_in);
+}
 
-void RigidBody::SetVelocity(Vec2 velocity_in)
+
+void RigidBody::SetVelocity(const Vec2& velocity_in)
 {
 	velocity = velocity_in;
 }
 
-void RigidBody::SetForm(Form Form_in)
+void RigidBody::SetForm(const Form& Form_in)
 {
 	form = Form_in;
 }
@@ -67,10 +72,21 @@ void RigidBody::UpdateMass()
 {
 	if (form.GetType() == Form::Type::Line)
 	{
-		mass = ((PI * (form.GetRadius()) * (form.GetRadius()) * density) + form.GetRadius() * form.GetVertice(1).GetPosition().Len()) * MASSFACTOR;
-		return;
+		mass = ((PI * form.GetRadius() * form.GetRadius() * density) + form.GetRadius() * form.GetVertice(1).GetPosition().Len()) * MASSFACTOR;
+		inertia = ((PI * mass * form.GetRadius() * form.GetRadius()) + form.GetRadius() * form.GetVertice(1).GetPosition().Len()) * MASSFACTOR;
 	}
-	mass = PI * (form.GetRadius()) * (form.GetRadius()) * density * MASSFACTOR;
+	else if (true)
+	{
+		mass = PI * (form.GetRadius()) * (form.GetRadius()) * density * MASSFACTOR;
+		inertia = mass * form.GetRadius() * form.GetRadius() * MASSFACTOR;
+	}
+	inv_mass = 1.0f / mass;
+	inv_inertia = 1.0f / inertia;
+	if (is_immovable)
+	{
+		inv_mass = 0.0f / mass;
+		inv_inertia = 0.0f / inertia;
+	}
 }
 
 void RigidBody::UpdateTransformation()
@@ -108,15 +124,30 @@ Vec2 RigidBody::GetVelocity()
 	return velocity;
 }
 
+Vec2 RigidBody::GetPosition()
+{
+	return transformation.GetPosition();
+}
+
 Vec2 RigidBody::GetForce()
 {
 	return force;
 }
 
-void RigidBody::AddForce(Vec2 force_in)
+Vec2 RigidBody::GetCOM()
 {
-	//if (is_immovable){return;}
+	return GetTransformation().GetPosition();
+}
+
+void RigidBody::AddForce(Vec2 & const force_in)
+{
 	force += force_in;
+}
+
+void RigidBody::AddForce(Vec2& const force_in, Vec2& const contactpoint_in)
+{
+	velocity += inv_mass * force_in;
+	angularVelocity += inv_inertia * Cross(contactpoint_in, force_in);
 }
 
 void RigidBody::ApplyForces()
@@ -127,20 +158,6 @@ void RigidBody::ApplyForces()
 void RigidBody::ClearForces()
 {
 	force.Set(0.0f,0.0f);
-}
-
-void RigidBody::ApplyImpulse(const Vec2 & impulse, const Vec2 & contactVector)
-{
-	velocity += im * impulse;
-	angularVelocity += iI * Cross(contactVector, impulse);
-}
-
-void RigidBody::SetStatic(void)
-{
-	I = 0.0f;
-	iI = 0.0f;
-	m = 0.0f;
-	im = 0.0f;
 }
 
 void RigidBody::SetOrientation(float radians)

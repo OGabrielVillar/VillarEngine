@@ -16,7 +16,7 @@ Transformation::Transformation(Vec2 position_in, Vec2 scale_in, float orientatio
 {
 	position = position_in;
 	scale = scale_in;
-	SetOrientation(orientationrad_in);
+	SetOrientationRad(orientationrad_in);
 }
 
 Transformation::Transformation(Vec2 position_in, Vec2 scale_in, Vec2 orientation_in, float orientationrad_in)
