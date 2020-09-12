@@ -3,7 +3,7 @@
 //#define UNITSLIMIT 99
 #define COMMANDCARDLENGHT 9
 
-const int UNITSLIMIT = 55;
+const int UNITSLIMIT = 550;
 
 #include "Transformation.h"
 #include "Command.h"

@@ -1,0 +1,23 @@
+VILLAR ENGINE GOALS
+
+This is a dynamic list, the goals will change and, probably, increase with the needs of the project.
+
+[KNOWN BUGS]
+-The Position Correction Bug.
+
+[SHORT TERM IMPROVEMENTS]
+-Add Line to Line Colision.
+-Make an camera object.
+
+[MEDIUM TERM IMPROVEMENTS]
+-Make the Frame Composing System.
+-Update unit, effects and commands from Arrays to Smart Containers.
+-Make an Event Script to capt the physics system events that occured on "linked objects".
+-Make an txt files system to store the game data and to save/load the game.
+-Improve the Combat System
+
+[LONG TERM IMPROVEMENTS]
+-Make 3D objects and systems, with sprite, firstly.
+-Convert txt files system to some personal file made to store the game data.
+-Optimize and customize the Chili Framework.
+-Optimize my engine.

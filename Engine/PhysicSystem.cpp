@@ -8,10 +8,10 @@ PhysicSystem::PhysicSystem(Unit * unitgroup_in)
 void PhysicSystem::Go(float ft_in)
 {
 	ft = ft_in;
-	MoveBodys();
+	MoveBodies();
 }
 
-void PhysicSystem::MoveBodys()
+void PhysicSystem::MoveBodies()
 {
 	ThereWasCollision = false;
 
@@ -20,6 +20,46 @@ void PhysicSystem::MoveBodys()
 
 	Unit* Punitb;
 	Punitb = Punitgroup;
+
+
+	bool _ithappens = false;
+	float _totalenergybefore = 0.0f;
+	float _totalenergyafter = 0.0f;
+	while (Punit != Punitgroup + UNITSLIMIT - 1)
+	{
+		if (!Punit->GetName().empty())
+		{
+			_totalenergybefore += Punit->rigidbody.velocity.Len()*Punit->rigidbody.mass;
+
+			if (!Punit->rigidbody.is_immovable)
+			{
+				//if (Punit != Sun)
+				//{
+				//	Vec2 punit_to_sun = (Sun->rigidbody.GetPosition() - Punit->rigidbody.GetPosition());
+				//	Punit->rigidbody.velocity += punit_to_sun.Normalize() * ((GCONST * Sun->rigidbody.mass * Punit->rigidbody.mass) / punit_to_sun.LenSqrd());	//GRAVITY
+				//}
+				Punit->rigidbody.velocity += Vec2(0.0f,10.0f);	//GRAVITY
+				Punit->rigidbody.velocity += Punit->rigidbody.force;
+				Punit->rigidbody.angularVelocity += Punit->rigidbody.torque;
+				//Punit->rigidbody.velocity *= AIRRESISTENCE;			//DRAG
+				//Punit->rigidbody.angularVelocity *= AIRRESISTENCE;	//DRAG
+				Transformation movement = Transformation(Punit->rigidbody.velocity*ft);
+				Vec2 rotation = (Vec2(std::cos(Punit->rigidbody.angularVelocity*ft), std::sin(Punit->rigidbody.angularVelocity*ft)));
+				Punit->rigidbody.SetTransformation(movement + Punit->rigidbody.GetTransformation());
+				Punit->rigidbody.transformation.orientation = GetRotated(Punit->rigidbody.transformation.orientation, rotation);
+				Punit->rigidbody.force.Set(0.0f, 0.0f);
+			}
+
+			_totalenergyafter += Punit->rigidbody.velocity.Len()*Punit->rigidbody.mass;
+			if (Punit->rigidbody.howmanyhits >= 1)
+			{
+				_ithappens = true;
+			}
+		}
+		Punit++;
+	}
+	Punit = Punitgroup;
+
 	while (Punitb != Punitgroup + UNITSLIMIT - 1)
 	{
 		if (!Punitb->GetName().empty()){
@@ -50,36 +90,6 @@ void PhysicSystem::MoveBodys()
 	}
 	Punit = Punitgroup;
 
-	bool _ithappens = false;
-	float _totalenergybefore = 0.0f;
-	float _totalenergyafter = 0.0f;
-	while (Punit != Punitgroup + UNITSLIMIT - 1)
-	{
-		if (!Punit->GetName().empty())
-		{
-			_totalenergybefore += Punit->rigidbody.velocity.Len()*Punit->rigidbody.mass;
-
-			if (!Punit->rigidbody.is_immovable)
-			{
-				Punit->rigidbody.velocity += Vec2(0.0f, 1000.0f*ft);	//GRAVITY
-				Punit->rigidbody.velocity += Punit->rigidbody.force;
-				Punit->rigidbody.angularVelocity += Punit->rigidbody.torque;
-				Punit->rigidbody.velocity *= AIRRESISTENCE;				//DRAG
-				Transformation movement = Transformation(Punit->rigidbody.velocity*ft);
-				Vec2 rotation = (Vec2(std::cos(Punit->rigidbody.angularVelocity*ft), std::sin(Punit->rigidbody.angularVelocity*ft)));
-				Punit->rigidbody.SetTransformation(movement + Punit->rigidbody.GetTransformation());
-				Punit->rigidbody.transformation.orientation = GetRotated(Punit->rigidbody.transformation.orientation, rotation);
-				Punit->rigidbody.force.Set(0.0f, 0.0f);
-			}
-
-			_totalenergyafter += Punit->rigidbody.velocity.Len()*Punit->rigidbody.mass;
-			if (Punit->rigidbody.howmanyhits >= 1)
-			{
-				_ithappens = true;
-			}
-		}
-		Punit++;
-	}
 	if (_ithappens)
 	{
 		int i = 0 + 1;
@@ -98,7 +108,7 @@ bool PhysicSystem::IsCollinding(RigidBody * rb_a, RigidBody * rb_b)
 	return false;
 }
 
-bool PhysicSystem::PointPointCollisionTest(RigidBody& rb0, RigidBody& rb1)
+bool PhysicSystem::PointToPointCollision(RigidBody& rb0, RigidBody& rb1)
 {
 	float radius_sum = rb0.form.GetRadius() + rb1.form.GetRadius();
 	if (SqrdDistance(rb0.GetVerticePos(0), rb1.GetVerticePos(0)) <= radius_sum*radius_sum)
@@ -113,7 +123,7 @@ bool PhysicSystem::PointPointCollisionTest(RigidBody& rb0, RigidBody& rb1)
 	return false;
 }
 
-bool PhysicSystem::PointLineCollisionTest(RigidBody & rb0, RigidBody & rb1)
+bool PhysicSystem::PointToLineCollision(RigidBody & rb0, RigidBody & rb1)
 {
 	RigidBody* point_in;
 	RigidBody* line_in;
@@ -201,6 +211,55 @@ bool PhysicSystem::PointLineCollisionTest(RigidBody & rb0, RigidBody & rb1)
 	return false;
 }
 
+bool PhysicSystem::LineToLineCollision(RigidBody & rb0, RigidBody & rb1)
+{
+	Vec2 a0 = rb0.GetVerticePos(0);
+	Vec2 a1 = rb0.GetVerticePos(1);
+	Vec2 b0 = rb1.GetVerticePos(0);
+	Vec2 b1 = rb1.GetVerticePos(1);
+	Vec2 angleFromP0toP1 = rb1.GetVerticeOri(0);
+	float radius_sum_sqrd = rb0.form.GetRadius() + rb1.form.GetRadius();
+	radius_sum_sqrd *= radius_sum_sqrd;
+
+	//Make an Matrix, inverted rotating the entire elements on the b0 axis
+	Vec2 c0_inMatrix = GetRotated(a0 - b0, GetInvertedAngle(angleFromP0toP1));
+	float p1_x_inMatrix = GetRotated(b1 - b0, GetInvertedAngle(angleFromP0toP1)).x;
+
+	//RETURN IF THE CIRCLE ISN'T IN THE LINE:
+	if (!(c0_inMatrix.y*c0_inMatrix.y <= radius_sum_sqrd))
+	{
+		return false;
+	}
+	Vec2 line_final_point;
+	Vec2 point_final_point = a0;
+	//CHECK IF CIRCLE IS IN THE LINE SECTION, RETURN IF IT DOESN'T:
+	if (c0_inMatrix.x < 0.0f) //IF IS BEFORE THE SECTION
+	{
+		line_final_point = b0;
+	}
+	else if (c0_inMatrix.x > p1_x_inMatrix) //IF IS AFTER THE SECTION
+	{
+		line_final_point = b1;
+	}
+	else		//TRANSFERS THE DATA BACK TO NON-MATRIX
+	{
+
+		line_final_point = b0 + GetRotated(Vec2(c0_inMatrix.x, 0.0f), angleFromP0toP1);
+	}
+	if (SqrdDistance(point_final_point, line_final_point) <= radius_sum_sqrd)
+	{
+		contact_point = point_final_point;
+		collision_point = line_final_point;
+
+		rb0contacts[0] = (contact_point - collision_point).Normalize()*rb1.form.GetRadius() + collision_point;
+		rb1contacts[0] = (collision_point - contact_point).Normalize()*rb0.form.GetRadius() + contact_point;
+		contact_count = 1;
+		return true;
+	}
+	return false;
+}
+
+
 bool PhysicSystem::PointCurve3PCollisionTest(RigidBody & rb_a, RigidBody & curve3p_in)
 {
 	float radius_sum = rb_a.form.GetRadius() + curve3p_in.form.GetRadius();
@@ -269,15 +328,15 @@ void PhysicSystem::Collision(RigidBody * rb0, RigidBody * rb1)
 	contact_count = 0;
 
 	//RETURN IF RIGID BODY 0 IS STOPPED
-	if (rb0->velocity.LenSqr() <= 0.0f) { return; }
+	if (rb0->velocity.LenSqrd() <= 0.0f) { return; }
 
 	if (rb0->form.IsCircle())
 	{
 		if (rb1->form.IsCircle()) {
-			if (!PointPointCollisionTest(*rb0, *rb1)) { return; }
+			if (!PointToPointCollision(*rb0, *rb1)) { return; }
 		}
 		if (rb1->form.GetType() == Form::Type::Line) {
-			if (!PointLineCollisionTest(*rb0, *rb1)) { return; }
+			if (!PointToLineCollision(*rb0, *rb1)) { return; }
 		}
 		if (rb1->form.GetType() == Form::Type::Curve3P)
 		{
@@ -289,10 +348,10 @@ void PhysicSystem::Collision(RigidBody * rb0, RigidBody * rb1)
 	if (rb0->form.GetType() == Form::Type::Line)
 	{
 		if (rb1->form.IsCircle()) {
-			if (!PointLineCollisionTest(*rb0, *rb1)) { return; }
+			if (!PointToLineCollision(*rb0, *rb1)) { return; }
 		}
 		if (rb1->form.GetType() == Form::Type::Line) {
-			return;
+			if (!LineToLineCollision(*rb0, *rb1)) { return; }
 		}
 		if (rb1->form.GetType() == Form::Type::Curve3P)
 		{

@@ -30,6 +30,7 @@ Game::Game(MainWindow& wnd)
 	defaultControl = world.GetControl();
 	defaultControl->BindKeyboard(wnd.kbd);
 	world.GetPCombatSystem()->BindKeyboard(wnd.kbd);
+
 }
 
 void Game::Go()
@@ -83,6 +84,7 @@ void Game::Update()
 	Transformation t;
 	float radius;
 	int i = 0;
+	
 	Unit* pU;
 	while (i < UNITSLIMIT)
 	{
@@ -114,15 +116,15 @@ void Game::Update()
 		i++;
 	}
 	i = 0;
-
-	if (defaultControl->kbd->KeyIsPressed(98)){	
-		world.curva->rigidbody.MoveVerticeTo(1.0f, Vec2(wnd.mouse.GetPosX(), wnd.mouse.GetPosY()));
+	
+	if (wnd.mouse.LeftIsPressed()){	
+		world.sun->rigidbody.SetPosition(Vec2(wnd.mouse.GetPosX(), wnd.mouse.GetPosY()));
 	}
 }
 
 void Game::ComposeFrame()		
 {
-	Color cx = Colors::Magenta;
+	Color cx = Colors::White;
 	int i = 0;
 	Unit* pU;
 	while (i < UNITSLIMIT)
@@ -130,7 +132,7 @@ void Game::ComposeFrame()
 		pU = &world.GetUnit(i);
 		if (!pU->GetName().empty())
 		{
-			cx = Colors::Magenta;
+			cx = Colors::White;
 			if (pU == world.userunit)
 			{
 				cx = Colors::Yellow;
@@ -166,30 +168,34 @@ void Game::ComposeFrame()
 		}
 		i++;
 	}
-	gfx.DrawCurve3P(Vec2(0.0f, 0.0f), Vec2(500.0f, 0.0f), Vec2(1000.0f, 0.0f), cx);
-	//gfx.DrawCurve3P(world.bolinha->rigidbody.GetVerticePos(0), world.linhagrande->rigidbody.GetVerticePos(0), world.linhagrande->rigidbody.GetVerticePos(1), cx);
-	//gfx.DrawCurve3P(Vec2(0.0f), world.linhagrande->rigidbody.GetVerticePos(0), world.linhagrande->rigidbody.GetVerticePos(1), cx);
-	/*
-	link.Draw( gfx );
-	gfx.PutPixel(500, 500, Colors::Magenta);
-	//font.DrawText( "Becky.\nLemme smash.",wnd.mouse.GetPos() - Vei2{ 50,150 },Colors::White,gfx );
-	if (trigger >= 60)
-	{
-		string = std::string("\nFps: " + std::to_string(1 / ft.Get()) );
-		list.PushElement(string);
-		trigger = 0;
-	}
-	finalString = '0';
-	for (int i = 0; i < list.capacity(); i++)
-	{
-		finalString += list[i];
-	}
-	font.DrawText(finalString, textPos, Colors::Yellow, gfx);
-	for (size_t i = 0; i < 20000000; i++)
-	{
-		char a = 0;
-		a = 1;
-	}
-	trigger ++;
-	*/
+
+
+
+
+	//gfx.DrawCurve3P(Vec2(0.0f, 0.0f), Vec2(500.0f, 0.0f), Vec2(1000.0f, 0.0f), cx);
+	////gfx.DrawCurve3P(world.bolinha->rigidbody.GetVerticePos(0), world.linhagrande->rigidbody.GetVerticePos(0), world.linhagrande->rigidbody.GetVerticePos(1), cx);
+	////gfx.DrawCurve3P(Vec2(0.0f), world.linhagrande->rigidbody.GetVerticePos(0), world.linhagrande->rigidbody.GetVerticePos(1), cx);
+	//
+	//
+	////link.Draw( gfx );
+	//gfx.PutPixel(500, 500, Colors::Magenta);
+	////font.DrawText( "Becky.\nLemme smash.",wnd.mouse.GetPos() - Vei2{ 50,150 },Colors::White,gfx );
+	//if (trigger >= 60)
+	//{
+	//	string = std::string("\nFps: " + std::to_string(1 / ft.Get()) );
+	//	list.PushElement(string);
+	//	trigger = 0;
+	//}
+	//finalString = '0';
+	//for (int i = 0; i < list.capacity(); i++)
+	//{
+	//	finalString += list[i];
+	//}
+	//font.DrawText(finalString, textPos, Colors::Yellow, gfx);
+	//for (size_t i = 0; i < 20000000; i++)
+	//{
+	//	char a = 0;
+	//	a = 1;
+	//}
+	//trigger ++;
 }

@@ -39,7 +39,7 @@ public://OPERATORS
 	void Set(float x_in, float y_in);
 public://MATH FUNCTIONS
 	float Len() const;
-	float LenSqr() const;
+	float LenSqrd() const;
 	Vec2& Normalize();
 	Vec2 GetNormalized() const;
 	explicit operator Vei2() const;

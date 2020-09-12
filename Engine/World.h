@@ -25,6 +25,7 @@ public: //GETTERS
 	Unit* userunit = nullptr;
 	Unit* linhagrande = nullptr;
 	Unit* curva = nullptr;
+	Unit* sun = nullptr;
 private:
 	Unit units[UNITSLIMIT];
 	CombatSystem combatSystem;

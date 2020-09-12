@@ -103,7 +103,7 @@ float Vec2::Len() const
 	return std::sqrt(x * x + y * y);
 }
 
-float Vec2::LenSqr() const
+float Vec2::LenSqrd() const
 {
 	return (x * x + y * y);
 }

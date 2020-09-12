@@ -2,6 +2,8 @@
 
 #define AIRDENSITY 1.2f
 #define AIRRESISTENCE 0.99f
+#define GCONSTPRE 0.0000001
+#define GCONST 6.67408 * GCONSTPRE
 
 #include "Unit.h"
 #include <string>
@@ -12,11 +14,12 @@ class PhysicSystem
 public:
 	PhysicSystem(Unit* unitgroup_in);
 	void Go(float ft_in);
-	void MoveBodys();
-	bool IsCollinding(RigidBody* rb_a, RigidBody* rb_b);
-	bool PointPointCollisionTest(RigidBody& rb_a, RigidBody& rb_b);
-	bool PointLineCollisionTest(RigidBody& rb_a, RigidBody& rb_b);
-	bool PointCurve3PCollisionTest(RigidBody & rb_a, RigidBody & curve3p_in);
+	void MoveBodies();
+	bool IsCollinding(RigidBody* rb0, RigidBody* rb1);
+	bool PointToPointCollision(RigidBody& rb0, RigidBody& rb1);
+	bool PointToLineCollision(RigidBody& rb0, RigidBody& rb1);
+	bool LineToLineCollision(RigidBody& rb0, RigidBody& rb1);
+	bool PointCurve3PCollisionTest(RigidBody & rb0, RigidBody & curve3p_in);
 	float SqrdDistance(Vec2 vec2_a, Vec2 vec2_b);
 	void Collision(RigidBody* rbP0, RigidBody* rbP1);
 	void InvertedForceTransmission(RigidBody & rbP0, RigidBody & rbP1);
@@ -29,6 +32,7 @@ private:
 	float amountOfEnergyInSystemN;
 	std::vector<std::string> log;
 public:
+	Unit* Sun;
 	Vec2 x_projection;
 	Vec2 y_projection;
 	Vec2 contact_point;
