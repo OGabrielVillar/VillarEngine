@@ -25,6 +25,7 @@ void PhysicSystem::MoveBodies()
 	bool _ithappens = false;
 	float _totalenergybefore = 0.0f;
 	float _totalenergyafter = 0.0f;
+
 	while (Punit != Punitgroup + UNITSLIMIT - 1)
 	{
 		if (!Punit->GetName().empty())
@@ -38,7 +39,7 @@ void PhysicSystem::MoveBodies()
 				//	Vec2 punit_to_sun = (Sun->rigidbody.GetPosition() - Punit->rigidbody.GetPosition());
 				//	Punit->rigidbody.velocity += punit_to_sun.Normalize() * ((GCONST * Sun->rigidbody.mass * Punit->rigidbody.mass) / punit_to_sun.LenSqrd());	//GRAVITY
 				//}
-				Punit->rigidbody.velocity += Vec2(0.0f,10.0f);	//GRAVITY
+				Punit->rigidbody.velocity += Vec2(0.0f, 10.0f);	//GRAVITY
 				Punit->rigidbody.velocity += Punit->rigidbody.force;
 				Punit->rigidbody.angularVelocity += Punit->rigidbody.torque;
 				//Punit->rigidbody.velocity *= AIRRESISTENCE;			//DRAG
@@ -63,6 +64,9 @@ void PhysicSystem::MoveBodies()
 	while (Punitb != Punitgroup + UNITSLIMIT - 1)
 	{
 		if (!Punitb->GetName().empty()){
+			if (!Punitb->rigidbody.is_immovable)
+			{
+			}
 			Punitb->rigidbody.arecolliding = false;
 			Punitb->rigidbody.arebeinghit = false;
 			Punitb->rigidbody.howmanyhits = 0;
@@ -89,6 +93,10 @@ void PhysicSystem::MoveBodies()
 		Punit++;
 	}
 	Punit = Punitgroup;
+
+
+	Punit = Punitgroup;
+
 
 	if (_ithappens)
 	{
@@ -217,46 +225,105 @@ bool PhysicSystem::LineToLineCollision(RigidBody & rb0, RigidBody & rb1)
 	Vec2 a1 = rb0.GetVerticePos(1);
 	Vec2 b0 = rb1.GetVerticePos(0);
 	Vec2 b1 = rb1.GetVerticePos(1);
-	Vec2 angleFromP0toP1 = rb1.GetVerticeOri(0);
+	Vec2 angleFrom_b0_to_b1 = rb1.GetVerticeOri(0);
 	float radius_sum_sqrd = rb0.form.GetRadius() + rb1.form.GetRadius();
 	radius_sum_sqrd *= radius_sum_sqrd;
 
 	//Make an Matrix, inverted rotating the entire elements on the b0 axis
-	Vec2 c0_inMatrix = GetRotated(a0 - b0, GetInvertedAngle(angleFromP0toP1));
-	float p1_x_inMatrix = GetRotated(b1 - b0, GetInvertedAngle(angleFromP0toP1)).x;
+	Vec2 a0_inMatrix = GetRotated(a0 - b0, GetInvertedAngle(angleFrom_b0_to_b1));
+	Vec2 a1_inMatrix = GetRotated(a1 - b0, GetInvertedAngle(angleFrom_b0_to_b1));
+	float b1_x_inMatrix = GetRotated(b1 - b0, GetInvertedAngle(angleFrom_b0_to_b1)).x;
 
-	//RETURN IF THE CIRCLE ISN'T IN THE LINE:
-	if (!(c0_inMatrix.y*c0_inMatrix.y <= radius_sum_sqrd))
+
+	//CHECK IF BOTH 'A' POINTS ARE IN THE SAME SIDE FROM THE RB1.
+	if (a0_inMatrix.y * a1_inMatrix.y > 0.0f)
 	{
+
+		Vec2 closest_collision_point;
+		Vec2 closest_contact_point;
+		Vec2 farest_collision_point;
+		Vec2 farest_contact_point;
+
+		//GET THE CLOSEST POINT:
+		float closest_y;
+		Vec2* closest_a;
+		Vec2* farest_a;
+		if (std::abs(a0_inMatrix.y) < std::abs(a1_inMatrix.y))
+		{
+			closest_y = a0_inMatrix.y;
+			closest_a = &a0_inMatrix;
+			farest_a = &a1_inMatrix;
+			closest_contact_point = a0;
+			farest_contact_point = a1;
+		}
+		else
+		{
+			closest_y = a1_inMatrix.y;
+			closest_a = &a1_inMatrix;
+			farest_a = &a0_inMatrix;
+			closest_contact_point = a1;
+			farest_contact_point = a0;
+		}
+		//RETURN IF THE CLOSEST POINT ISN'T IN THE LINE SCOPE:
+		if (!(closest_y*closest_y <= radius_sum_sqrd))
+		{
+			return false;
+		}
+
+		//CHECK IF CIRCLE IS IN THE LINE SECTION, RETURN IF IT DOESN'T:
+		if (closest_a->x < 0.0f) //IF IS BEFORE THE SECTION
+		{
+			closest_collision_point = b0;
+		}
+		else if (closest_a->x > b1_x_inMatrix) //IF IS AFTER THE SECTION
+		{
+			closest_collision_point = b1;
+		}
+		else		//TRANSFERS THE DATA BACK TO NON-MATRIX
+		{
+			closest_collision_point = b0 + GetRotated(Vec2(closest_a->x, 0.0f), angleFrom_b0_to_b1);
+		}
+		if (SqrdDistance(closest_contact_point, closest_collision_point) <= radius_sum_sqrd)
+		{
+			contact_point = closest_contact_point;
+			collision_point = closest_collision_point;
+
+			Vec2 collision_point_to_contact_point_normal = (contact_point - collision_point).Normalize();
+			rb0contacts[0] = collision_point_to_contact_point_normal*rb1.form.GetRadius() + collision_point;
+			rb1contacts[0] = (-collision_point_to_contact_point_normal)*rb0.form.GetRadius() + contact_point;
+			contact_count = 1;
+
+			//RETURN IF THE FAREST POINT ISN'T IN THE LINE SCOPE:
+			if (farest_a->y * farest_a->y <= radius_sum_sqrd)
+			{
+				//CHECK IF THE FAREST_A IS IN THE LINE SECTION, BREAK IF IT DOESN'T:
+				if (farest_a->x < 0.0f) //IF IS BEFORE THE SECTION
+				{
+					farest_collision_point = b0;
+				}
+				else if (farest_a->x > b1_x_inMatrix) //IF IS AFTER THE SECTION
+				{
+					farest_collision_point = b1;
+				}
+				else		//TRANSFERS THE DATA BACK TO NON-MATRIX
+				{
+					farest_collision_point = b0 + GetRotated(Vec2(farest_a->x, 0.0f), angleFrom_b0_to_b1);
+				}
+				if (SqrdDistance(farest_contact_point, farest_collision_point) <= radius_sum_sqrd)
+				{
+					Vec2 collision_point_to_contact_point_normal = (farest_contact_point - farest_collision_point).Normalize();
+					rb0contacts[1] = collision_point_to_contact_point_normal * rb1.form.GetRadius() + farest_collision_point;
+					rb1contacts[1] = (-collision_point_to_contact_point_normal)*rb0.form.GetRadius() + farest_contact_point;
+					contact_count = 2;
+					return true;
+				}
+			}
+			return true;
+		}
 		return false;
 	}
-	Vec2 line_final_point;
-	Vec2 point_final_point = a0;
-	//CHECK IF CIRCLE IS IN THE LINE SECTION, RETURN IF IT DOESN'T:
-	if (c0_inMatrix.x < 0.0f) //IF IS BEFORE THE SECTION
-	{
-		line_final_point = b0;
-	}
-	else if (c0_inMatrix.x > p1_x_inMatrix) //IF IS AFTER THE SECTION
-	{
-		line_final_point = b1;
-	}
-	else		//TRANSFERS THE DATA BACK TO NON-MATRIX
-	{
-
-		line_final_point = b0 + GetRotated(Vec2(c0_inMatrix.x, 0.0f), angleFromP0toP1);
-	}
-	if (SqrdDistance(point_final_point, line_final_point) <= radius_sum_sqrd)
-	{
-		contact_point = point_final_point;
-		collision_point = line_final_point;
-
-		rb0contacts[0] = (contact_point - collision_point).Normalize()*rb1.form.GetRadius() + collision_point;
-		rb1contacts[0] = (collision_point - contact_point).Normalize()*rb0.form.GetRadius() + contact_point;
-		contact_count = 1;
-		return true;
-	}
 	return false;
+
 }
 
 
@@ -410,8 +477,24 @@ void PhysicSystem::InvertedForceTransmission(RigidBody & rb0, RigidBody & rb1)
 void PhysicSystem::ForceTransmission(RigidBody & rb0, RigidBody & rb1)
 {
 	//Corrects the penetration
-	Vec2 position_slope = (rb0contacts[0] - rb1contacts[0]);
+	Vec2 position_slope = (rb0contacts[0] - rb1contacts[0])*0.5f;
+	if (contact_count == 2)
+	{
+		Vec2 position_slope1 = (rb0contacts[1] - rb1contacts[1])*0.5f;
+		if (position_slope.LenSqrd() >= position_slope1.LenSqrd())
+		{
+			rb0.SetPosition(rb0.GetPosition() + position_slope);
+			//rb0.AddForce(position_slope);
+		}
+		else
+		{
+			position_slope = (position_slope + position_slope1) / 1.9f;
+		}
+	}
+	rb0.AddForce(position_slope);
+	rb1.AddForce(-position_slope);
 	rb0.SetPosition(rb0.GetPosition() + position_slope);
+	//rb1.SetPosition(rb0.GetPosition() - position_slope);
 
 	Vec2 p0_to_p1 = collision_point - contact_point;
 	Vec2 normal_angle = p0_to_p1.GetNormalized();

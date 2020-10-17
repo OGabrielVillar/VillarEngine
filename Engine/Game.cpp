@@ -118,7 +118,7 @@ void Game::Update()
 	i = 0;
 	
 	if (wnd.mouse.LeftIsPressed()){	
-		world.sun->rigidbody.SetPosition(Vec2(wnd.mouse.GetPosX(), wnd.mouse.GetPosY()));
+		world.userunit->rigidbody.SetPosition(Vec2(wnd.mouse.GetPosX(), wnd.mouse.GetPosY()));
 	}
 }
 
