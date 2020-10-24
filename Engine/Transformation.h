@@ -23,8 +23,10 @@ public:
 	Transformation& operator+=(const Vec2& position_rhs);
 	void SetPosition(const Vec2& rhs);
 	void RotatesBy(const Vec2& rhs);
+	void ScalesBy(float const rhs);
 	Vec2 GetPosition() const;
 	Vec2 GetOrientation();
+	float GetScale() const;
 	void SetOrientation(Vec2 orientation_in);
 	void SetOrientationRad(float orientation_in);
 public:
@@ -40,6 +42,9 @@ inline Vec2 GetRotated(const Vec2& vec_in, const Vec2& sincos_in) {
 }
 inline Vec2 GetRotated(const float float_in, const Vec2& sincos_in) {
 	return GetRotated(Vec2(float_in, 0.0f), sincos_in);
+}
+inline Vec2 GetSinCosOfDegrees(float degrees_in) {
+	return Vec2(std::cos(degrees_in), std::sin(degrees_in));
 }
 inline Vec2 GetInvertedAngle(const Vec2& sincos_in) {
 	return Vec2(sincos_in.x,-sincos_in.y);

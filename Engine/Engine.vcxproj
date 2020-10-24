@@ -138,8 +138,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AI.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="ChiliException.h" />
     <ClInclude Include="ChiliWin.h" />
+    <ClInclude Include="DrawSystem.h" />
     <ClInclude Include="Form.h" />
     <ClInclude Include="Colors.h" />
     <ClInclude Include="CombatSystem.h" />
@@ -150,6 +152,7 @@
     <ClInclude Include="Effect.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="Function.h" />
+    <ClInclude Include="UIElement.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="UnitToBodyAttachment.h" />
     <ClInclude Include="FrameTimer.h" />
@@ -174,6 +177,8 @@
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="DrawSystem.cpp" />
     <ClCompile Include="Form.cpp" />
     <ClCompile Include="CombatSystem.cpp" />
     <ClCompile Include="COMInitializer.cpp" />
@@ -197,6 +202,7 @@
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="Surface.cpp" />
     <ClCompile Include="Transformation.cpp" />
+    <ClCompile Include="UIElement.cpp" />
     <ClCompile Include="Unit.cpp" />
     <ClCompile Include="UnitToBodyAttachment.cpp" />
     <ClCompile Include="Vec2.cpp" />

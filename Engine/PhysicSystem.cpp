@@ -39,7 +39,7 @@ void PhysicSystem::MoveBodies()
 				//	Vec2 punit_to_sun = (Sun->rigidbody.GetPosition() - Punit->rigidbody.GetPosition());
 				//	Punit->rigidbody.velocity += punit_to_sun.Normalize() * ((GCONST * Sun->rigidbody.mass * Punit->rigidbody.mass) / punit_to_sun.LenSqrd());	//GRAVITY
 				//}
-				Punit->rigidbody.velocity += Vec2(0.0f, 10.0f);	//GRAVITY
+				//Punit->rigidbody.velocity += Vec2(0.0f, 10.0f);	//GRAVITY
 				Punit->rigidbody.velocity += Punit->rigidbody.force;
 				Punit->rigidbody.angularVelocity += Punit->rigidbody.torque;
 				//Punit->rigidbody.velocity *= AIRRESISTENCE;			//DRAG

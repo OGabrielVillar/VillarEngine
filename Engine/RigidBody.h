@@ -27,6 +27,7 @@ public: //SETTERS
 public: //GETTERS
 	Transformation GetTransformation();
 	Vec2 GetVerticePos(int vertice_index);
+	Transformation GetVerticeTransf(int vertice_index);
 	Vec2 GetVerticeOri(int vertice_index);
 	Transformation GetVertice(int vertice_index) const;
 	Vec2 GetVelocity();

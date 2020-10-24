@@ -34,14 +34,14 @@ World::World() :
 	GetCreatedUnit()->rigidbody.form.PushVertice(Vec2(200.0f, 0.0f));
 	GetCreatedUnit()->rigidbody.is_immovable = true;
 	GetCreatedUnit()->rigidbody.UpdateMass();
-
+	
 	AddUnit(Unit("linhamedia", Vec2(1000.0f, 300.0f)));
 	GetCreatedUnit()->SetRadius(radius*2.5f);
 	GetCreatedUnit()->SetRigidBodyForm(Form(radius*1.0f, Form::Type::Line));
 	GetCreatedUnit()->rigidbody.form.PushVertice(Vec2(50.0f, 0.0f));
 	GetCreatedUnit()->rigidbody.is_immovable = true;
 	GetCreatedUnit()->rigidbody.UpdateMass();
-
+	
 	AddUnit(Unit("linhamediaVertical", Vec2(800.0f, 300.0f)));
 	GetCreatedUnit()->SetRadius(radius*2.5f);
 	GetCreatedUnit()->SetRigidBodyForm(Form(radius*4.0f, Form::Type::Line));
@@ -49,14 +49,14 @@ World::World() :
 	GetCreatedUnit()->rigidbody.is_immovable = true;
 	GetCreatedUnit()->rigidbody.UpdateMass();
 	linhagrande = GetCreatedUnit();
-
+	
 	AddUnit(Unit("linhagrande", Vec2(500.0f, 660.0f)));
 	GetCreatedUnit()->SetRadius(radius*6.5f);
 	GetCreatedUnit()->SetRigidBodyForm(Form(radius*4.0f, Form::Type::Line));
 	GetCreatedUnit()->rigidbody.form.PushVertice(Vec2(2300.0f, 0.0f));
 	GetCreatedUnit()->rigidbody.is_immovable = true;
 	GetCreatedUnit()->rigidbody.UpdateMass();
-
+	
 	AddUnit(Unit("linha", Vec2(500.0f, 160.0f)));
 	GetCreatedUnit()->SetRadius(radius);
 	GetCreatedUnit()->SetRigidBodyForm(Form(radius*0.8f, Form::Type::Line));
@@ -197,6 +197,11 @@ void World::AddCommand(Unit * unit_in, unsigned char key_in, unsigned int effect
 Unit * World::GetCreatedUnit()
 {
 	return newUnit;
+}
+
+Camera * World::GetCamera()
+{
+	return &camera;
 }
 
 PhysicSystem * World::GetPPhysicsSystem()

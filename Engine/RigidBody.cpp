@@ -109,6 +109,11 @@ Vec2 RigidBody::GetVerticePos(int vertice_index)
 	return (transformation + (form.GetVertice(vertice_index)-form.GetCentralPoint())).GetPosition();
 }
 
+Transformation RigidBody::GetVerticeTransf(int vertice_index)
+{
+	return (transformation + (form.GetVertice(vertice_index) - form.GetCentralPoint()));
+}
+
 Vec2 RigidBody::GetVerticeOri(int vertice_index)
 {
 	return GetRotated(form.GetVertice(vertice_index).GetOrientation(),transformation.GetOrientation());

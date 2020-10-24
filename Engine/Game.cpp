@@ -25,7 +25,8 @@ Game::Game(MainWindow& wnd)
 	:
 	wnd(wnd),
 	gfx(wnd),
-	world()
+	world(),
+	drawSystem(gfx,world)
 {
 	defaultControl = world.GetControl();
 	defaultControl->BindKeyboard(wnd.kbd);
@@ -96,19 +97,19 @@ void Game::Update()
 			t = pU->GetTransformation();
 			if (t.GetPosition().x <= -radius)
 			{
-				t.position.x = gfx.ScreenWidth + (radius + 1.0f);
+				t.position.x = gfx.ScreenWidth + (radius + 2.0f);
 			}
-			else if (t.GetPosition().x > gfx.ScreenWidth + radius)
+			else if (t.GetPosition().x >= gfx.ScreenWidth + radius)
 			{
-				t.position.x = -(radius + 1.0f);
+				t.position.x = -(radius + 2.0f);
 			}
 			if (t.GetPosition().y <= -radius)
 			{
-				t.position.y = gfx.ScreenHeight + (radius + 1.0f);
+				t.position.y = gfx.ScreenHeight + (radius + 2.0f);
 			}
-			else if (t.GetPosition().y > gfx.ScreenHeight + radius)
+			else if (t.GetPosition().y >= gfx.ScreenHeight + radius)
 			{
-				t.position.y = -(radius+1.0f);
+				t.position.y = -(radius+2.0f);
 			}
 			pU->SetTransformation(t);
 			velocity_sum += pU->rigidbody.velocity.Len();
@@ -120,82 +121,62 @@ void Game::Update()
 	if (wnd.mouse.LeftIsPressed()){	
 		world.userunit->rigidbody.SetPosition(Vec2(wnd.mouse.GetPosX(), wnd.mouse.GetPosY()));
 	}
+
+	if (wnd.kbd.KeyIsPressed((char)104))
+	{
+		world.GetCamera()->SetTransformation(*world.GetCamera()->GetTransformation()+Transformation(Vec2(0.0f,-500.0f*ft.Get())));
+	}
+
+	if (wnd.kbd.KeyIsPressed((char)98))
+	{
+		world.GetCamera()->SetTransformation(*world.GetCamera()->GetTransformation() + Transformation(Vec2(0.0f, 500.0f*ft.Get())));
+	}
+
+
+	if (wnd.kbd.KeyIsPressed((char)102))
+	{
+		world.GetCamera()->SetTransformation(*world.GetCamera()->GetTransformation() + Transformation(Vec2(500.0f*ft.Get(), 0.0f)));
+	}
+
+	if (wnd.kbd.KeyIsPressed((char)100))
+	{
+		world.GetCamera()->SetTransformation(*world.GetCamera()->GetTransformation() + Transformation(Vec2(-500.0f*ft.Get(), 0.0f)));
+	}
+
+	if (wnd.kbd.KeyIsPressed((char)105))
+	{
+		Transformation rotation;
+		rotation.RotatesBy(GetSinCosOfDegrees(0.7f*ft.Get()));
+		world.GetCamera()->SetTransformation(*world.GetCamera()->GetTransformation() + rotation);
+	}
+	if (wnd.kbd.KeyIsPressed((char)103))
+	{
+		Transformation reversed_rotation;
+		reversed_rotation.RotatesBy(GetSinCosOfDegrees(-0.7f*ft.Get()));
+		world.GetCamera()->SetTransformation(*world.GetCamera()->GetTransformation() + reversed_rotation);
+	}
+
+	if (wnd.kbd.KeyIsPressed((char)32))
+	{
+		world.GetCamera()->SetTransformation(Transformation(Vec2(gfx.ScreenWidth / 2.0f, gfx.ScreenHeight / 2.0f)));
+	}
+
+	if (wnd.kbd.KeyIsPressed((char)107))
+	{
+		Transformation scale;
+		scale.ScalesBy(1.05263f);
+		world.GetCamera()->SetTransformation(*world.GetCamera()->GetTransformation() + scale);
+	}
+
+	if (wnd.kbd.KeyIsPressed((char)109))
+	{
+		Transformation scale;
+		scale.ScalesBy(0.95f);
+		world.GetCamera()->SetTransformation(*world.GetCamera()->GetTransformation() + scale);
+	}
 }
 
 void Game::ComposeFrame()		
 {
-	Color cx = Colors::White;
-	int i = 0;
-	Unit* pU;
-	while (i < UNITSLIMIT)
-	{
-		pU = &world.GetUnit(i);
-		if (!pU->GetName().empty())
-		{
-			cx = Colors::White;
-			if (pU == world.userunit)
-			{
-				cx = Colors::Yellow;
-			}
-			//if (pU->rigidbody.arecolliding){cx = Colors::Red;}
-			//if (pU->rigidbody.arebeinghit){cx = Colors::Blue;}
-			if (pU->rigidbody.form.GetType() == Form::Type::Point) // DRAW CIRCLES
-			{
-				gfx.DrawCircle(pU->rigidbody.GetVerticePos(0), pU->GetRadius(), cx);
-				gfx.DrawLine(pU->rigidbody.GetVerticePos(0),
-					pU->rigidbody.GetVerticePos(0) + GetRotated(pU->rigidbody.form.GetRadius(), pU->rigidbody.GetVerticeOri(0)), cx);
-				//gfx.DrawLine(pU->rigidbody.GetVerticePos(0), world.GetPPhysicsSystem()->x_projection, cx);
-				//gfx.DrawLine(pU->rigidbody.GetVerticePos(0), world.GetPPhysicsSystem()->y_projection, cx);
-				//gfx.DrawLine(world.GetPPhysicsSystem()->contact_point, world.GetPPhysicsSystem()->collision_point, cx);
-				//gfx.DrawLine(pU->rigidbody.GetVerticePos(0), pU->rigidbody.GetVerticePos(0)+(-pU->rigidbody.velocity * ft.Get()), Colors::Cyan);
-				//gfx.DrawCircle(world.GetPPhysicsSystem()->x_projection, 12.0f, cx);
-			}
-			if (pU->rigidbody.form.GetType() == Form::Type::Line) // DRAW LINES
-			{
-				gfx.DrawCircleLine(pU->rigidbody.GetVerticePos(0), pU->rigidbody.GetVerticePos(1), pU->GetRadius(), cx);
-				gfx.DrawLine(pU->rigidbody.GetVerticePos(0),
-					pU->rigidbody.GetVerticePos(0) + GetRotated(pU->rigidbody.form.GetRadius(), pU->rigidbody.GetVerticeOri(0)), cx);
-				gfx.DrawLine(pU->rigidbody.GetVerticePos(1),
-					pU->rigidbody.GetVerticePos(1) + GetRotated(pU->rigidbody.form.GetRadius(), pU->rigidbody.GetVerticeOri(1)), cx);
-			}
-			if (pU->rigidbody.form.GetType() == Form::Type::Curve3P) // DRAW CURVES3P
-			{
-				//gfx.DrawCurve3Ptestes(pU->rigidbody.GetVerticePos(0), pU->rigidbody.GetVerticePos(1), pU->rigidbody.GetVerticePos(2), pU->GetRadius(), Colors::Blue);
-				gfx.DrawCircleCurve3P(pU->rigidbody.GetVerticePos(0), pU->rigidbody.GetVerticePos(1), pU->rigidbody.GetVerticePos(2), pU->GetRadius(), cx);
-				gfx.DrawCurve3P(pU->rigidbody.GetVerticePos(0), pU->rigidbody.GetVerticePos(1), pU->rigidbody.GetVerticePos(2), cx);
-			}
-			//gfx.DrawCircle(world.GetPPhysicsSystem()->contacts[0],10.0f,Colors::Red);
-		}
-		i++;
-	}
-
-
-
-
-	//gfx.DrawCurve3P(Vec2(0.0f, 0.0f), Vec2(500.0f, 0.0f), Vec2(1000.0f, 0.0f), cx);
-	////gfx.DrawCurve3P(world.bolinha->rigidbody.GetVerticePos(0), world.linhagrande->rigidbody.GetVerticePos(0), world.linhagrande->rigidbody.GetVerticePos(1), cx);
-	////gfx.DrawCurve3P(Vec2(0.0f), world.linhagrande->rigidbody.GetVerticePos(0), world.linhagrande->rigidbody.GetVerticePos(1), cx);
-	//
-	//
-	////link.Draw( gfx );
-	//gfx.PutPixel(500, 500, Colors::Magenta);
-	////font.DrawText( "Becky.\nLemme smash.",wnd.mouse.GetPos() - Vei2{ 50,150 },Colors::White,gfx );
-	//if (trigger >= 60)
-	//{
-	//	string = std::string("\nFps: " + std::to_string(1 / ft.Get()) );
-	//	list.PushElement(string);
-	//	trigger = 0;
-	//}
-	//finalString = '0';
-	//for (int i = 0; i < list.capacity(); i++)
-	//{
-	//	finalString += list[i];
-	//}
-	//font.DrawText(finalString, textPos, Colors::Yellow, gfx);
-	//for (size_t i = 0; i < 20000000; i++)
-	//{
-	//	char a = 0;
-	//	a = 1;
-	//}
-	//trigger ++;
+	drawSystem.Go(ft.Get());
 }

@@ -37,6 +37,9 @@
     <Filter Include="About the Project">
       <UniqueIdentifier>{243ead6b-708f-426e-a264-9c174eeb81d0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\VisualSide">
+      <UniqueIdentifier>{3561251a-b0de-44d8-9651-27cfcc118787}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI.h">
@@ -144,6 +147,15 @@
     <ClInclude Include="Vei2.h">
       <Filter>Header Files\VillarMath</Filter>
     </ClInclude>
+    <ClInclude Include="UIElement.h">
+      <Filter>Header Files\VisualSide</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawSystem.h">
+      <Filter>Header Files\VisualSide</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files\World Side</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CombatSystem.cpp">
@@ -229,6 +241,15 @@
     </ClCompile>
     <ClCompile Include="Vec2.cpp">
       <Filter>Source Files\VillarMath</Filter>
+    </ClCompile>
+    <ClCompile Include="UIElement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

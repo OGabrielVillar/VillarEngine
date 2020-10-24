@@ -6,6 +6,7 @@
 #include "Control.h"
 #include "AI.h"
 #include "FrameTimer.h"
+#include "Camera.h"
 
 class World
 {
@@ -20,6 +21,7 @@ public: //GETTERS
 	Unit& GetUnit(int index);
 	Control* GetControl();
 	Unit* GetCreatedUnit();
+	Camera* GetCamera();
 	PhysicSystem* GetPPhysicsSystem();
 	CombatSystem* GetPCombatSystem();
 	Unit* userunit = nullptr;
@@ -32,5 +34,6 @@ private:
 	PhysicSystem physicSystem;
 	Control control;
 	Unit* newUnit = nullptr;
+	Camera camera;
 	float ft;
 };

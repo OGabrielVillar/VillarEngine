@@ -333,9 +333,9 @@ void Graphics::PutPixelInCanvas(int x, int y, Color c)
 
 void Graphics::DrawCircle(Vec2 position_in, float radius_in, Color c)
 {
-	for (int x_a = (int)-radius_in; x_a < (int)radius_in; x_a++)
+	for (int x_a = (int)-radius_in; x_a < (int)radius_in + 1; x_a++)
 	{
-		for (int y_a = (int)-radius_in; y_a < (int)radius_in; y_a++)
+		for (int y_a = (int)-radius_in; y_a < (int)radius_in + 1; y_a++)
 		{
 			if ((x_a * x_a)+(y_a * y_a) < radius_in*radius_in)
 			{
@@ -470,9 +470,9 @@ void Graphics::DrawCircleLine(Vec2 & start, Vec2 & end, float radius_in, Color c
 	Vec2 upline_slop = (GetRotated90((start - end).GetNormalized()) * radius_in);
 	DrawLine(start + upline_slop, end + upline_slop, c);
 	DrawLine(start - upline_slop, end - upline_slop, c);
-	for (int x_a = (int)-radius_in; x_a < (int)radius_in; x_a++)
+	for (int x_a = (int)-radius_in; x_a < (int)radius_in + 1; x_a++)
 	{
-		for (int y_a = (int)-radius_in; y_a < (int)radius_in; y_a++)
+		for (int y_a = (int)-radius_in; y_a < (int)radius_in + 1; y_a++)
 		{
 			if ((x_a * x_a) + (y_a * y_a) < radius_in*radius_in)
 			{

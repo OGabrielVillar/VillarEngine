@@ -31,7 +31,7 @@
 #include "Sound.h"
 #include "List.h"
 
-
+#include "DrawSystem.h"
 #include "World.h"
 
 class Game
@@ -51,6 +51,7 @@ private:
 	MainWindow& wnd;
 	Graphics gfx;
 	World world;
+	DrawSystem drawSystem;
 	Control* defaultControl;
 	FrameTimer ft;
 	float velocity_sum;
