@@ -27,7 +27,7 @@ void PhysicSystem::MoveBodies()
 	float _totalenergybefore = 0.0f;
 	float _totalenergyafter = 0.0f;
 
-	while (!lr_a.IsTheLastElement())
+	while (!lr_a.Ended())
 	{
 		if (!lr_a.Get()->GetName().empty())
 		{
@@ -61,7 +61,7 @@ void PhysicSystem::MoveBodies()
 		lr_a.Next();
 	}
 	lr_a.Reset();
-	while (!lr_a.IsTheLastElement())
+	while (!lr_a.Ended())
 	{
 		if (!lr_a.Get()->GetName().empty()){
 			if (!lr_a.Get()->rigidbody.is_immovable)
@@ -74,13 +74,13 @@ void PhysicSystem::MoveBodies()
 		lr_a.Next();
 	}
 	lr_a.Reset();
-	while (!lr_a.IsTheLastElement())
+	while (!lr_a.Ended())
 	{
 		if (!lr_a.Get()->GetName().empty())
 		{
 			lr_b.Reset();
 			lr_b.Next();
-			while (!lr_b.IsTheLastElement())
+			while (!lr_b.Ended())
 			{
 				if (!lr_b.Get()->GetName().empty())
 				{

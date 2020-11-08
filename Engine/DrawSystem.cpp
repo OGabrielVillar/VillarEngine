@@ -32,7 +32,7 @@ void DrawSystem::ComposeFrame()
 
 	IdListReader<Unit> lr_pu(world->GetUnitIdList());
 
-	while (!lr_pu.IsTheLastElement())
+	while (!lr_pu.Ended())
 	{
 		pU = lr_pu.Get();
 		if (!pU->GetName().empty())

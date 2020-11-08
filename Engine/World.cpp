@@ -116,7 +116,7 @@ World::World() :
 	lefteffect.SetFunctionFloat(0, 0, -0.8f);
 	AddCommand(linhagrande, (char)37, lefteffect);
 
-	// 25 UNIT SPAWN
+	/*/ 25 UNIT SPAWN
 	for (size_t i = 0; i < 2; i++)
 	{
 		for (size_t j = 0; j < 20 ; j++)

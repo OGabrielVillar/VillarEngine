@@ -33,6 +33,9 @@ inline void IdListBlock<T>::PushElement(T & element_in)
 template<class T>
 inline T * IdListBlock<T>::GetElement()
 {
+	if (&*this == NULL) {
+		return NULL;
+	}
 	return element;
 }
 
@@ -147,6 +150,10 @@ inline void IdList<T>::NewBlock()
 template<class T>
 inline IdListBlock<T>* IdList<T>::SeekBlock(unsigned int id)
 {
+	if (id >= many_elements)
+	{
+		return NULL;
+	}
 	if (id == 0)
 	{
 		return first_block;
@@ -174,6 +181,7 @@ public:
 	void Next();
 	T* PeekPrevious();
 	bool IsTheLastElement();
+	bool Ended();
 	void Reset();
 private:
 	IdList<T>* id_list = nullptr;
@@ -218,6 +226,16 @@ inline bool IdListReader<T>::IsTheLastElement()
 	{
 		return true;
 	}
+	return false;
+}
+
+template<class T>
+inline bool IdListReader<T>::Ended()
+{
+	if (current_block == NULL)
+	{
+		return true;
+	};
 	return false;
 }
 
