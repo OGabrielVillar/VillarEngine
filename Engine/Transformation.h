@@ -24,6 +24,7 @@ public:
 	void SetPosition(const Vec2& rhs);
 	void RotatesBy(const Vec2& rhs);
 	void ScalesBy(float const rhs);
+	void MovesBy(const Vec2& rhs);
 	Vec2 GetPosition() const;
 	Vec2 GetOrientation();
 	float GetScale() const;

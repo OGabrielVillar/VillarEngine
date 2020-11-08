@@ -30,9 +30,11 @@
 #include "Font.h"
 #include "Sound.h"
 #include "List.h"
+#include "FileStream.h"
 
 #include "DrawSystem.h"
 #include "World.h"
+#include "IdList.h"
 
 class Game
 {
@@ -48,6 +50,8 @@ private:
 	/*  User Functions              */
 	/********************************/
 private:
+	FileStream fs;
+
 	MainWindow& wnd;
 	Graphics gfx;
 	World world;

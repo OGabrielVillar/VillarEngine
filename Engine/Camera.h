@@ -8,7 +8,7 @@ public:
 	Camera() = default;
 	~Camera() = default;
 	Transformation* GetTransformation();
-	void SetTransformation(Transformation& const transf_in);
+	void SetTransformation(const Transformation& transf_in);
 private:
 	Transformation transformation;
 	float zoom = 1.0f;

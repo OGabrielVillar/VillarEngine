@@ -8,11 +8,13 @@
 #include "Unit.h"
 #include <string>
 #include <sstream>
+#include "IdList.h"
 
 class PhysicSystem
 {
 public:
 	PhysicSystem(Unit* unitgroup_in);
+	PhysicSystem(IdList<Unit>* unitgroup_in);
 	void Go(float ft_in);
 	void MoveBodies();
 	bool IsCollinding(RigidBody* rb0, RigidBody* rb1);
@@ -26,7 +28,7 @@ public:
 	void ForceTransmission(RigidBody & rbP0, RigidBody & rbP1);
 	Vec2 GetReflectedForce(Vec2 v_in, Vec2 w_in);
 private:
-	Unit* Punitgroup;
+	IdList<Unit>* Punitgroupxx;
 	float ft;
 	bool ThereWasCollision = false;
 	float amountOfEnergyInSystemN;

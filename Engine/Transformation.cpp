@@ -87,6 +87,11 @@ void Transformation::ScalesBy(float const rhs)
 	scale *= rhs;
 }
 
+void Transformation::MovesBy(const Vec2 & rhs)
+{
+	position += rhs;
+}
+
 Vec2 Transformation::GetPosition() const
 {
 	return Vec2(position.x, position.y);

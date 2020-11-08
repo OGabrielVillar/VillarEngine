@@ -3,8 +3,6 @@
 //#define UNITSLIMIT 99
 #define COMMANDCARDLENGHT 9
 
-const int UNITSLIMIT = 550;
-
 #include "Transformation.h"
 #include "Command.h"
 #include "RigidBody.h"
@@ -25,7 +23,8 @@ public: //SETTERS
 public: //GETTERS
 	Command& GetCommand(char index);
 	std::string& GetName();
-	float GetRadius();
+	float GetRadiusSqrd() const;
+	float GetFormRadius() const;
 	Transformation GetTransformation();
 
 	RigidBody rigidbody;

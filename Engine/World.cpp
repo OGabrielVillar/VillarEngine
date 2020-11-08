@@ -1,8 +1,8 @@
 #include "World.h"
 
 World::World() :
-	physicSystem(&units[0]),
-	combatSystem(&units[0]),
+	physicSystem(&_unitsx),
+	combatSystem(&_unitsx),
 	control(combatSystem)
 {
 	float radius = 8.0f;		        //cm
@@ -159,29 +159,14 @@ World::World() :
 void World::Go(float ft_in)
 {
 	ft = ft_in;
-	//Vec2 orientationX = Vec2(std::cos(1.0f*ft), std::sin(1.0f*ft));
-	//float orientationXx = GetAngle(orientationX);
-	//linhagrande->rigidbody.MoveVerticeTo(1,bolinha->rigidbody.GetVerticePos(0) + Vec2(0.0f, -100.0f));
-	//linhagrande->rigidbody.transformation.RotatesBy(orientationX);
 	combatSystem.Go(ft_in);
 	physicSystem.Go(ft_in);
 }
 
 void World::AddUnit(Unit unt_in)
 {
-	{
-		int i = 0;
-		while (i < UNITSLIMIT)
-		{
-			if (units[i].GetName().empty())
-			{
-				units[i] = unt_in;
-				newUnit = &units[i];
-				return;
-			}
-			i++;
-		}
-	}
+	_unitsx.PushElement(unt_in);
+	newUnit = _unitsx.GetLastElement();
 }
 
 void World::AddCommand(Unit * unit_in, unsigned char key_in, Effect effect_in)
@@ -204,6 +189,11 @@ Camera * World::GetCamera()
 	return &camera;
 }
 
+IdList<Unit>* World::GetUnitIdList()
+{
+	return &_unitsx;
+}
+
 PhysicSystem * World::GetPPhysicsSystem()
 {
 	return &physicSystem;
@@ -212,15 +202,6 @@ PhysicSystem * World::GetPPhysicsSystem()
 CombatSystem * World::GetPCombatSystem()
 {
 	return &combatSystem;
-}
-
-Unit & World::GetUnit(int index)
-{
-	if (index > UNITSLIMIT)
-	{
-		return units[0];
-	}
-	return units[index];
 }
 
 Control* World::GetControl()

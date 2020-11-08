@@ -66,7 +66,12 @@ std::string & Unit::GetName()
 	return name;
 }
 
-float Unit::GetRadius()
+float Unit::GetRadiusSqrd() const
+{
+	return rigidbody.form.GetRadiusFromCenterSqrd();
+}
+
+float Unit::GetFormRadius() const
 {
 	return rigidbody.form.GetRadius();
 }

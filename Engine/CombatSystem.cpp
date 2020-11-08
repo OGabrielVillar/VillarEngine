@@ -1,8 +1,8 @@
 #include "CombatSystem.h"
 
-CombatSystem::CombatSystem(Unit * unit_list_in)
+CombatSystem::CombatSystem(IdList<Unit>* unit_list_in)
 {
-	unit_list = unit_list_in;
+	il_units = unit_list_in;
 }
 
 void CombatSystem::Go(float ft_in)
@@ -15,19 +15,21 @@ void CombatSystem::Go(float ft_in)
 
 void CombatSystem::CheckForCommands()
 {
-	for (size_t i = 0; i < UNITSLIMIT; i++)
+	IdListReader<Unit> lr_Punit(il_units);
+
+	for (size_t i = 0; i < il_units->ManyElements(); i++)
 	{
 		for (char i = 0; i < COMMANDCARDLENGHT; i++)
 		{
-			if (kbd->KeyIsPressed(unit_list->GetCommand(i).GetKey()))
+			if (kbd->KeyIsPressed(lr_Punit.Get()->GetCommand(i).GetKey()))
 			{
-				AddEffect(effects_templates[unit_list->GetCommand(i).GetEffectID()],
-					unit_list);
+				AddEffect(effects_templates[lr_Punit.Get()->GetCommand(i).GetEffectID()],
+					lr_Punit.Get());
 			}
 		}
-		unit_list++;
+		lr_Punit.Next();
 	}
-	unit_list -= UNITSLIMIT;
+	lr_Punit.Reset();
 }
 
 void CombatSystem::CheckForEffects()

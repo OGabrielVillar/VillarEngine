@@ -31,7 +31,28 @@ Game::Game(MainWindow& wnd)
 	defaultControl = world.GetControl();
 	defaultControl->BindKeyboard(wnd.kbd);
 	world.GetPCombatSystem()->BindKeyboard(wnd.kbd);
+	world.GetCamera()->SetTransformation(Transformation(Vec2(gfx.ScreenWidth / 2.0f, gfx.ScreenHeight / 2.0f)));
 
+	fs.OpenFile("test\test.txt");
+	char xtest = fs.Read<char>();
+	char ytest = fs.Read<char>();
+	fs.Write<char>((char)40,"gugu");
+	char ztest = fs.Read<char>();
+	char wtest = fs.Read<char>();
+	IdList<Vec2> lago;
+	lago.PushElement(Vec2(1.0f));
+	lago.PushElement(Vec2(3.0f));
+	lago.PushElement(Vec2(5.0f));
+	lago.PushElement(Vec2(5.0f));
+	lago.PushElement(Vec2(5.0f));
+	lago.PushElement(Vec2(5.0f));
+	lago.PushElement(Vec2(5.0f));
+	lago.PushElement(Vec2(5.0f));
+	lago.PushElement(Vec2(5.0f));
+	lago.PushElement(Vec2(8.0f));
+	lago.PushElement(Vec2(5.0f));
+	Vec2 testA = *lago[5];
+	Vec2 testB = *lago[9];
 }
 
 void Game::Go()
@@ -85,63 +106,66 @@ void Game::Update()
 	Transformation t;
 	float radius;
 	int i = 0;
-	
+	Vec2 rectBound = Vec2(gfx.ScreenWidth, gfx.ScreenHeight);
 	Unit* pU;
-	while (i < UNITSLIMIT)
+
+	IdListReader<Unit> lr_pu(world.GetUnitIdList());
+
+	while (!lr_pu.IsTheLastElement())
 	{
-		pU = &world.GetUnit(i);
+		pU = lr_pu.Get();
 		if (!pU->GetName().empty())
 		{
-			pU = &world.GetUnit(i);
-			radius = pU->GetRadius();
+			radius = pU->GetRadiusSqrd();
 			t = pU->GetTransformation();
-			if (t.GetPosition().x <= -radius)
+			if (Sqr(t.GetPosition().x - gfx.ScreenWidth) > radius+Sqr(gfx.ScreenWidth))
 			{
-				t.position.x = gfx.ScreenWidth + (radius + 2.0f);
+				t.position.x = gfx.ScreenWidth + (radius - 2.0f);
 			}
 			else if (t.GetPosition().x >= gfx.ScreenWidth + radius)
 			{
-				t.position.x = -(radius + 2.0f);
+				t.position.x = -(radius - 2.0f);
 			}
-			if (t.GetPosition().y <= -radius)
+			if (Sqr(t.GetPosition().y) <= -radius)
 			{
 				t.position.y = gfx.ScreenHeight + (radius + 2.0f);
 			}
 			else if (t.GetPosition().y >= gfx.ScreenHeight + radius)
 			{
-				t.position.y = -(radius+2.0f);
+				t.position.y = -(radius + 2.0f);
 			}
 			pU->SetTransformation(t);
 			velocity_sum += pU->rigidbody.velocity.Len();
 		}
-		i++;
+		lr_pu.Next();
 	}
-	i = 0;
-	
+
 	if (wnd.mouse.LeftIsPressed()){	
-		world.userunit->rigidbody.SetPosition(Vec2(wnd.mouse.GetPosX(), wnd.mouse.GetPosY()));
+		world.userunit->rigidbody.SetPosition(Vec2((float)wnd.mouse.GetPosX(), (float)wnd.mouse.GetPosY()));
 	}
+	float camera_velocity = (750.0f / world.GetCamera()->GetTransformation()->GetScale())*ft.Get();
 
 	if (wnd.kbd.KeyIsPressed((char)104))
 	{
-		world.GetCamera()->SetTransformation(*world.GetCamera()->GetTransformation()+Transformation(Vec2(0.0f,-500.0f*ft.Get())));
+		world.GetCamera()->GetTransformation()->MovesBy(Vec2(0.0f,-camera_velocity ));
 	}
 
 	if (wnd.kbd.KeyIsPressed((char)98))
 	{
-		world.GetCamera()->SetTransformation(*world.GetCamera()->GetTransformation() + Transformation(Vec2(0.0f, 500.0f*ft.Get())));
+		world.GetCamera()->GetTransformation()->MovesBy(Vec2(0.0f, camera_velocity));
 	}
 
 
 	if (wnd.kbd.KeyIsPressed((char)102))
 	{
-		world.GetCamera()->SetTransformation(*world.GetCamera()->GetTransformation() + Transformation(Vec2(500.0f*ft.Get(), 0.0f)));
+		world.GetCamera()->GetTransformation()->MovesBy(Vec2(camera_velocity, 0.0f));
 	}
 
 	if (wnd.kbd.KeyIsPressed((char)100))
 	{
-		world.GetCamera()->SetTransformation(*world.GetCamera()->GetTransformation() + Transformation(Vec2(-500.0f*ft.Get(), 0.0f)));
+		world.GetCamera()->GetTransformation()->MovesBy(Vec2(-camera_velocity, 0.0f));
 	}
+
 
 	if (wnd.kbd.KeyIsPressed((char)105))
 	{
@@ -163,16 +187,12 @@ void Game::Update()
 
 	if (wnd.kbd.KeyIsPressed((char)107))
 	{
-		Transformation scale;
-		scale.ScalesBy(1.05263f);
-		world.GetCamera()->SetTransformation(*world.GetCamera()->GetTransformation() + scale);
+		world.GetCamera()->GetTransformation()->ScalesBy(1.05263f);
 	}
 
 	if (wnd.kbd.KeyIsPressed((char)109))
 	{
-		Transformation scale;
-		scale.ScalesBy(0.95f);
-		world.GetCamera()->SetTransformation(*world.GetCamera()->GetTransformation() + scale);
+		world.GetCamera()->GetTransformation()->ScalesBy(0.95f);
 	}
 }
 

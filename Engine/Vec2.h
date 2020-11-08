@@ -68,6 +68,10 @@ inline float DistSqr(const Vec2& a, const Vec2& b)
 	Vec2 c = a - b;
 	return Dot(c, c);
 }
+inline float DistSqr(const Vec2& a)
+{
+	return a.x * a.x + a.y * a.y;
+}
 inline Vec2 Cross(const Vec2& v, float a)
 {
 	return Vec2(a * v.y, -a * v.x);

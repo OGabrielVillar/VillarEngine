@@ -5,11 +5,12 @@
 
 #include "Effect.h"
 #include "Keyboard.h"
+#include "IdList.h"
 
 class CombatSystem
 {
 public:
-	CombatSystem(Unit* unit_list_in);
+	CombatSystem(IdList<Unit>* unit_list_in);
 	void Go(float ft);
 
 	void CheckForCommands();
@@ -22,7 +23,7 @@ public:
 private:
 	Effect effects[EFFECTLIMIT];
 	Effect effects_templates[EFFECTTEMPLATELIMIT];
-	Unit* unit_list;
+	IdList<Unit>* il_units;
 	Keyboard* kbd = nullptr;
 	float ft;
 };

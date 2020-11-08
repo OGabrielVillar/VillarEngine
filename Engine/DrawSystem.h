@@ -7,7 +7,7 @@
 class DrawSystem
 {
 public:
-	DrawSystem(Graphics& const gfx_in, World& const world_in);
+	DrawSystem(Graphics& gfx_in, World& world_in);
 public:
 	void Go(float ft_in);
 	void ComposeFrame();

@@ -480,7 +480,7 @@ void Graphics::DrawCircleLine(Vec2 & start, Vec2 & end, float radius_in, Color c
 				{
 					int x_b;
 					int y_b;
-					if (Dot((start - end), Vec2( x_a, y_a )) > 0.0f)
+					if (Dot((start - end), Vec2( (float)x_a, (float)y_a )) > 0.0f)
 					{
 						x_b = x_a + (int)start.x;
 						y_b = y_a + (int)start.y;
@@ -504,9 +504,9 @@ void Graphics::DrawCircleCurve3P(Vec2 & start, Vec2 & mid, Vec2 & end, float rad
 	float scalar = Dot(angleOfMatrix, angleOfMatrix2);
 	Vec2 xx = (GetRotated(mid, GetInvertedAngle(angleOfMatrix)));
 	Vec2 upline_slop1 = (mid - GetRotated((GetRotated(mid, GetInvertedAngle(angleOfMatrix)) + Vec2(0.0f, -radius_in)),angleOfMatrix));
-	PutPixelInCanvas((mid + upline_slop1).x, (mid + upline_slop1).y, Colors::Yellow);
-	PutPixelInCanvas((mid - upline_slop1).x, (mid - upline_slop1).y, Colors::Yellow);
-	PutPixelInCanvas((mid).x, (mid).y, Colors::Yellow);
+	PutPixelInCanvas((int)(mid.x + upline_slop1.x), (int)(mid.x + upline_slop1.y), Colors::Yellow);
+	PutPixelInCanvas((int)(mid.x - upline_slop1.x), (int)(mid.x - upline_slop1.y), Colors::Yellow);
+	PutPixelInCanvas((int)(mid).x, (int)(mid).y, Colors::Yellow);
 	Vec2 upline_slop0 = GetRotated90((start - mid).GetNormalized()) * radius_in;
 	Vec2 upline_slop2 = GetRotated90((mid - end).GetNormalized()) * radius_in;
 	DrawCurve3P(start + upline_slop0, mid + upline_slop1, end + upline_slop2, c);
@@ -521,13 +521,13 @@ void Graphics::DrawCircleCurve3P(Vec2 & start, Vec2 & mid, Vec2 & end, float rad
 				{
 					int x_b;
 					int y_b;
-					if (Dot((start - mid), Vec2(x_a, y_a)) > 0.0f)
+					if (Dot((start - mid), Vec2((float)x_a, (float)y_a)) > 0.0f)
 					{
 						x_b = x_a + (int)start.x;
 						y_b = y_a + (int)start.y;
 						PutPixelInCanvas(x_b, y_b, c);
 					}
-					if (Dot((end - mid), Vec2(x_a, y_a)) > 0.0f)
+					if (Dot((end - mid), Vec2((float)x_a, (float)y_a)) > 0.0f)
 					{
 						x_b = x_a + (int)end.x;
 						y_b = y_a + (int)end.y;

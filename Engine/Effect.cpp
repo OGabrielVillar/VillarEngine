@@ -90,7 +90,7 @@ void Effect::AddForce_CMperS(Unit * Punit, Transformation transformation_in, flo
 
 void Effect::AddUnitRadius(Unit* Punit, float float_in)
 {
-	Punit->SetRadius(Punit->GetRadius() + float_in);
+	Punit->SetRadius(Punit->GetFormRadius() + float_in);
 }
 
 void Effect::SetUnitPosition(Unit * Punit, Vec2 position_in)

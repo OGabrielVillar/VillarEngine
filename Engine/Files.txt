@@ -1,0 +1,48 @@
+PreTemplate
+PosTemplate
+Individual
+
+directories
+
+characters:
+command: / . [2]
+special: 
+alphabetic: a b c d e f g h i j k l m n o p q r s t u v x y w z [26]
+uppercase: A B C D E F G H I J K L M N O P Q R S T U V X Y W Z [26]
+numerical: 0 1 2 3 4 5 6 7 8 9 [10]
+
+string=.tx
+
+
+PreTemplateDirectories
+00 worlds	/sub/sub/world.wld 	= 00 + int id
+02 units		/sub/sub/name.tx 		= 02 + int id
+02 units		/sub/sub/name.tx 		= 02 + int id
+03 effects	/sub/sub/x.eft		= 03 + int id
+
+
+
+summary
+[]
+0 world <sTextId>
+//first block, of static construction variables:
+dimensions
+//second block, of functions callings
+GLOSSARY BLOCK
+:
+		|worlds-id	|			|			|			|
+result	|0			|0			|0			|0			|
+
+
+CHUNK BLOCK
+:
+		|item		|chunk		|chunk		|name		|
+		|type		|x			|y			|			|
+		|			|			|			|sTextId	|
+		|			|			|			|			|
+		|unsigned	|unsigned	|unsigned	|unsigned	|
+		|short		|short		|short		|int		|
+		|16bits		|16bits		|16bits		|32bits		|
+		|			|			|			|			|
+txt		|world,		|0,			|0,			|mundinho,	|
+result	|0			|0			|0			|0			|

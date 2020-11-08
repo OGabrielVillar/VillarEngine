@@ -40,6 +40,15 @@
     <Filter Include="Header Files\VisualSide">
       <UniqueIdentifier>{3561251a-b0de-44d8-9651-27cfcc118787}</UniqueIdentifier>
     </Filter>
+    <Filter Include="About the Project\ThoughsAbout">
+      <UniqueIdentifier>{e73a7290-588f-4c83-82ef-58a5b0fce4de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\FileManagement">
+      <UniqueIdentifier>{91c708c3-876c-4345-9bbc-4442b5c3c626}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\FileManagement">
+      <UniqueIdentifier>{142e343e-b9bb-482e-b0b3-abce2410d4bc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI.h">
@@ -156,6 +165,15 @@
     <ClInclude Include="Camera.h">
       <Filter>Header Files\World Side</Filter>
     </ClInclude>
+    <ClInclude Include="FileStream.h">
+      <Filter>Header Files\FileManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="VillarList.h">
+      <Filter>Header Files\FileManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="IdList.h">
+      <Filter>Header Files\FileManagement</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CombatSystem.cpp">
@@ -251,6 +269,12 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FileManagement.cpp">
+      <Filter>Source Files\FileManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="FileStream.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="FramebufferPS.hlsl">
@@ -273,6 +297,9 @@
   <ItemGroup>
     <Text Include="GOALS.txt">
       <Filter>About the Project</Filter>
+    </Text>
+    <Text Include="Files.txt">
+      <Filter>About the Project\ThoughsAbout</Filter>
     </Text>
   </ItemGroup>
 </Project>

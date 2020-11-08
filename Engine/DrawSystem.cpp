@@ -1,9 +1,11 @@
 #include "DrawSystem.h"
 
-DrawSystem::DrawSystem(Graphics& const gfx_in, World& const world_in)
+DrawSystem::DrawSystem(Graphics& gfx_in, World& world_in)
 {
 	gfx = &gfx_in;
 	world = &world_in;
+	UIElement xx;
+	screen.elements_inside = &xx;
 }
 
 void DrawSystem::Go(float ft_in)
@@ -17,8 +19,6 @@ void DrawSystem::ComposeFrame()
 	Transformation* matrix = world->GetCamera()->GetTransformation();
 	Vec2 center = Vec2(gfx->ScreenWidth / 2.0f, gfx->ScreenHeight / 2.0f);
 	Color cx = Colors::White;
-	int i = 0;
-	Unit* pU;
 	gfx->DrawLine((*matrix - Transformation(Vec2(0.0f, 0.0f))).GetPosition() + center, 
 		(*matrix - Transformation(Vec2(gfx->ScreenWidth, 0.0f))).GetPosition() + center, Colors::Green);
 	gfx->DrawLine((*matrix - Transformation(Vec2(gfx->ScreenWidth, 0.0f))).GetPosition() + center,
@@ -27,11 +27,25 @@ void DrawSystem::ComposeFrame()
 		(*matrix - Transformation(Vec2(0.0f, gfx->ScreenHeight))).GetPosition() + center, Colors::Green);
 	gfx->DrawLine((*matrix - Transformation(Vec2(0.0f, gfx->ScreenHeight))).GetPosition() + center,
 		(*matrix - Transformation(Vec2(0.0f, 0.0f))).GetPosition() + center, Colors::Green);
-	while (i < UNITSLIMIT)
+
+	Unit* pU;
+
+	IdListReader<Unit> lr_pu(world->GetUnitIdList());
+
+	while (!lr_pu.IsTheLastElement())
 	{
-		pU = &world->GetUnit(i);
+		pU = lr_pu.Get();
 		if (!pU->GetName().empty())
 		{
+			Transformation puTransf = *matrix - pU->GetTransformation();
+			float pu0Radius = pU->GetRadiusSqrd()*puTransf.GetScale();
+			if (DistSqr(center) < DistSqr(puTransf.GetPosition()))
+			{
+				lr_pu.Next();
+				continue;
+			}
+
+
 			cx = Colors::White;
 			if (pU == world->userunit)
 			{
@@ -41,11 +55,11 @@ void DrawSystem::ComposeFrame()
 			//if (pU->rigidbody.arebeinghit){cx = Colors::Blue;}
 			if (pU->rigidbody.form.GetType() == Form::Type::Point) // DRAW CIRCLES
 			{
-				Transformation puTransf = *matrix - pU->rigidbody.GetVerticeTransf(0);
-				Vec2 puPosition = puTransf.GetPosition() + center;
-				float puRadius = pU->GetRadius()*puTransf.GetScale();
-				gfx->DrawCircle(puPosition, puRadius, cx);
-				gfx->DrawLine(puPosition, puPosition + GetRotated(puRadius, puTransf.GetOrientation()), cx);
+				Transformation pu_v0Transf = *matrix - pU->rigidbody.GetVerticeTransf(0);
+				Vec2 pu_v0Position = pu_v0Transf.GetPosition() + center;
+				float pu_v0Radius = pU->GetFormRadius()*pu_v0Transf.GetScale();
+				gfx->DrawCircle(pu_v0Position, pu_v0Radius, cx);
+				gfx->DrawLine(pu_v0Position, pu_v0Position + GetRotated(pu_v0Radius, pu_v0Transf.GetOrientation()), cx);
 
 				//gfx->DrawLine(pU->rigidbody.GetVerticePos(0), world.GetPPhysicsSystem()->x_projection, cx);
 				//gfx->DrawLine(pU->rigidbody.GetVerticePos(0), world.GetPPhysicsSystem()->y_projection, cx);
@@ -55,17 +69,17 @@ void DrawSystem::ComposeFrame()
 			}
 			else if (pU->rigidbody.form.GetType() == Form::Type::Line) // DRAW LINES
 			{
-				Transformation pu0Transf = *matrix - pU->rigidbody.GetVerticeTransf(0);
-				Vec2 pu0Position = pu0Transf.GetPosition() + center;
-				float pu0Radius = pU->GetRadius()*pu0Transf.GetScale();
-				Transformation pu1Transf = *matrix - pU->rigidbody.GetVerticeTransf(1);
-				Vec2 pu1Position = pu1Transf.GetPosition() + center;
-				float pu1Radius = pU->GetRadius()*pu1Transf.GetScale();
-				gfx->DrawCircleLine(pu0Position, pu1Position, pu0Radius, cx);
-				gfx->DrawLine(pu0Position,
-					pu0Position + GetRotated(pu0Radius, pu0Transf.GetOrientation()), cx);
-				gfx->DrawLine(pu1Position,
-					pu1Position + GetRotated(pu1Radius, pu1Transf.GetOrientation()), cx);
+				Transformation pu_v0Transf = *matrix - pU->rigidbody.GetVerticeTransf(0);
+				Vec2 pu_v0Position = pu_v0Transf.GetPosition() + center;
+				float pu_v0Radius = pU->GetFormRadius()*pu_v0Transf.GetScale();
+				Transformation pu_v1Transf = *matrix - pU->rigidbody.GetVerticeTransf(1);
+				Vec2 pu_v1Position = pu_v1Transf.GetPosition() + center;
+				float pu_v1Radius = pU->GetFormRadius()*pu_v1Transf.GetScale();
+				gfx->DrawCircleLine(pu_v0Position, pu_v1Position, pu_v0Radius, cx);
+				gfx->DrawLine(pu_v0Position,
+					pu_v0Position + GetRotated(pu_v0Radius, pu_v0Transf.GetOrientation()), cx);
+				gfx->DrawLine(pu_v1Position,
+					pu_v1Position + GetRotated(pu_v1Radius, pu_v1Transf.GetOrientation()), cx);
 			}
 			else if (pU->rigidbody.form.GetType() == Form::Type::Curve3P) // DRAW CURVES3P
 			{
@@ -75,7 +89,7 @@ void DrawSystem::ComposeFrame()
 			}
 			//gfx->DrawCircle(world.GetPPhysicsSystem()->contacts[0],10.0f,Colors::Red);
 		}
-		i++;
+		lr_pu.Next();
 	}
 
 

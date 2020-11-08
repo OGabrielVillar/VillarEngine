@@ -44,12 +44,32 @@ void Form::UpdateCentralPoint()
 	{
 		central_point += vertices[i].GetPosition();
 	}
-	central_point /= (current_vert+1);
+	central_point /= (float)(current_vert+1);
 }
 
 void Form::UpdateCentralPoint(Vec2 const vertice_movement)
 {
-	central_point += vertice_movement/(current_vert + 1);
+	central_point += vertice_movement/(float)(current_vert + 1);
+}
+
+float Form::GetRadiusFromCenterSqrd() const
+{
+	float radiusSqrd = Sqr(radius);
+	if (current_vert == 0)
+	{
+		return radiusSqrd;
+	}
+	float furthest_point = 0.0f;
+	for (size_t i = 0; i <= current_vert; i++)
+	{
+		float iDist = (DistSqr(vertices[i].GetPosition(),central_point));
+		if (iDist > furthest_point)
+		{
+			furthest_point = iDist;
+		};
+	}
+	return furthest_point+radiusSqrd;
+
 }
 
 Vec2 Form::GetCentralPoint() const

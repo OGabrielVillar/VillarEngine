@@ -2,7 +2,12 @@
 
 PhysicSystem::PhysicSystem(Unit * unitgroup_in)
 {
-	Punitgroup = unitgroup_in;
+	//Punitgroup = unitgroup_in;
+}
+
+PhysicSystem::PhysicSystem(IdList<Unit>* unitgroup_in)
+{
+	Punitgroupxx = unitgroup_in;
 }
 
 void PhysicSystem::Go(float ft_in)
@@ -15,24 +20,20 @@ void PhysicSystem::MoveBodies()
 {
 	ThereWasCollision = false;
 
-	Unit* Punit;
-	Punit = Punitgroup;
-
-	Unit* Punitb;
-	Punitb = Punitgroup;
-
+	IdListReader<Unit> lr_a(Punitgroupxx);
+	IdListReader<Unit> lr_b(Punitgroupxx);
 
 	bool _ithappens = false;
 	float _totalenergybefore = 0.0f;
 	float _totalenergyafter = 0.0f;
 
-	while (Punit != Punitgroup + UNITSLIMIT - 1)
+	while (!lr_a.IsTheLastElement())
 	{
-		if (!Punit->GetName().empty())
+		if (!lr_a.Get()->GetName().empty())
 		{
-			_totalenergybefore += Punit->rigidbody.velocity.Len()*Punit->rigidbody.mass;
+			_totalenergybefore += lr_a.Get()->rigidbody.velocity.Len()*lr_a.Get()->rigidbody.mass;
 
-			if (!Punit->rigidbody.is_immovable)
+			if (!lr_a.Get()->rigidbody.is_immovable)
 			{
 				//if (Punit != Sun)
 				//{
@@ -40,64 +41,58 @@ void PhysicSystem::MoveBodies()
 				//	Punit->rigidbody.velocity += punit_to_sun.Normalize() * ((GCONST * Sun->rigidbody.mass * Punit->rigidbody.mass) / punit_to_sun.LenSqrd());	//GRAVITY
 				//}
 				//Punit->rigidbody.velocity += Vec2(0.0f, 10.0f);	//GRAVITY
-				Punit->rigidbody.velocity += Punit->rigidbody.force;
-				Punit->rigidbody.angularVelocity += Punit->rigidbody.torque;
+				lr_a.Get()->rigidbody.velocity += lr_a.Get()->rigidbody.force;
+				lr_a.Get()->rigidbody.angularVelocity += lr_a.Get()->rigidbody.torque;
 				//Punit->rigidbody.velocity *= AIRRESISTENCE;			//DRAG
 				//Punit->rigidbody.angularVelocity *= AIRRESISTENCE;	//DRAG
-				Transformation movement = Transformation(Punit->rigidbody.velocity*ft);
-				Vec2 rotation = (Vec2(std::cos(Punit->rigidbody.angularVelocity*ft), std::sin(Punit->rigidbody.angularVelocity*ft)));
-				Punit->rigidbody.SetTransformation(movement + Punit->rigidbody.GetTransformation());
-				Punit->rigidbody.transformation.orientation = GetRotated(Punit->rigidbody.transformation.orientation, rotation);
-				Punit->rigidbody.force.Set(0.0f, 0.0f);
+				Transformation movement = Transformation(lr_a.Get()->rigidbody.velocity*ft);
+				Vec2 rotation = (Vec2(std::cos(lr_a.Get()->rigidbody.angularVelocity*ft), std::sin(lr_a.Get()->rigidbody.angularVelocity*ft)));
+				lr_a.Get()->rigidbody.SetTransformation(movement + lr_a.Get()->rigidbody.GetTransformation());
+				lr_a.Get()->rigidbody.transformation.orientation = GetRotated(lr_a.Get()->rigidbody.transformation.orientation, rotation);
+				lr_a.Get()->rigidbody.force.Set(0.0f, 0.0f);
 			}
 
-			_totalenergyafter += Punit->rigidbody.velocity.Len()*Punit->rigidbody.mass;
-			if (Punit->rigidbody.howmanyhits >= 1)
+			_totalenergyafter += lr_a.Get()->rigidbody.velocity.Len()*lr_a.Get()->rigidbody.mass;
+			if (lr_a.Get()->rigidbody.howmanyhits >= 1)
 			{
 				_ithappens = true;
 			}
 		}
-		Punit++;
+		lr_a.Next();
 	}
-	Punit = Punitgroup;
-
-	while (Punitb != Punitgroup + UNITSLIMIT - 1)
+	lr_a.Reset();
+	while (!lr_a.IsTheLastElement())
 	{
-		if (!Punitb->GetName().empty()){
-			if (!Punitb->rigidbody.is_immovable)
+		if (!lr_a.Get()->GetName().empty()){
+			if (!lr_a.Get()->rigidbody.is_immovable)
 			{
 			}
-			Punitb->rigidbody.arecolliding = false;
-			Punitb->rigidbody.arebeinghit = false;
-			Punitb->rigidbody.howmanyhits = 0;
+			lr_a.Get()->rigidbody.arecolliding = false;
+			lr_a.Get()->rigidbody.arebeinghit = false;
+			lr_a.Get()->rigidbody.howmanyhits = 0;
 		}
-		Punitb++;
+		lr_a.Next();
 	}
-	while (Punit != Punitgroup + UNITSLIMIT - 1)
+	lr_a.Reset();
+	while (!lr_a.IsTheLastElement())
 	{
-		if (!Punit->GetName().empty())
+		if (!lr_a.Get()->GetName().empty())
 		{
-
-			Unit* PunitInteration;
-			PunitInteration = Punit+1;
-			while (PunitInteration != Punitgroup + UNITSLIMIT - 1)
+			lr_b.Reset();
+			lr_b.Next();
+			while (!lr_b.IsTheLastElement())
 			{
-				if (!PunitInteration->GetName().empty())
+				if (!lr_b.Get()->GetName().empty())
 				{
-					Collision(&Punit->rigidbody,&PunitInteration->rigidbody);
-					Collision(&PunitInteration->rigidbody, &Punit->rigidbody);
+					Collision(&lr_a.Get()->rigidbody,&lr_b.Get()->rigidbody);
+					Collision(&lr_b.Get()->rigidbody, &lr_a.Get()->rigidbody);
 				}
-				PunitInteration++;
+				lr_b.Next();
 			}
 		}
-		Punit++;
+		lr_a.Next();
 	}
-	Punit = Punitgroup;
-
-
-	Punit = Punitgroup;
-
-
+	lr_a.Reset();
 	if (_ithappens)
 	{
 		int i = 0 + 1;

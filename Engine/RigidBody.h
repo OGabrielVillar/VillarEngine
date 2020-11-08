@@ -35,8 +35,8 @@ public: //GETTERS
 	Vec2 GetForce();
 	Vec2 GetCOM();
 public: //FUNCTIONS
-	void AddForce(Vec2 & const force_in);
-	void AddForce(Vec2 & const force_in, Vec2 & const contactpoint_in);
+	void AddForce(const Vec2 & force_in);
+	void AddForce(const Vec2 & force_in, const Vec2 & contactpoint_in);
 	void ApplyForces();
 	void ClearForces();
 	void SetOrientation(float radians);

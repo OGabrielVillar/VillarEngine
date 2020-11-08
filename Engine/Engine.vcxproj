@@ -152,6 +152,8 @@
     <ClInclude Include="Effect.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="Function.h" />
+    <ClInclude Include="FileStream.h" />
+    <ClInclude Include="IdList.h" />
     <ClInclude Include="UIElement.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="UnitToBodyAttachment.h" />
@@ -173,12 +175,14 @@
     <ClInclude Include="Unit.h" />
     <ClInclude Include="Vec2.h" />
     <ClInclude Include="Vei2.h" />
+    <ClInclude Include="VillarList.h" />
     <ClInclude Include="VMath.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DrawSystem.cpp" />
+    <ClCompile Include="FileStream.cpp" />
     <ClCompile Include="Form.cpp" />
     <ClCompile Include="CombatSystem.cpp" />
     <ClCompile Include="COMInitializer.cpp" />
@@ -200,6 +204,7 @@
     <ClCompile Include="RectI.cpp" />
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="Sound.cpp" />
+    <ClCompile Include="FileManagement.cpp" />
     <ClCompile Include="Surface.cpp" />
     <ClCompile Include="Transformation.cpp" />
     <ClCompile Include="UIElement.cpp" />
@@ -279,6 +284,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="GOALS.txt" />
+    <Text Include="Files.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

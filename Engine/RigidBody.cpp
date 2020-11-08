@@ -144,12 +144,12 @@ Vec2 RigidBody::GetCOM()
 	return GetTransformation().GetPosition();
 }
 
-void RigidBody::AddForce(Vec2 & const force_in)
+void RigidBody::AddForce(const Vec2 & force_in)
 {
 	force += force_in;
 }
 
-void RigidBody::AddForce(Vec2& const force_in, Vec2& const contactpoint_in)
+void RigidBody::AddForce(const Vec2& force_in, const Vec2& contactpoint_in)
 {
 	velocity += inv_mass * force_in;
 	angularVelocity += inv_inertia * Cross(contactpoint_in, force_in);

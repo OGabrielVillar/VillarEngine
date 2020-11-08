@@ -6,7 +6,6 @@
 class UIElement
 {
 public:
-	UIElement();
 	enum Type
 	{
 		Field,
@@ -32,6 +31,9 @@ public:
 		Edge,
 		OppositeEdge
 	};
+	UIElement();
+
+public:
 	Transformation trasformation;
 	bool orientationlocked = true;
 	Vei2 dimensions;
@@ -44,6 +46,8 @@ public:
 
 class Field: public UIElement
 {
+	Field();
+	Field(Type type_in, Side attached_at_in, Side init_side_in, const Vec2& dimensions);
 };
 
 class Image : public UIElement

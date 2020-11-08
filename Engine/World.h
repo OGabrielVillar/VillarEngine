@@ -7,6 +7,7 @@
 #include "AI.h"
 #include "FrameTimer.h"
 #include "Camera.h"
+#include "IdList.h"
 
 class World
 {
@@ -18,10 +19,10 @@ public:
 	void AddCommand(Unit* unit_in, unsigned char key_in, Effect effect_in);
 	void AddCommand(Unit* unit_in, unsigned char key_in, unsigned int effect_id_in);
 public: //GETTERS
-	Unit& GetUnit(int index);
 	Control* GetControl();
 	Unit* GetCreatedUnit();
 	Camera* GetCamera();
+	IdList<Unit>* GetUnitIdList();
 	PhysicSystem* GetPPhysicsSystem();
 	CombatSystem* GetPCombatSystem();
 	Unit* userunit = nullptr;
@@ -29,7 +30,7 @@ public: //GETTERS
 	Unit* curva = nullptr;
 	Unit* sun = nullptr;
 private:
-	Unit units[UNITSLIMIT];
+	IdList<Unit> _unitsx;
 	CombatSystem combatSystem;
 	PhysicSystem physicSystem;
 	Control control;

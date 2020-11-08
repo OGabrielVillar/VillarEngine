@@ -32,6 +32,7 @@ public: //GETTERS
 	float GetPerimeter() const;
 	Type GetType() const;
 	Vec2 GetCentralPoint() const;
+	float GetRadiusFromCenterSqrd()const;
 	Transformation GetVertice(int index) const;
 	int GetNumberOfVertices() const;
 private: //PRIVATE FUNCTIONS
