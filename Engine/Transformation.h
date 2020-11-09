@@ -27,9 +27,10 @@ public:
 	void MovesBy(const Vec2& rhs);
 	Vec2 GetPosition() const;
 	Vec2 GetOrientation();
+	float GetOrientationDegrees();
 	float GetScale() const;
 	void SetOrientation(Vec2 orientation_in);
-	void SetOrientationRad(float orientation_in);
+	void SetOrientationInRadians(float orientation_in);
 public:
 	Vec2 position;
 	Vec2 scale = Vec2(1.0f, 1.0f);

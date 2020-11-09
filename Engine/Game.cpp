@@ -102,11 +102,8 @@ void Game::Update()
 	// update character
 	link.Update( ft.Mark() );
 	*/
-	velocity_sum = 0.0f;
-	Transformation t;
-	float radius;
-	int i = 0;
 	Vec2 rectBound = Vec2(gfx.ScreenWidth, gfx.ScreenHeight);
+	Vec2 center = rectBound / 2.0f;
 	Unit* pU;
 
 	IdListReader<Unit> lr_pu(world.GetUnitIdList());
@@ -114,29 +111,17 @@ void Game::Update()
 	while (!lr_pu.Ended())
 	{
 		pU = lr_pu.Get();
-		if (!pU->GetName().empty())
+		if (pU->GetName().empty()){lr_pu.Next();continue;}
+
+		Vec2 pu_position = pU->GetTransformation().GetPosition();
+		if (DistSqr(pu_position, center) > DistSqr(center))
 		{
-			radius = pU->GetRadiusSqrd();
-			t = pU->GetTransformation();
-			if (Sqr(t.GetPosition().x - gfx.ScreenWidth) > radius+Sqr(gfx.ScreenWidth))
-			{
-				t.position.x = gfx.ScreenWidth + (radius - 2.0f);
-			}
-			else if (t.GetPosition().x >= gfx.ScreenWidth + radius)
-			{
-				t.position.x = -(radius - 2.0f);
-			}
-			if (Sqr(t.GetPosition().y) <= -radius)
-			{
-				t.position.y = gfx.ScreenHeight + (radius + 2.0f);
-			}
-			else if (t.GetPosition().y >= gfx.ScreenHeight + radius)
-			{
-				t.position.y = -(radius + 2.0f);
-			}
-			pU->SetTransformation(t);
-			velocity_sum += pU->rigidbody.velocity.Len();
+			Vec2 rotation_matrix = (pU->GetTransformation().GetPosition() - center).GetNormalized();
+			Vec2 velocity_in_matrix = GetRotated(pU->rigidbody.GetVelocity(),(GetInvertedAngle(rotation_matrix)));
+			pU->rigidbody.SetVelocity(GetRotated(Vec2(velocity_in_matrix.x, -velocity_in_matrix.y), rotation_matrix));
+			pU->SetPosition(center + (center - pU->GetTransformation().GetPosition()) + (rotation_matrix/10.0f));
 		}
+
 		lr_pu.Next();
 	}
 

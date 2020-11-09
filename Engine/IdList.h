@@ -4,13 +4,15 @@ class IdListBlock
 {
 public:
 	IdListBlock() = default;
-	IdListBlock(unsigned int id_in);
+	IdListBlock(unsigned int id_in, IdListBlock<T>* previous_in);
 	~IdListBlock() = default;
 	void PushElement(T& element_in);
 	T* GetElement();
 	IdListBlock<T>* GenerateNextBlock(unsigned int id_in);
 	IdListBlock<T>* GetPreviousBlock();
 	IdListBlock<T>* GetNextBlock();
+	void LinkNextTo(IdListBlock<T>* block_in);
+	void LinkPreviousTo(IdListBlock<T>* block_in);
 private:
 	T* element = nullptr;
 	IdListBlock<T>* previous_block = nullptr;
@@ -19,8 +21,9 @@ private:
 };
 
 template<class T>
-inline IdListBlock<T>::IdListBlock(unsigned int id_in)
+inline IdListBlock<T>::IdListBlock(unsigned int id_in, IdListBlock<T>* previous_in)
 {
+	previous_block = previous_in;
 	id = id_in;
 }
 
@@ -42,8 +45,20 @@ inline T * IdListBlock<T>::GetElement()
 template<class T>
 inline IdListBlock<T>* IdListBlock<T>::GenerateNextBlock(unsigned int id_in)
 {
-	next_block = new IdListBlock<T>(id_in);
+	next_block = new IdListBlock<T>(id_in, &*this);
 	return next_block;
+}
+
+template<class T>
+inline void IdListBlock<T>::LinkNextTo(IdListBlock<T>* block_in)
+{
+	next_block = block_in;
+}
+
+template<class T>
+inline void IdListBlock<T>::LinkPreviousTo(IdListBlock<T>* block_in)
+{
+	previous_block = block_in;
 }
 
 template<class T>
@@ -73,11 +88,13 @@ public://FUNCTIONS
 	T* operator [](unsigned int);
 	//void ClearRem();
 	void PushElement(T& element_in);
+	//void RemoveElement(T* element_in);
 	IdListBlock<T>* GetFirstBlock();
 	IdListBlock<T>* GetLastBlock();
 	T* GetFirstElement();
 	T* GetLastElement();
 	unsigned int ManyElements();
+	void DropManyElementsBy(unsigned int rhs);
 private://PRIVATE FUNCTIONS
 	void NewBlock();
 	IdListBlock<T>* SeekBlock(unsigned int id);
@@ -132,11 +149,17 @@ inline unsigned int IdList<T>::ManyElements()
 }
 
 template<class T>
+inline void IdList<T>::DropManyElementsBy(unsigned int rhs)
+{
+	many_elements -= rhs;
+}
+
+template<class T>
 inline void IdList<T>::NewBlock()
 {
 	if (many_elements == 0)
 	{
-		first_block = new IdListBlock<T>(0);
+		first_block = new IdListBlock<T>(0,last_block);
 		last_block = first_block;
 	}
 	else
@@ -159,7 +182,7 @@ inline IdListBlock<T>* IdList<T>::SeekBlock(unsigned int id)
 		return first_block;
 	}
 	IdListBlock<T>* seek = first_block;
-	for (int i = 1; i <= id; i++)
+	for (unsigned int i = 1; i <= id; i++)
 	{
 		seek = seek->GetNextBlock();
 	}
@@ -179,6 +202,7 @@ public:
 	T* Get();
 	T* PeekNext();
 	void Next();
+	void Remove();
 	T* PeekPrevious();
 	bool IsTheLastElement();
 	bool Ended();
@@ -199,6 +223,24 @@ template<class T>
 inline void IdListReader<T>::Next()
 {
 	current_block = current_block->GetNextBlock();
+}
+
+template<class T>
+inline void IdListReader<T>::Remove()
+{
+	IdListBlock<T>* previous = current_block->GetPreviousBlock();
+	IdListBlock<T>* next = current_block->GetNextBlock();
+	if (previous != NULL)
+	{
+		previous->LinkNextTo(next);
+	}
+	if (next != NULL)
+	{
+		next->LinkPreviousTo(previous);
+	}
+	id_list->DropManyElementsBy(1);
+	delete current_block;
+	current_block = next;
 }
 
 template<class T>

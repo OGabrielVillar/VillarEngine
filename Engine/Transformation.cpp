@@ -16,7 +16,7 @@ Transformation::Transformation(Vec2 position_in, Vec2 scale_in, float orientatio
 {
 	position = position_in;
 	scale = scale_in;
-	SetOrientationRad(orientationrad_in);
+	SetOrientationInRadians(orientationrad_in);
 }
 
 Transformation::Transformation(Vec2 position_in, Vec2 scale_in, Vec2 orientation_in, float orientationrad_in)
@@ -94,12 +94,17 @@ void Transformation::MovesBy(const Vec2 & rhs)
 
 Vec2 Transformation::GetPosition() const
 {
-	return Vec2(position.x, position.y);
+	return position;
 }
 
 Vec2 Transformation::GetOrientation()
 {
-	return Vec2(orientation.x , orientation.y);
+	return orientation;
+}
+
+float Transformation::GetOrientationDegrees()
+{
+	return std::atan2(orientation.y, orientation.x) * 180 / PI;
 }
 
 float Transformation::GetScale() const
@@ -113,7 +118,7 @@ void Transformation::SetOrientation(Vec2 orientation_in)
 	orientation = orientation_in;
 }
 
-void Transformation::SetOrientationRad(float orientation_in)
+void Transformation::SetOrientationInRadians(float orientation_in)
 {
 	orientation_rad = orientation_in;
 	orientation = Vec2(std::cos(orientation_in), std::sin(orientation_in));

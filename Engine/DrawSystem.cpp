@@ -19,14 +19,15 @@ void DrawSystem::ComposeFrame()
 	Transformation* matrix = world->GetCamera()->GetTransformation();
 	Vec2 center = Vec2(gfx->ScreenWidth / 2.0f, gfx->ScreenHeight / 2.0f);
 	Color cx = Colors::White;
-	gfx->DrawLine((*matrix - Transformation(Vec2(0.0f, 0.0f))).GetPosition() + center, 
-		(*matrix - Transformation(Vec2(gfx->ScreenWidth, 0.0f))).GetPosition() + center, Colors::Green);
-	gfx->DrawLine((*matrix - Transformation(Vec2(gfx->ScreenWidth, 0.0f))).GetPosition() + center,
-		(*matrix - Transformation(Vec2(gfx->ScreenWidth, gfx->ScreenHeight))).GetPosition() + center, Colors::Green);
-	gfx->DrawLine((*matrix - Transformation(Vec2(gfx->ScreenWidth, gfx->ScreenHeight))).GetPosition() + center,
-		(*matrix - Transformation(Vec2(0.0f, gfx->ScreenHeight))).GetPosition() + center, Colors::Green);
-	gfx->DrawLine((*matrix - Transformation(Vec2(0.0f, gfx->ScreenHeight))).GetPosition() + center,
-		(*matrix - Transformation(Vec2(0.0f, 0.0f))).GetPosition() + center, Colors::Green);
+	//gfx->DrawLine((*matrix - Transformation(Vec2(0.0f, 0.0f))).GetPosition() + center, 
+	//	(*matrix - Transformation(Vec2(gfx->ScreenWidth, 0.0f))).GetPosition() + center, Colors::Green);
+	//gfx->DrawLine((*matrix - Transformation(Vec2(gfx->ScreenWidth, 0.0f))).GetPosition() + center,
+	//	(*matrix - Transformation(Vec2(gfx->ScreenWidth, gfx->ScreenHeight))).GetPosition() + center, Colors::Green);
+	//gfx->DrawLine((*matrix - Transformation(Vec2(gfx->ScreenWidth, gfx->ScreenHeight))).GetPosition() + center,
+	//	(*matrix - Transformation(Vec2(0.0f, gfx->ScreenHeight))).GetPosition() + center, Colors::Green);
+	//gfx->DrawLine((*matrix - Transformation(Vec2(0.0f, gfx->ScreenHeight))).GetPosition() + center,
+	//	(*matrix - Transformation(Vec2(0.0f, 0.0f))).GetPosition() + center, Colors::Green);
+	gfx->DrawCircle((*matrix - Transformation(center)).GetPosition() + center, center.Len() * matrix->GetScale(), Colors::White);
 
 	Unit* pU;
 

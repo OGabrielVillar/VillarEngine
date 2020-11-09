@@ -42,6 +42,12 @@ void Unit::SetTransformation(Transformation transformation_in)
 	rigidbody.SetTransformation(transformation_in);
 }
 
+void Unit::SetPosition(Vec2 & position_in)
+{
+	transformation.position = position_in;
+	rigidbody.transformation.position = position_in;
+}
+
 void Unit::SetRigidBody(RigidBody rigidbody_in)
 {
 	rigidbody = rigidbody_in;

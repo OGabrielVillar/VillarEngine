@@ -5,7 +5,7 @@ World::World() :
 	combatSystem(&_unitsx),
 	control(combatSystem)
 {
-	float radius = 8.0f;		        //cm
+	float radius = 24.0f;		        //cm
 	//testPorposes
 	/*/ */ /*
 
@@ -50,12 +50,12 @@ World::World() :
 	GetCreatedUnit()->rigidbody.UpdateMass();
 	linhagrande = GetCreatedUnit();
 	
-	AddUnit(Unit("linhagrande", Vec2(500.0f, 660.0f)));
-	GetCreatedUnit()->SetRadius(radius*6.5f);
-	GetCreatedUnit()->SetRigidBodyForm(Form(radius*4.0f, Form::Type::Line));
-	GetCreatedUnit()->rigidbody.form.PushVertice(Vec2(2300.0f, 0.0f));
-	GetCreatedUnit()->rigidbody.is_immovable = true;
-	GetCreatedUnit()->rigidbody.UpdateMass();
+	//AddUnit(Unit("linhagrande", Vec2(500.0f, 660.0f)));
+	//GetCreatedUnit()->SetRadius(radius*6.5f);
+	//GetCreatedUnit()->SetRigidBodyForm(Form(radius*4.0f, Form::Type::Line));
+	//GetCreatedUnit()->rigidbody.form.PushVertice(Vec2(2300.0f, 0.0f));
+	//GetCreatedUnit()->rigidbody.is_immovable = true;
+	//GetCreatedUnit()->rigidbody.UpdateMass();
 	
 	AddUnit(Unit("linha", Vec2(500.0f, 160.0f)));
 	GetCreatedUnit()->SetRadius(radius);
@@ -66,7 +66,7 @@ World::World() :
 	AddUnit(Unit("esfera", Vec2(100, 200.0f)));
 	GetCreatedUnit()->SetRadius(radius);
 	control.SetSelectedUnit(*GetCreatedUnit());
-	GetCreatedUnit()->rigidbody.transformation.SetOrientationRad(PI / 3.8f);
+	GetCreatedUnit()->rigidbody.transformation.SetOrientationInRadians(PI / 3.8f);
 	userunit = GetCreatedUnit();
 
 	float force = 1100.0f;			//cm per second
@@ -116,14 +116,14 @@ World::World() :
 	lefteffect.SetFunctionFloat(0, 0, -0.8f);
 	AddCommand(linhagrande, (char)37, lefteffect);
 
-	/*/ 25 UNIT SPAWN
-	for (size_t i = 0; i < 2; i++)
+	// 25 UNIT SPAWN
+	for (size_t i = 0; i < 10; i++)
 	{
-		for (size_t j = 0; j < 20 ; j++)
+		for (size_t j = 0; j < 10 ; j++)
 		{
-			AddUnit(Unit("Steve", Vec2(2.2f * radius * (float)i + 800.0f, 2.2f * radius * (float)j + 0.0f)));
+			AddUnit(Unit("Steve", Vec2(2.2f * radius * (float)i + 300.0f, 2.2f * radius * (float)j + 500.0f)));
 			GetCreatedUnit()->SetRadius(radius);
-			GetCreatedUnit()->rigidbody.transformation.SetOrientationRad(PI / 2);
+			GetCreatedUnit()->rigidbody.transformation.SetOrientationInRadians(PI / 2);
 			Effect spaceeffectx;
 			spaceeffectx.SetFunction(0, Function::Type::AddForce, Function::Unit::Source);
 			spaceeffectx.SetFunctionTransformation(0, 0, Transformation(Vec2(0.0f, force)));
