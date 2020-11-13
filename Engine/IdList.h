@@ -203,6 +203,7 @@ public:
 	T* PeekNext();
 	void Next();
 	void Remove();
+	void Copy(const IdListReader& listreader_in);
 	T* PeekPrevious();
 	bool IsTheLastElement();
 	bool Ended();
@@ -241,6 +242,12 @@ inline void IdListReader<T>::Remove()
 	id_list->DropManyElementsBy(1);
 	delete current_block;
 	current_block = next;
+}
+
+template<class T>
+inline void IdListReader<T>::Copy(const IdListReader & listreader_in)
+{
+	*this = listreader_in;
 }
 
 template<class T>

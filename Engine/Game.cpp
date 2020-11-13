@@ -26,12 +26,12 @@ Game::Game(MainWindow& wnd)
 	wnd(wnd),
 	gfx(wnd),
 	world(),
-	drawSystem(gfx,world)
+	drawSystem(gfx,world),
+	CamDefaultTransf(*world.GetCamera()->GetTransformation())
 {
 	defaultControl = world.GetControl();
 	defaultControl->BindKeyboard(wnd.kbd);
 	world.GetPCombatSystem()->BindKeyboard(wnd.kbd);
-	world.GetCamera()->SetTransformation(Transformation(Vec2(gfx.ScreenWidth / 2.0f, gfx.ScreenHeight / 2.0f)));
 
 	fs.OpenFile("test\test.txt");
 	char xtest = fs.Read<char>();
@@ -39,20 +39,6 @@ Game::Game(MainWindow& wnd)
 	fs.Write<char>((char)40,"gugu");
 	char ztest = fs.Read<char>();
 	char wtest = fs.Read<char>();
-	IdList<Vec2> lago;
-	lago.PushElement(Vec2(1.0f));
-	lago.PushElement(Vec2(3.0f));
-	lago.PushElement(Vec2(5.0f));
-	lago.PushElement(Vec2(5.0f));
-	lago.PushElement(Vec2(5.0f));
-	lago.PushElement(Vec2(5.0f));
-	lago.PushElement(Vec2(5.0f));
-	lago.PushElement(Vec2(5.0f));
-	lago.PushElement(Vec2(5.0f));
-	lago.PushElement(Vec2(8.0f));
-	lago.PushElement(Vec2(5.0f));
-	Vec2 testA = *lago[5];
-	Vec2 testB = *lago[9];
 }
 
 void Game::Go()
@@ -102,24 +88,27 @@ void Game::Update()
 	// update character
 	link.Update( ft.Mark() );
 	*/
-	Vec2 rectBound = Vec2(gfx.ScreenWidth, gfx.ScreenHeight);
-	Vec2 center = rectBound / 2.0f;
+
+
+	Vec2 Bound = Vec2(25.0f, 25.0f);
+	Vec2 center = Bound / 2.0f;
 	Unit* pU;
 
 	IdListReader<Unit> lr_pu(world.GetUnitIdList());
-
+	
 	while (!lr_pu.Ended())
 	{
+		if (!bound_active) { break; }
 		pU = lr_pu.Get();
 		if (pU->GetName().empty()){lr_pu.Next();continue;}
 
 		Vec2 pu_position = pU->GetTransformation().GetPosition();
-		if (DistSqr(pu_position, center) > DistSqr(center))
+		if (DistSqr(pu_position) > DistSqr(center))
 		{
-			Vec2 rotation_matrix = (pU->GetTransformation().GetPosition() - center).GetNormalized();
+			Vec2 rotation_matrix = pU->GetTransformation().GetPosition().GetNormalized();
 			Vec2 velocity_in_matrix = GetRotated(pU->rigidbody.GetVelocity(),(GetInvertedAngle(rotation_matrix)));
 			pU->rigidbody.SetVelocity(GetRotated(Vec2(velocity_in_matrix.x, -velocity_in_matrix.y), rotation_matrix));
-			pU->SetPosition(center + (center - pU->GetTransformation().GetPosition()) + (rotation_matrix/10.0f));
+			pU->SetPosition(- (rotation_matrix*(center.Len()-1.0f)));
 		}
 
 		lr_pu.Next();
@@ -128,7 +117,7 @@ void Game::Update()
 	if (wnd.mouse.LeftIsPressed()){	
 		world.userunit->rigidbody.SetPosition(Vec2((float)wnd.mouse.GetPosX(), (float)wnd.mouse.GetPosY()));
 	}
-	float camera_velocity = (750.0f / world.GetCamera()->GetTransformation()->GetScale())*ft.Get();
+	float camera_velocity = (1.0f/(world.GetCamera()->GetTransformation()->GetScale() * world.GetCamera()->zoom)) * ft.Get();
 
 	if (wnd.kbd.KeyIsPressed((char)104))
 	{
@@ -167,21 +156,34 @@ void Game::Update()
 
 	if (wnd.kbd.KeyIsPressed((char)32))
 	{
-		world.GetCamera()->SetTransformation(Transformation(Vec2(gfx.ScreenWidth / 2.0f, gfx.ScreenHeight / 2.0f)));
+		world.GetCamera()->SetTransformation(CamDefaultTransf);
 	}
 
 	if (wnd.kbd.KeyIsPressed((char)107))
 	{
-		world.GetCamera()->GetTransformation()->ScalesBy(1.05263f);
+		world.GetCamera()->zoom *= 1.05263f;
 	}
 
 	if (wnd.kbd.KeyIsPressed((char)109))
 	{
-		world.GetCamera()->GetTransformation()->ScalesBy(0.95f);
+		world.GetCamera()->zoom *= 0.95f;
+	}
+
+	if (wnd.kbd.KeyIsPressed((char)112))
+	{
+		bound_active = !bound_active;
 	}
 }
 
 void Game::ComposeFrame()		
 {
 	drawSystem.Go(ft.Get());
+	if (!bound_active)
+	{
+		gfx.DrawCircle(Vec2(5.0f), 4.0f, Colors::Green);
+	}
+	else
+	{
+		gfx.DrawCircle(Vec2(5.0f), 4.0f, Colors::Red);
+	}
 }

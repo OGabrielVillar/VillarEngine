@@ -11,5 +11,6 @@ public:
 	void SetTransformation(const Transformation& transf_in);
 private:
 	Transformation transformation;
-	float zoom = 1.0f;
+public:
+	float zoom = 0.02f;
 };

@@ -80,12 +80,12 @@ void Effect::ApplyFunctions(float ft_in)
 
 void Effect::AddForce(Unit* Punit, Transformation transformation_in, float ft_in)
 {
-	Punit->rigidbody.AddForce(transformation_in.position * ft_in);
+	Punit->rigidbody.AddForce(transformation_in.GetPosition() * ft_in);
 }
 
 void Effect::AddForce_CMperS(Unit * Punit, Transformation transformation_in, float ft_in)
 {
-	Punit->rigidbody.AddForce(transformation_in.position * Punit->rigidbody.mass * (ft_in*ft_in));
+	Punit->rigidbody.AddForce(transformation_in.GetPosition() * Punit->rigidbody.mass * (ft_in*ft_in));
 }
 
 void Effect::AddUnitRadius(Unit* Punit, float float_in)
@@ -96,7 +96,7 @@ void Effect::AddUnitRadius(Unit* Punit, float float_in)
 void Effect::SetUnitPosition(Unit * Punit, Vec2 position_in)
 {
 	Transformation t = Punit->GetTransformation();
-	t.position = position_in;
+	t.GetPosition() = position_in;
 	Punit->SetTransformation(t);
 }
 

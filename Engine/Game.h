@@ -59,6 +59,9 @@ private:
 	Control* defaultControl;
 	FrameTimer ft;
 	float velocity_sum;
+	Transformation CamDefaultTransf;
+
+	bool bound_active = true;
 	/********************************/
 	//  User Variables              
 	//List<std::string> list;

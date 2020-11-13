@@ -174,6 +174,9 @@
     <ClInclude Include="IdList.h">
       <Filter>Header Files\FileManagement</Filter>
     </ClInclude>
+    <ClInclude Include="WPosition.h">
+      <Filter>Header Files\World Side</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CombatSystem.cpp">
@@ -266,14 +269,17 @@
     <ClCompile Include="DrawSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="FileManagement.cpp">
       <Filter>Source Files\FileManagement</Filter>
     </ClCompile>
     <ClCompile Include="FileStream.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\FileManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\WorldSide</Filter>
+    </ClCompile>
+    <ClCompile Include="WPosition.cpp">
+      <Filter>Source Files\WorldSide</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -299,6 +305,9 @@
       <Filter>About the Project</Filter>
     </Text>
     <Text Include="Files.txt">
+      <Filter>About the Project\ThoughsAbout</Filter>
+    </Text>
+    <Text Include="ChunksDivisions.txt">
       <Filter>About the Project\ThoughsAbout</Filter>
     </Text>
   </ItemGroup>

@@ -5,7 +5,8 @@ World::World() :
 	combatSystem(&_unitsx),
 	control(combatSystem)
 {
-	float radius = 24.0f;		        //cm
+	camera.SetTransformation(Transformation(WPosition(),Vec2(1.0f),0.0f));
+	float radius = 0.35f;		        //cm
 	//testPorposes
 	/*/ */ /*
 
@@ -28,48 +29,48 @@ World::World() :
 	//physicSystem.Sun = GetCreatedUnit();
 	//sun = GetCreatedUnit();
 
-	AddUnit(Unit("linhamedia", Vec2(500.0f, 300.0f)));
-	GetCreatedUnit()->SetRadius(radius*2.5f);
-	GetCreatedUnit()->SetRigidBodyForm(Form(radius*4.0f, Form::Type::Line));
-	GetCreatedUnit()->rigidbody.form.PushVertice(Vec2(200.0f, 0.0f));
-	GetCreatedUnit()->rigidbody.is_immovable = true;
-	GetCreatedUnit()->rigidbody.UpdateMass();
-	
-	AddUnit(Unit("linhamedia", Vec2(1000.0f, 300.0f)));
-	GetCreatedUnit()->SetRadius(radius*2.5f);
-	GetCreatedUnit()->SetRigidBodyForm(Form(radius*1.0f, Form::Type::Line));
-	GetCreatedUnit()->rigidbody.form.PushVertice(Vec2(50.0f, 0.0f));
-	GetCreatedUnit()->rigidbody.is_immovable = true;
-	GetCreatedUnit()->rigidbody.UpdateMass();
-	
-	AddUnit(Unit("linhamediaVertical", Vec2(800.0f, 300.0f)));
-	GetCreatedUnit()->SetRadius(radius*2.5f);
-	GetCreatedUnit()->SetRigidBodyForm(Form(radius*4.0f, Form::Type::Line));
-	GetCreatedUnit()->rigidbody.form.PushVertice(Vec2(350.0f, 0.0f));
-	GetCreatedUnit()->rigidbody.is_immovable = true;
-	GetCreatedUnit()->rigidbody.UpdateMass();
-	linhagrande = GetCreatedUnit();
-	
+	//AddUnit(Unit("linhamedia", Vec2(500.0f, 300.0f)));
+	//GetCreatedUnit()->SetRadius(radius*2.5f);
+	//GetCreatedUnit()->SetRigidBodyForm(Form(radius*4.0f, Form::Type::Line));
+	//GetCreatedUnit()->rigidbody.form.PushVertice(Vec2(200.0f, 0.0f));
+	//GetCreatedUnit()->rigidbody.is_immovable = true;
+	//GetCreatedUnit()->rigidbody.UpdateMass();
+	//
+	//AddUnit(Unit("linhamedia", Vec2(1000.0f, 300.0f)));
+	//GetCreatedUnit()->SetRadius(radius*2.5f);
+	//GetCreatedUnit()->SetRigidBodyForm(Form(radius*1.0f, Form::Type::Line));
+	//GetCreatedUnit()->rigidbody.form.PushVertice(Vec2(50.0f, 0.0f));
+	//GetCreatedUnit()->rigidbody.is_immovable = true;
+	//GetCreatedUnit()->rigidbody.UpdateMass();
+	//
+	//AddUnit(Unit("linhamediaVertical", Vec2(800.0f, 300.0f)));
+	//GetCreatedUnit()->SetRadius(radius*2.5f);
+	//GetCreatedUnit()->SetRigidBodyForm(Form(radius*4.0f, Form::Type::Line));
+	//GetCreatedUnit()->rigidbody.form.PushVertice(Vec2(350.0f, 0.0f));
+	//GetCreatedUnit()->rigidbody.is_immovable = true;
+	//GetCreatedUnit()->rigidbody.UpdateMass();
+	//linhagrande = GetCreatedUnit();
+	//
 	//AddUnit(Unit("linhagrande", Vec2(500.0f, 660.0f)));
 	//GetCreatedUnit()->SetRadius(radius*6.5f);
 	//GetCreatedUnit()->SetRigidBodyForm(Form(radius*4.0f, Form::Type::Line));
 	//GetCreatedUnit()->rigidbody.form.PushVertice(Vec2(2300.0f, 0.0f));
 	//GetCreatedUnit()->rigidbody.is_immovable = true;
 	//GetCreatedUnit()->rigidbody.UpdateMass();
-	
-	AddUnit(Unit("linha", Vec2(500.0f, 160.0f)));
-	GetCreatedUnit()->SetRadius(radius);
-	GetCreatedUnit()->SetRigidBodyForm(Form(radius*0.8f, Form::Type::Line));
-	GetCreatedUnit()->rigidbody.form.PushVertice(Vec2(radius * 5.0f, 0.0f));
-	GetCreatedUnit()->rigidbody.UpdateMass();
+	//
+	//AddUnit(Unit("linha", Vec2(500.0f, 160.0f)));
+	//GetCreatedUnit()->SetRadius(radius);
+	//GetCreatedUnit()->SetRigidBodyForm(Form(radius*0.8f, Form::Type::Line));
+	//GetCreatedUnit()->rigidbody.form.PushVertice(Vec2(radius * 5.0f, 0.0f));
+	//GetCreatedUnit()->rigidbody.UpdateMass();
 
-	AddUnit(Unit("esfera", Vec2(100, 200.0f)));
+	AddUnit(Unit("esfera", Vec2(1.0f, 2.0f)));
 	GetCreatedUnit()->SetRadius(radius);
 	control.SetSelectedUnit(*GetCreatedUnit());
 	GetCreatedUnit()->rigidbody.transformation.SetOrientationInRadians(PI / 3.8f);
 	userunit = GetCreatedUnit();
 
-	float force = 1100.0f;			//cm per second
+	float force = 10.0f;			//cm per second
 
 	Effect aeffect;
 	aeffect.SetFunction(0, Function::Type::AddForce, Function::Unit::Source);
@@ -93,35 +94,30 @@ World::World() :
 
 	Effect qeffect;
 	qeffect.SetFunction(0, Function::Type::AddUnitRadius, Function::Unit::Source);
-	qeffect.SetFunctionFloat(0, 0, 1.0);
+	qeffect.SetFunctionFloat(0, 0, 0.1);
 	AddCommand(userunit, 'Q', qeffect);
 
 	Effect eeffect;
 	eeffect.SetFunction(0, Function::Type::AddUnitRadius, Function::Unit::Source);
-	eeffect.SetFunctionFloat(0, 0, -1.0);
+	eeffect.SetFunctionFloat(0, 0, -0.1);
 	AddCommand(userunit, 'E', eeffect);
 
-	Effect spaceeffect;
-	spaceeffect.SetFunction(0, Function::Type::SetUnitPosition, Function::Unit::Source);
-	spaceeffect.SetFunctionVec2(0, 0, Vec2(300.0f,300.0f));
-	AddCommand(userunit, (char)32, spaceeffect);
-
-	Effect righteffect;
-	righteffect.SetFunction(0, Function::Type::RotatesByRad, Function::Unit::Source);
-	righteffect.SetFunctionFloat(0, 0, 0.8f);
-	AddCommand(linhagrande, (char)39, righteffect);
-	
-	Effect lefteffect;
-	lefteffect.SetFunction(0, Function::Type::RotatesByRad, Function::Unit::Source);
-	lefteffect.SetFunctionFloat(0, 0, -0.8f);
-	AddCommand(linhagrande, (char)37, lefteffect);
+	//Effect righteffect;
+	//righteffect.SetFunction(0, Function::Type::RotatesByRad, Function::Unit::Source);
+	//righteffect.SetFunctionFloat(0, 0, 0.8f);
+	//AddCommand(linhagrande, (char)39, righteffect);
+	//
+	//Effect lefteffect;
+	//lefteffect.SetFunction(0, Function::Type::RotatesByRad, Function::Unit::Source);
+	//lefteffect.SetFunctionFloat(0, 0, -0.8f);
+	//AddCommand(linhagrande, (char)37, lefteffect);
 
 	// 25 UNIT SPAWN
 	for (size_t i = 0; i < 10; i++)
 	{
-		for (size_t j = 0; j < 10 ; j++)
+		for (size_t j = 0; j < 5 ; j++)
 		{
-			AddUnit(Unit("Steve", Vec2(2.2f * radius * (float)i + 300.0f, 2.2f * radius * (float)j + 500.0f)));
+			AddUnit(Unit("Steve", Vec2(2.2f * radius * (float)i - 10.0f, 2.2f * radius * (float)j - 10.0f)));
 			GetCreatedUnit()->SetRadius(radius);
 			GetCreatedUnit()->rigidbody.transformation.SetOrientationInRadians(PI / 2);
 			Effect spaceeffectx;

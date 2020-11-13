@@ -5,21 +5,33 @@ Transformation::Transformation(Vec2 position_in)
 	position = position_in;
 }
 
-Transformation::Transformation(Vec2 position_in, Vec2 scale_in, Vec2 orientation_in)
+Transformation::Transformation(WPosition position_in)
+{
+	position = position_in;
+}
+
+Transformation::Transformation(WPosition position_in, Vec2 scale_in, Vec2 orientation_in)
 {
 	position = position_in;
 	scale = scale_in;
 	SetOrientation(orientation_in);
 }
 
-Transformation::Transformation(Vec2 position_in, Vec2 scale_in, float orientationrad_in)
+Transformation::Transformation(WPosition position_in, float scale_in, Vec2 orientation_in)
+{
+	position = position_in;
+	scale = scale_in;
+	SetOrientation(orientation_in);
+}
+
+Transformation::Transformation(WPosition position_in, Vec2 scale_in, float orientationrad_in)
 {
 	position = position_in;
 	scale = scale_in;
 	SetOrientationInRadians(orientationrad_in);
 }
 
-Transformation::Transformation(Vec2 position_in, Vec2 scale_in, Vec2 orientation_in, float orientationrad_in)
+Transformation::Transformation(WPosition position_in, Vec2 scale_in, Vec2 orientation_in, float orientationrad_in)
 {
 	position = position_in;
 	scale = scale_in;
@@ -29,7 +41,7 @@ Transformation::Transformation(Vec2 position_in, Vec2 scale_in, Vec2 orientation
 
 Transformation Transformation::operator+(const Transformation & rhs) const
 {
-	return Transformation(GetRotated(rhs.position,orientation) + position,scale*rhs.scale,GetRotated(rhs.orientation,orientation));
+	return Transformation(position + GetRotated(rhs.position,orientation),scale*rhs.scale,GetRotated(rhs.orientation,orientation));
 }
 
 Transformation & Transformation::operator+=(const Transformation & rhs)
@@ -42,15 +54,11 @@ Transformation Transformation::operator-(const Transformation & rhs) const
 	return Transformation(GetRotated((rhs.position - position), GetInvertedAngle(orientation))*scale, scale*rhs.scale, GetRotated(rhs.orientation, GetInvertedAngle(orientation)));
 }
 
-Transformation Transformation::operator*(float rhs) const
+Transformation & Transformation::operator-=(const Transformation & rhs)
 {
-	return Transformation(position * rhs, scale*rhs, orientation);
+	return *this = *this - rhs;
 }
 
-Transformation & Transformation::operator*=(float rhs)
-{
-	return *this = *this * rhs;
-}
 
 Transformation Transformation::operator-(const Vec2 & position_rhs) const
 {
@@ -94,7 +102,7 @@ void Transformation::MovesBy(const Vec2 & rhs)
 
 Vec2 Transformation::GetPosition() const
 {
-	return position;
+	return position.GetPosition();
 }
 
 Vec2 Transformation::GetOrientation()

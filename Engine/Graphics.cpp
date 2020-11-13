@@ -333,26 +333,29 @@ void Graphics::PutPixelInCanvas(int x, int y, Color c)
 
 void Graphics::DrawCircle(Vec2 position_in, float radius_in, Color c)
 {
-	for (int x_a = (int)-radius_in; x_a < (int)radius_in + 1; x_a++)
+	float circumference = radius_in * PI * 2.0f;
+	Vec2 current_pixel(radius_in,0.0f);
+	Vec2 rotation(std::cos(PI / (radius_in * PI)), std::sin(PI / (radius_in * PI)));
+	for (int i = 0; i < (int)circumference / 4; i++)
 	{
-		for (int y_a = (int)-radius_in; y_a < (int)radius_in + 1; y_a++)
+		for (size_t i = 0; i < 4; i++)
 		{
-			if ((x_a * x_a)+(y_a * y_a) < radius_in*radius_in)
+			int x = (int)current_pixel.x + (int)position_in.x;
+			int y = (int)current_pixel.y + (int)position_in.y;
+			if (x < 0 || x >= Graphics::ScreenWidth)
 			{
-				if ((x_a * x_a) + (y_a * y_a) > (radius_in-1.0f) * (radius_in-1.0f))
-				{
-					int x_b = x_a + (int)position_in.x;
-					int y_b = y_a + (int)position_in.y;
-					if (!(x_b < 0 || x_b >= Graphics::ScreenWidth))
-					{
-						if (!(y_b < 0 || y_b >= Graphics::ScreenHeight))
-						{
-							PutPixel(x_b, y_b, c);
-						}
-					}
-				}
+				current_pixel = GetRotated90(current_pixel);
+				continue;
 			}
+			if (y < 0 || y >= Graphics::ScreenHeight)
+			{
+				current_pixel = GetRotated90(current_pixel);
+				continue;
+			}
+			PutPixel(x, y, c);
+			current_pixel = GetRotated90(current_pixel);
 		}
+		current_pixel = GetRotated(current_pixel, rotation);
 	}
 }
 

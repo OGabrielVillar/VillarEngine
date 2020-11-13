@@ -154,6 +154,7 @@
     <ClInclude Include="Function.h" />
     <ClInclude Include="FileStream.h" />
     <ClInclude Include="IdList.h" />
+    <ClInclude Include="WPosition.h" />
     <ClInclude Include="UIElement.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="UnitToBodyAttachment.h" />
@@ -201,6 +202,7 @@
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="PhysicSystem.cpp" />
+    <ClCompile Include="WPosition.cpp" />
     <ClCompile Include="RectI.cpp" />
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="Sound.cpp" />
@@ -283,6 +285,7 @@
     <Image Include="Chili.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="ChunksDivisions.txt" />
     <Text Include="GOALS.txt" />
     <Text Include="Files.txt" />
   </ItemGroup>

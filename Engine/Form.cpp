@@ -100,7 +100,7 @@ float Form::GetPerimeter() const
 	}
 	else if (type == Type::Line)
 	{
-		return	PI * radius * 2.0f + Vec2(vertices[0].position - vertices[1].position).Len() * 2.0f;
+		return	PI * radius * 2.0f + Vec2(vertices[0].GetPosition() - vertices[1].GetPosition()).Len() * 2.0f;
 	}
 	return 0.0f;
 }

@@ -16,8 +16,10 @@ void DrawSystem::Go(float ft_in)
 
 void DrawSystem::ComposeFrame()
 {
-	Transformation* matrix = world->GetCamera()->GetTransformation();
 	Vec2 center = Vec2(gfx->ScreenWidth / 2.0f, gfx->ScreenHeight / 2.0f);
+	Transformation matrix = *world->GetCamera()->GetTransformation();
+	matrix.ScalesBy(world->GetCamera()->zoom);
+	matrix.ScalesBy(center.Len());
 	Color cx = Colors::White;
 	//gfx->DrawLine((*matrix - Transformation(Vec2(0.0f, 0.0f))).GetPosition() + center, 
 	//	(*matrix - Transformation(Vec2(gfx->ScreenWidth, 0.0f))).GetPosition() + center, Colors::Green);
@@ -27,7 +29,7 @@ void DrawSystem::ComposeFrame()
 	//	(*matrix - Transformation(Vec2(0.0f, gfx->ScreenHeight))).GetPosition() + center, Colors::Green);
 	//gfx->DrawLine((*matrix - Transformation(Vec2(0.0f, gfx->ScreenHeight))).GetPosition() + center,
 	//	(*matrix - Transformation(Vec2(0.0f, 0.0f))).GetPosition() + center, Colors::Green);
-	gfx->DrawCircle((*matrix - Transformation(center)).GetPosition() + center, center.Len() * matrix->GetScale(), Colors::White);
+	gfx->DrawCircle((matrix - Transformation(Vec2(0.0f))).GetPosition() + center, Vec2(12.5f).Len() * matrix.GetScale(), Colors::White);
 
 	Unit* pU;
 
@@ -38,14 +40,14 @@ void DrawSystem::ComposeFrame()
 		pU = lr_pu.Get();
 		if (!pU->GetName().empty())
 		{
-			Transformation puTransf = *matrix - pU->GetTransformation();
+			Transformation puTransf = matrix - pU->GetTransformation();
 			float pu0Radius = pU->GetRadiusSqrd()*puTransf.GetScale();
-			if (DistSqr(center) < DistSqr(puTransf.GetPosition()))
-			{
-				lr_pu.Next();
-				continue;
-			}
-
+			//if (DistSqr(center) < DistSqr(puTransf.GetPosition()))
+			//{
+			//	lr_pu.Next();
+			//	continue;
+			//}
+			//
 
 			cx = Colors::White;
 			if (pU == world->userunit)
@@ -56,7 +58,7 @@ void DrawSystem::ComposeFrame()
 			//if (pU->rigidbody.arebeinghit){cx = Colors::Blue;}
 			if (pU->rigidbody.form.GetType() == Form::Type::Point) // DRAW CIRCLES
 			{
-				Transformation pu_v0Transf = *matrix - pU->rigidbody.GetVerticeTransf(0);
+				Transformation pu_v0Transf = matrix - pU->rigidbody.GetVerticeTransf(0);
 				Vec2 pu_v0Position = pu_v0Transf.GetPosition() + center;
 				float pu_v0Radius = pU->GetFormRadius()*pu_v0Transf.GetScale();
 				gfx->DrawCircle(pu_v0Position, pu_v0Radius, cx);
@@ -70,10 +72,10 @@ void DrawSystem::ComposeFrame()
 			}
 			else if (pU->rigidbody.form.GetType() == Form::Type::Line) // DRAW LINES
 			{
-				Transformation pu_v0Transf = *matrix - pU->rigidbody.GetVerticeTransf(0);
+				Transformation pu_v0Transf = matrix - pU->rigidbody.GetVerticeTransf(0);
 				Vec2 pu_v0Position = pu_v0Transf.GetPosition() + center;
 				float pu_v0Radius = pU->GetFormRadius()*pu_v0Transf.GetScale();
-				Transformation pu_v1Transf = *matrix - pU->rigidbody.GetVerticeTransf(1);
+				Transformation pu_v1Transf = matrix - pU->rigidbody.GetVerticeTransf(1);
 				Vec2 pu_v1Position = pu_v1Transf.GetPosition() + center;
 				float pu_v1Radius = pU->GetFormRadius()*pu_v1Transf.GetScale();
 				gfx->DrawCircleLine(pu_v0Position, pu_v1Position, pu_v0Radius, cx);

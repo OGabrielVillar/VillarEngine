@@ -48,7 +48,7 @@ void PhysicSystem::MoveBodies()
 				Transformation movement = Transformation(lr_a.Get()->rigidbody.velocity*ft);
 				Vec2 rotation = (Vec2(std::cos(lr_a.Get()->rigidbody.angularVelocity*ft), std::sin(lr_a.Get()->rigidbody.angularVelocity*ft)));
 				lr_a.Get()->rigidbody.SetTransformation(movement + lr_a.Get()->rigidbody.GetTransformation());
-				lr_a.Get()->rigidbody.transformation.orientation = GetRotated(lr_a.Get()->rigidbody.transformation.orientation, rotation);
+				lr_a.Get()->rigidbody.transformation.RotatesBy(rotation);
 				lr_a.Get()->rigidbody.force.Set(0.0f, 0.0f);
 			}
 
@@ -78,19 +78,19 @@ void PhysicSystem::MoveBodies()
 	{
 		if (!lr_a.Get()->GetName().empty())
 		{
-			lr_b.Reset();
 			lr_b.Next();
 			while (!lr_b.Ended())
 			{
 				if (!lr_b.Get()->GetName().empty())
 				{
 					Collision(&lr_a.Get()->rigidbody,&lr_b.Get()->rigidbody);
-					Collision(&lr_b.Get()->rigidbody, &lr_a.Get()->rigidbody);
+					Collision(&lr_b.Get()->rigidbody,&lr_a.Get()->rigidbody);
 				}
 				lr_b.Next();
 			}
 		}
 		lr_a.Next();
+		lr_b.Copy(lr_a);
 	}
 	lr_a.Reset();
 	if (_ithappens)
