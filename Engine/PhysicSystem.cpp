@@ -35,12 +35,13 @@ void PhysicSystem::MoveBodies()
 
 			if (!lr_a.Get()->rigidbody.is_immovable)
 			{
-				//if (Punit != Sun)
+				//if (lr_a.Get() != Sun)
 				//{
-				//	Vec2 punit_to_sun = (Sun->rigidbody.GetPosition() - Punit->rigidbody.GetPosition());
-				//	Punit->rigidbody.velocity += punit_to_sun.Normalize() * ((GCONST * Sun->rigidbody.mass * Punit->rigidbody.mass) / punit_to_sun.LenSqrd());	//GRAVITY
+				//	Vec2 punit_to_sun = (Sun->rigidbody.GetPosition() - lr_a.Get()->rigidbody.GetPosition());
+				//	lr_a.Get()->rigidbody.velocity += punit_to_sun.Normalize() * ((GCONST * Sun->rigidbody.mass * lr_a.Get()->rigidbody.mass) / punit_to_sun.LenSqrd());	//GRAVITY
 				//}
-				//Punit->rigidbody.velocity += Vec2(0.0f, 10.0f);	//GRAVITY
+				
+				//lr_a.Get()->rigidbody.velocity += Vec2(0.0f, 0.2f);	//GRAVITY
 				lr_a.Get()->rigidbody.velocity += lr_a.Get()->rigidbody.force;
 				lr_a.Get()->rigidbody.angularVelocity += lr_a.Get()->rigidbody.torque;
 				//Punit->rigidbody.velocity *= AIRRESISTENCE;			//DRAG
@@ -472,24 +473,27 @@ void PhysicSystem::InvertedForceTransmission(RigidBody & rb0, RigidBody & rb1)
 void PhysicSystem::ForceTransmission(RigidBody & rb0, RigidBody & rb1)
 {
 	//Corrects the penetration
-	Vec2 position_slope = (rb0contacts[0] - rb1contacts[0])*0.5f;
-	if (contact_count == 2)
+	if (!rb0.is_immovable)
 	{
-		Vec2 position_slope1 = (rb0contacts[1] - rb1contacts[1])*0.5f;
-		if (position_slope.LenSqrd() >= position_slope1.LenSqrd())
+		Vec2 position_slope = (rb0contacts[0] - rb1contacts[0])*0.5f;
+		if (contact_count == 2)
 		{
-			rb0.SetPosition(rb0.GetPosition() + position_slope);
-			//rb0.AddForce(position_slope);
+			Vec2 position_slope1 = (rb0contacts[1] - rb1contacts[1])*0.5f;
+			if (position_slope.LenSqrd() >= position_slope1.LenSqrd())
+			{
+				rb0.SetPosition(rb0.GetPosition() + position_slope);
+				//rb0.AddForce(position_slope);
+			}
+			else
+			{
+				position_slope = (position_slope + position_slope1) / 1.9f;
+			}
 		}
-		else
-		{
-			position_slope = (position_slope + position_slope1) / 1.9f;
-		}
+		rb0.AddForce(position_slope);
+		rb1.AddForce(-position_slope);
+		rb0.SetPosition(rb0.GetPosition() + position_slope);
+		//rb1.SetPosition(rb0.GetPosition() - position_slope);
 	}
-	rb0.AddForce(position_slope);
-	rb1.AddForce(-position_slope);
-	rb0.SetPosition(rb0.GetPosition() + position_slope);
-	//rb1.SetPosition(rb0.GetPosition() - position_slope);
 
 	Vec2 p0_to_p1 = collision_point - contact_point;
 	Vec2 normal_angle = p0_to_p1.GetNormalized();

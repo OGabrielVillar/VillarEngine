@@ -154,6 +154,9 @@
     <ClInclude Include="Function.h" />
     <ClInclude Include="FileStream.h" />
     <ClInclude Include="IdList.h" />
+    <ClInclude Include="SoundSystem.h" />
+    <ClInclude Include="TextRendering.h" />
+    <ClInclude Include="ttfParser.h" />
     <ClInclude Include="WPosition.h" />
     <ClInclude Include="UIElement.h" />
     <ClInclude Include="Material.h" />
@@ -169,8 +172,7 @@
     <ClInclude Include="RectI.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="RigidBody.h" />
-    <ClInclude Include="Sound.h" />
-    <ClInclude Include="SoundEffect.h" />
+    <ClInclude Include="ChiliSound.h" />
     <ClInclude Include="Surface.h" />
     <ClInclude Include="Transformation.h" />
     <ClInclude Include="Unit.h" />
@@ -184,6 +186,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DrawSystem.cpp" />
     <ClCompile Include="FileStream.cpp" />
+    <ClCompile Include="font_test.cpp" />
     <ClCompile Include="Form.cpp" />
     <ClCompile Include="CombatSystem.cpp" />
     <ClCompile Include="COMInitializer.cpp" />
@@ -202,10 +205,11 @@
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="PhysicSystem.cpp" />
+    <ClCompile Include="TextRendering.cpp" />
     <ClCompile Include="WPosition.cpp" />
     <ClCompile Include="RectI.cpp" />
     <ClCompile Include="RigidBody.cpp" />
-    <ClCompile Include="Sound.cpp" />
+    <ClCompile Include="ChiliSound.cpp" />
     <ClCompile Include="FileManagement.cpp" />
     <ClCompile Include="Surface.cpp" />
     <ClCompile Include="Transformation.cpp" />

@@ -6,7 +6,7 @@ World::World() :
 	control(combatSystem)
 {
 	camera.SetTransformation(Transformation(WPosition(),Vec2(1.0f),0.0f));
-	float radius = 0.35f;		        //cm
+	float radius = 0.5f;		        //cm
 	//testPorposes
 	/*/ */ /*
 
@@ -21,13 +21,14 @@ World::World() :
 	curva = GetCreatedUnit();
 	// */
 	//
-	//AddUnit(Unit("sol", Vec2(600.0f, 250.0f)));
-	//GetCreatedUnit()->SetRadius(105.0f);
-	//GetCreatedUnit()->rigidbody.is_immovable = false;
-	//GetCreatedUnit()->rigidbody.density = 10000.0f;
-	//GetCreatedUnit()->rigidbody.UpdateMass();
-	//physicSystem.Sun = GetCreatedUnit();
-	//sun = GetCreatedUnit();
+	AddUnit(Unit("sol", Vec2(0.0f, 0.0f)));
+	GetCreatedUnit()->SetRadius(5.0f);
+	GetCreatedUnit()->rigidbody.density = 10000.0f;
+	GetCreatedUnit()->rigidbody.UpdateMass();
+
+	GetCreatedUnit()->rigidbody.is_immovable = true;
+	sun = GetCreatedUnit();
+	physicSystem.Sun = GetCreatedUnit();
 
 	//AddUnit(Unit("linhamedia", Vec2(500.0f, 300.0f)));
 	//GetCreatedUnit()->SetRadius(radius*2.5f);
@@ -36,10 +37,10 @@ World::World() :
 	//GetCreatedUnit()->rigidbody.is_immovable = true;
 	//GetCreatedUnit()->rigidbody.UpdateMass();
 	//
-	//AddUnit(Unit("linhamedia", Vec2(1000.0f, 300.0f)));
-	//GetCreatedUnit()->SetRadius(radius*2.5f);
+	//AddUnit(Unit("linhamedia", Vec2(0.0f, 1.0f)));
+	//GetCreatedUnit()->SetRadius(1.0f);
 	//GetCreatedUnit()->SetRigidBodyForm(Form(radius*1.0f, Form::Type::Line));
-	//GetCreatedUnit()->rigidbody.form.PushVertice(Vec2(50.0f, 0.0f));
+	//GetCreatedUnit()->rigidbody.form.PushVertice(Vec2(35.0f, 0.0f));
 	//GetCreatedUnit()->rigidbody.is_immovable = true;
 	//GetCreatedUnit()->rigidbody.UpdateMass();
 	//
@@ -64,13 +65,13 @@ World::World() :
 	//GetCreatedUnit()->rigidbody.form.PushVertice(Vec2(radius * 5.0f, 0.0f));
 	//GetCreatedUnit()->rigidbody.UpdateMass();
 
-	AddUnit(Unit("esfera", Vec2(1.0f, 2.0f)));
+	AddUnit(Unit("esfera", Vec2(0.0f, -8.0f)));
 	GetCreatedUnit()->SetRadius(radius);
 	control.SetSelectedUnit(*GetCreatedUnit());
 	GetCreatedUnit()->rigidbody.transformation.SetOrientationInRadians(PI / 3.8f);
 	userunit = GetCreatedUnit();
 
-	float force = 10.0f;			//cm per second
+	float force = 50.0f;			//cm per second
 
 	Effect aeffect;
 	aeffect.SetFunction(0, Function::Type::AddForce, Function::Unit::Source);
@@ -113,18 +114,17 @@ World::World() :
 	//AddCommand(linhagrande, (char)37, lefteffect);
 
 	// 25 UNIT SPAWN
-	for (size_t i = 0; i < 10; i++)
+	float circlespawn_radius = 12.0f;
+	int circlespawn_amount = 30;
+	for (size_t i = 0; i < circlespawn_amount; i++)
 	{
-		for (size_t j = 0; j < 5 ; j++)
-		{
-			AddUnit(Unit("Steve", Vec2(2.2f * radius * (float)i - 10.0f, 2.2f * radius * (float)j - 10.0f)));
-			GetCreatedUnit()->SetRadius(radius);
-			GetCreatedUnit()->rigidbody.transformation.SetOrientationInRadians(PI / 2);
-			Effect spaceeffectx;
-			spaceeffectx.SetFunction(0, Function::Type::AddForce, Function::Unit::Source);
-			spaceeffectx.SetFunctionTransformation(0, 0, Transformation(Vec2(0.0f, force)));
-			AddCommand(GetCreatedUnit(), 'X', spaceeffectx);
-		}
+		AddUnit(Unit("Steve", Vec2(std::cos(((PI*2)/circlespawn_amount)*i)*circlespawn_radius, std::sin(((PI * 2) / circlespawn_amount)*i)*circlespawn_radius)));
+		GetCreatedUnit()->SetRadius(radius);
+		GetCreatedUnit()->rigidbody.transformation.SetOrientationInRadians(PI / 2);
+		//Effect spaceeffectx;
+		//spaceeffectx.SetFunction(0, Function::Type::AddForce, Function::Unit::Source);
+		//spaceeffectx.SetFunctionTransformation(0, 0, Transformation(Vec2(0.0f, force)));
+		//AddCommand(GetCreatedUnit(), 'X', spaceeffectx);
 	}
 	//Line3/*/
 	//

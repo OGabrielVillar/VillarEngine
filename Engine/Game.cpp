@@ -114,9 +114,9 @@ void Game::Update()
 		lr_pu.Next();
 	}
 
-	if (wnd.mouse.LeftIsPressed()){	
-		world.userunit->rigidbody.SetPosition(Vec2((float)wnd.mouse.GetPosX(), (float)wnd.mouse.GetPosY()));
-	}
+	//if (wnd.mouse.LeftIsPressed()){	
+	//	world.userunit->rigidbody.SetPosition(Vec2((float)wnd.mouse.GetPosX(), (float)wnd.mouse.GetPosY()));
+	//}
 	float camera_velocity = (1.0f/(world.GetCamera()->GetTransformation()->GetScale() * world.GetCamera()->zoom)) * ft.Get();
 
 	if (wnd.kbd.KeyIsPressed((char)104))

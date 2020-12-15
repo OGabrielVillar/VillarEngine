@@ -27,8 +27,7 @@
 #include "Animation.h"
 #include "FrameTimer.h"
 #include "Character.h"
-#include "Font.h"
-#include "Sound.h"
+//#include "Font.h"
 #include "List.h"
 #include "FileStream.h"
 

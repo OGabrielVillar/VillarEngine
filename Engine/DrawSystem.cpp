@@ -17,9 +17,10 @@ void DrawSystem::Go(float ft_in)
 void DrawSystem::ComposeFrame()
 {
 	Vec2 center = Vec2(gfx->ScreenWidth / 2.0f, gfx->ScreenHeight / 2.0f);
+
 	Transformation matrix = *world->GetCamera()->GetTransformation();
-	matrix.ScalesBy(world->GetCamera()->zoom);
-	matrix.ScalesBy(center.Len());
+	matrix.ScalesBy(world->GetCamera()->zoom * center.Len());
+
 	Color cx = Colors::White;
 	//gfx->DrawLine((*matrix - Transformation(Vec2(0.0f, 0.0f))).GetPosition() + center, 
 	//	(*matrix - Transformation(Vec2(gfx->ScreenWidth, 0.0f))).GetPosition() + center, Colors::Green);
@@ -30,6 +31,11 @@ void DrawSystem::ComposeFrame()
 	//gfx->DrawLine((*matrix - Transformation(Vec2(0.0f, gfx->ScreenHeight))).GetPosition() + center,
 	//	(*matrix - Transformation(Vec2(0.0f, 0.0f))).GetPosition() + center, Colors::Green);
 	gfx->DrawCircle((matrix - Transformation(Vec2(0.0f))).GetPosition() + center, Vec2(12.5f).Len() * matrix.GetScale(), Colors::White);
+
+
+	GridRender();
+
+
 
 	Unit* pU;
 
@@ -124,5 +130,49 @@ void DrawSystem::ComposeFrame()
 	//	a = 1;
 	//}
 	//trigger ++;
+}
+
+void DrawSystem::GridRender()
+{
+	//GRID RENDERING:
+	Vec2 center = Vec2(gfx->ScreenWidth / 2.0f, gfx->ScreenHeight / 2.0f);
+	Transformation matrix = *world->GetCamera()->GetTransformation();
+	float cam_scale = 1.0f * world->GetCamera()->zoom * center.Len();
+	matrix.ScalesBy(cam_scale);
+
+	float threshold = 0.028f / cam_scale;
+	if (threshold < 1.0f)
+	{
+		Vec2 cam_orientation(matrix.GetOrientation());
+		Vec2 cam_position(matrix.GetPosition());
+		Vec2 a_corner(GetRotated(-center, cam_orientation) / cam_scale);
+		Vec2 b_corner(GetRotated(Vec2(-center.x, center.y), cam_orientation) / cam_scale);
+		float initial_x = std::abs(a_corner.x);
+		float initial_y = std::abs(a_corner.y);
+		if (initial_x < std::abs(b_corner.x))
+		{
+			initial_x = std::abs(b_corner.x);
+		}
+		if (initial_y < std::abs(b_corner.y))
+		{
+			initial_y = std::abs(b_corner.y);
+		}
+		float endin_x = cam_position.x + initial_x;
+		float endin_y = cam_position.y + initial_y;
+		float start_x = cam_position.x - initial_x;
+		float start_y = cam_position.y - initial_y;
+		for (float x = (int)start_x - ((int)start_x % 128);
+			x <= endin_x; x += 128.0f)
+		{
+			gfx->DrawLine((matrix - Transformation(Vec2(x, start_y))).GetPosition() + center, (matrix - Transformation(Vec2(x, endin_y))).GetPosition() + center
+				, Color((unsigned char)32 - (threshold* threshold * 32), (unsigned char)32 - (threshold * threshold * 32), (unsigned char)64 - (threshold * 64)));
+		}
+		for (float y = (int)start_y - ((int)start_y % 128);
+			y <= endin_y; y += 128.0f)
+		{
+			gfx->DrawLine((matrix - Transformation(Vec2(start_x, y))).GetPosition() + center, (matrix - Transformation(Vec2(endin_x, y))).GetPosition() + center
+				, Color((unsigned char)32 - (threshold * threshold * 32), (unsigned char)32 - (threshold * threshold * 32), (unsigned char)64 - (threshold * 64)));
+		}
+	}
 }
 

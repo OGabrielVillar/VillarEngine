@@ -18,7 +18,7 @@
  *	You should have received a copy of the GNU General Public License					  *
  *	along with this source code.  If not, see <http://www.gnu.org/licenses/>.			  *
  ******************************************************************************************/
-#include "Sound.h"
+#include "ChiliSound.h"
 #include <assert.h>
 #include <algorithm>
 #include <fstream>

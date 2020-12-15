@@ -49,6 +49,9 @@
     <Filter Include="Source Files\FileManagement">
       <UniqueIdentifier>{142e343e-b9bb-482e-b0b3-abce2410d4bc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\font">
+      <UniqueIdentifier>{c112585f-243d-480e-aec2-b817a65096b0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI.h">
@@ -138,12 +141,6 @@
     <ClInclude Include="Resource.h">
       <Filter>Header Files\ChiliFramework</Filter>
     </ClInclude>
-    <ClInclude Include="Sound.h">
-      <Filter>Header Files\ChiliFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="SoundEffect.h">
-      <Filter>Header Files\ChiliFramework</Filter>
-    </ClInclude>
     <ClInclude Include="Surface.h">
       <Filter>Header Files\ChiliFramework</Filter>
     </ClInclude>
@@ -176,6 +173,15 @@
     </ClInclude>
     <ClInclude Include="WPosition.h">
       <Filter>Header Files\World Side</Filter>
+    </ClInclude>
+    <ClInclude Include="ttfParser.h">
+      <Filter>Header Files\font</Filter>
+    </ClInclude>
+    <ClInclude Include="TextRendering.h">
+      <Filter>Header Files\font</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiliSound.h">
+      <Filter>Header Files\ChiliFramework</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -248,9 +254,6 @@
     <ClCompile Include="RectI.cpp">
       <Filter>Source Files\ChiliFramework</Filter>
     </ClCompile>
-    <ClCompile Include="Sound.cpp">
-      <Filter>Source Files\ChiliFramework</Filter>
-    </ClCompile>
     <ClCompile Include="Surface.cpp">
       <Filter>Source Files\ChiliFramework</Filter>
     </ClCompile>
@@ -280,6 +283,15 @@
     </ClCompile>
     <ClCompile Include="WPosition.cpp">
       <Filter>Source Files\WorldSide</Filter>
+    </ClCompile>
+    <ClCompile Include="font_test.cpp">
+      <Filter>Header Files\font</Filter>
+    </ClCompile>
+    <ClCompile Include="TextRendering.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ChiliSound.cpp">
+      <Filter>Source Files\ChiliFramework</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

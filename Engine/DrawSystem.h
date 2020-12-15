@@ -12,6 +12,8 @@ public:
 	void Go(float ft_in);
 	void ComposeFrame();
 private:
+	void GridRender();
+private:
 	Graphics* gfx;
 	World* world;
 	UIElement screen;
