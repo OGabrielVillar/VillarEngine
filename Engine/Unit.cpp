@@ -8,8 +8,9 @@ Unit::Unit(std::string name_in, Transformation transf_in)
 {
 	name = name_in;
 	transformation = transf_in;
-	radius = 10.0f;
+	radius = 1.0f;
 	CreateDefaultRigidBody();
+	rigidbody.UpdateMass();
 }
 
 void Unit::AddCommand(Command cmd)

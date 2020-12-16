@@ -65,6 +65,11 @@ WPosition WPosition::operator+(const Vec2 & rhs) const
 	return WPosition(x_in, y_in, x_chunk, y_chunk);
 }
 
+WPosition & WPosition::operator+=(const WPosition & rhs)
+{
+	return *this = *this + rhs;
+}
+
 WPosition & WPosition::operator+=(const Vec2 & rhs)
 {
 	x += rhs.x;

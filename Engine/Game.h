@@ -27,13 +27,14 @@
 #include "Animation.h"
 #include "FrameTimer.h"
 #include "Character.h"
-//#include "Font.h"
+#include "Font.h"
 #include "List.h"
 #include "FileStream.h"
 
 #include "DrawSystem.h"
 #include "World.h"
 #include "IdList.h"
+#include <string>
 
 class Game
 {
@@ -48,6 +49,9 @@ private:
 	/********************************/
 	/*  User Functions              */
 	/********************************/
+	void Controls();
+	WPosition GetMouseWorldPosition();
+	WPosition GetScreenWorldPosition(const Vec2& screen_pos);
 private:
 	FileStream fs;
 
@@ -60,12 +64,17 @@ private:
 	float velocity_sum;
 	Transformation CamDefaultTransf;
 
+
+
 	bool bound_active = true;
 	/********************************/
 	//  User Variables              
+	Font font = "Images\\Fixedsys16x28.bmp";
+	bool lefthasbeenpressed = false;
+	WPosition left_clickPos;
+	WPosition left_camInitialPos;
 	//List<std::string> list;
 	////Character link = Vec2(111,111);
-	//Font font = "Images\\Fixedsys16x28.bmp";
 	//Sound hit = L"Sounds\\hit.wav";
 	//Sound song = Sound(L"Sounds\\SonzinJogo01.wav",0.0f,(60.0f*4.0f)+27.0f);
 	//Vei2 textPos = Vei2(1200,100);

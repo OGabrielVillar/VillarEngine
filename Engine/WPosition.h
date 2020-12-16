@@ -12,6 +12,7 @@ public:
 	// +
 	WPosition operator+(const WPosition& rhs) const;
 	WPosition operator+(const Vec2& rhs) const;
+	WPosition& operator+=(const WPosition& rhs);
 	WPosition& operator+=(const Vec2& rhs);
 	// -
 	WPosition operator-(const WPosition& rhs) const;
@@ -23,8 +24,8 @@ public:
 	//FUNCTIONS
 	Vec2 GetPosition() const;
 public:
-	signed short x_chunk;
-	signed short y_chunk;
+	signed short x_chunk = 0;
+	signed short y_chunk = 0;
 	float x;
 	float y;
 	signed char x_round;

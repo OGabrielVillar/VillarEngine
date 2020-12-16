@@ -100,9 +100,24 @@ void Transformation::MovesBy(const Vec2 & rhs)
 	position += rhs;
 }
 
+void Transformation::MovesBy(const WPosition & rhs)
+{
+	position += rhs;
+}
+
+void Transformation::MoveTo(const WPosition & rhs)
+{
+	position = rhs;
+}
+
 Vec2 Transformation::GetPosition() const
 {
 	return position.GetPosition();
+}
+
+WPosition Transformation::GetWPosition() const
+{
+	return position;
 }
 
 Vec2 Transformation::GetOrientation()

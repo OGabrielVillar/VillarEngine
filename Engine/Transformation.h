@@ -27,7 +27,10 @@ public:
 	void RotatesBy(const Vec2& rhs);
 	void ScalesBy(float const rhs);
 	void MovesBy(const Vec2& rhs);
+	void MovesBy(const WPosition& rhs);
+	void MoveTo(const WPosition& rhs);
 	Vec2 GetPosition() const;
+	WPosition GetWPosition() const;
 	Vec2 GetOrientation();
 	float GetOrientationDegrees();
 	float GetScale() const;

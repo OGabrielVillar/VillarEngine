@@ -165,13 +165,13 @@ void DrawSystem::GridRender()
 			x <= endin_x; x += 128.0f)
 		{
 			gfx->DrawLine((matrix - Transformation(Vec2(x, start_y))).GetPosition() + center, (matrix - Transformation(Vec2(x, endin_y))).GetPosition() + center
-				, Color((unsigned char)32 - (threshold* threshold * 32), (unsigned char)32 - (threshold * threshold * 32), (unsigned char)64 - (threshold * 64)));
+				, Color((unsigned char)(32.0f - (threshold* threshold * 32.0f)), (unsigned char)(32.0f - (threshold * threshold * 32.0f)), (unsigned char)(64.0f - (threshold * 64.0f))));
 		}
 		for (float y = (int)start_y - ((int)start_y % 128);
 			y <= endin_y; y += 128.0f)
 		{
 			gfx->DrawLine((matrix - Transformation(Vec2(start_x, y))).GetPosition() + center, (matrix - Transformation(Vec2(endin_x, y))).GetPosition() + center
-				, Color((unsigned char)32 - (threshold * threshold * 32), (unsigned char)32 - (threshold * threshold * 32), (unsigned char)64 - (threshold * 64)));
+				, Color((unsigned char)(32.0f - (threshold* threshold * 32.0f)), (unsigned char)(32.0f - (threshold * threshold * 32.0f)), (unsigned char)(64.0f - (threshold * 64.0f))));
 		}
 	}
 }
