@@ -73,6 +73,7 @@ private:
 	bool lefthasbeenpressed = false;
 	WPosition left_clickPos;
 	WPosition left_camInitialPos;
+	WPosition left_clickLastPos;
 	//List<std::string> list;
 	////Character link = Vec2(111,111);
 	//Sound hit = L"Sounds\\hit.wav";

@@ -184,10 +184,22 @@ void Game::Controls()
 	// update character
 	link.Update( ft.Mark() );
 	*/
+	WPosition a;
+	WPosition b;
+
+	WPosition userunit_position(world.userunit->GetTransformation().GetWPosition());
+	font.DrawText(
+		"User Position\nx: " + std::to_string(userunit_position.x) + "(" + std::to_string(userunit_position.x_chunk)
+		+ ")\ny: " + std::to_string(userunit_position.y) + "(" + std::to_string(userunit_position.y_chunk)
+		+ ")"
+		, Vei2(gfx.ScreenHeight-40, 40), Colors::Yellow, gfx);
+
 
 	WPosition mousewp(GetMouseWorldPosition());
 	font.DrawText(	"x: "	+ std::to_string(mousewp.x)	+ "(" + std::to_string(mousewp.x_chunk)
 	+				")\ny: " + std::to_string(mousewp.y) + "(" + std::to_string(mousewp.y_chunk)
+	+				")\nx: "	+ std::to_string(mousewp.GetPosition().x)
+	+				")\ny: " + std::to_string(mousewp.GetPosition().y)
 	+				")"
 	, Vei2(40, 40), Colors::Yellow, gfx);
 
@@ -195,16 +207,14 @@ void Game::Controls()
 	{
 		if (!lefthasbeenpressed)
 		{
+			left_clickLastPos.Reset();
 			left_clickPos = mousewp;
 			left_camInitialPos = world.GetCamera()->GetTransformation()->GetWPosition();
 			lefthasbeenpressed = true;
 		}
-		WPosition offset = mousewp - left_clickPos;
-		if (wnd.kbd.KeyIsPressed('A'))
-		{
-			int  i = 1;
-		}
-		//world.GetCamera()->GetTransformation()->MoveTo(left_camInitialPos - offset);
+		WPosition offset = (mousewp - left_clickPos) + left_clickLastPos;
+		left_clickLastPos = offset;
+		world.GetCamera()->GetTransformation()->MoveTo(left_camInitialPos - offset);
 
 		font.DrawText(
 			"Mouse Position\nx: " + std::to_string(offset.x) + "(" + std::to_string(offset.x_chunk)

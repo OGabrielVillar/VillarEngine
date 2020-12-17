@@ -161,14 +161,14 @@ void DrawSystem::GridRender()
 		float endin_y = cam_position.y + initial_y;
 		float start_x = cam_position.x - initial_x;
 		float start_y = cam_position.y - initial_y;
-		for (float x = (int)start_x - ((int)start_x % 128);
-			x <= endin_x; x += 128.0f)
+		for (float x = (int)start_x - ((int)start_x % 256) - 128;
+			x <= endin_x; x += 256.0f)
 		{
 			gfx->DrawLine((matrix - Transformation(Vec2(x, start_y))).GetPosition() + center, (matrix - Transformation(Vec2(x, endin_y))).GetPosition() + center
 				, Color((unsigned char)(32.0f - (threshold* threshold * 32.0f)), (unsigned char)(32.0f - (threshold * threshold * 32.0f)), (unsigned char)(64.0f - (threshold * 64.0f))));
 		}
-		for (float y = (int)start_y - ((int)start_y % 128);
-			y <= endin_y; y += 128.0f)
+		for (float y = (int)start_y - ((int)start_y % 256) - 128;
+			y <= endin_y; y += 256.0f)
 		{
 			gfx->DrawLine((matrix - Transformation(Vec2(start_x, y))).GetPosition() + center, (matrix - Transformation(Vec2(endin_x, y))).GetPosition() + center
 				, Color((unsigned char)(32.0f - (threshold* threshold * 32.0f)), (unsigned char)(32.0f - (threshold * threshold * 32.0f)), (unsigned char)(64.0f - (threshold * 64.0f))));

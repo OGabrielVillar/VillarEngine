@@ -23,6 +23,7 @@ public:
 	WPosition& operator=(const Vec2& rhs);
 	//FUNCTIONS
 	Vec2 GetPosition() const;
+	void Reset();
 public:
 	signed short x_chunk = 0;
 	signed short y_chunk = 0;

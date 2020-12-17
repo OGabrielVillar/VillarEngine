@@ -1,3 +1,4 @@
+#define OFFSET_REARRANGEMENT = 256.0f //128.0f;
 #include "WPosition.h"
 
 WPosition::WPosition() :
@@ -10,12 +11,25 @@ y_chunk(0)
 
 WPosition::WPosition(const Vec2 & rhs)
 {
-	signed short x_chunk_in = (signed short)(rhs.x / 128.0f);
-	signed short y_chunk_in = (signed short)(rhs.y / 128.0f);
-	x = rhs.x - 128.0f * (float)x_chunk_in;
-	y = rhs.y - 128.0f * (float)y_chunk_in;
-	x_chunk = x_chunk_in;
-	y_chunk = y_chunk_in;
+	*this = WPosition(rhs.x, rhs.y, 0, 0);
+//	if (x >= 128.0f || y >= 128.0f)
+//	{
+//		signed short x_chunk_in = (signed short)((x / 256.0f));
+//		signed short y_chunk_in = (signed short)((y / 256.0f));
+//		x -= 256.0f * (float)x_chunk_in;
+//		y -= 256.0f * (float)y_chunk_in;
+//		x_chunk = x_chunk_in;
+//		y_chunk = y_chunk_in;
+//	}
+//	else if (x < -128.0f || y < -128.0f)
+//	{
+//		signed short x_chunk_in = (signed short)((x / 256.0f) - 0.5f);
+//		signed short y_chunk_in = (signed short)((y / 256.0f) - 0.5f);
+//		x -= 256.0f * (float)x_chunk_in;
+//		y -= 256.0f * (float)y_chunk_in;
+//		x_chunk = x_chunk_in;
+//		y_chunk = y_chunk_in;
+//	}
 }
 
 WPosition::WPosition(float x_in, float y_in, signed short x_chunk_in, signed short y_chunk_in) :
@@ -24,45 +38,36 @@ WPosition::WPosition(float x_in, float y_in, signed short x_chunk_in, signed sho
 	x(x_in),
 	y(y_in)
 {
-	if (x >= 128.0f || x < -128.0f || y >= 128.0f || y < -128.0f)
+	if (x >= 128.0f || y >= 128.0f )
 	{
-		signed short x_chunk_in = (signed short)(x / 128.0f);
-		signed short y_chunk_in = (signed short)(y / 128.0f);
-		x -= 128.0f * (float)x_chunk_in;
-		y -= 128.0f * (float)y_chunk_in;
-		x_chunk += x_chunk_in;
-		y_chunk += y_chunk_in;
+		signed short x_chunk_off = (signed short)((x / 256.0f) + 0.5f);
+		signed short y_chunk_off = (signed short)((y / 256.0f) + 0.5f);
+		x -= 256.0f * (float)x_chunk_off;
+		y -= 256.0f * (float)y_chunk_off;
+		x_chunk += x_chunk_off;
+		y_chunk += y_chunk_off;
+		return;
+	}
+	else if (x < -128.0f || y < -128.0f)
+	{
+		signed short x_chunk_off = (signed short)((x / 256.0f) - 0.5f);
+		signed short y_chunk_off = (signed short)((y / 256.0f) - 0.5f);
+		x -= 256.0f * (float)x_chunk_off;
+		y -= 256.0f * (float)y_chunk_off;
+		x_chunk += x_chunk_off;
+		y_chunk += y_chunk_off;
+		return;
 	}
 }
 
 WPosition WPosition::operator+(const WPosition & rhs) const
 {
-	float x_in = x + rhs.x;
-	float y_in = y + rhs.y;
-	if (x_in >= 128.0f || x_in < -128.0f || y_in >= 128.0f || y_in < -128.0f)
-	{
-		if (x_chunk >= _SHORT_SIZE)
-		{
-			//TO CODE
-		}
-		signed short x_chunk_in = (signed short)(x_in / 128.0f);
-		signed short y_chunk_in = (signed short)(y_in / 128.0f);
-		return WPosition(x_in - (128.0f * (float)x_chunk_in), y_in - (128.0f * (float)y_chunk_in), x_chunk + x_chunk_in + rhs.x_chunk, y_chunk + y_chunk_in + rhs.y_chunk);
-	}
-	return WPosition(x_in, y_in, x_chunk + rhs.x_chunk, y_chunk + rhs.y_chunk);
+	return WPosition(x + rhs.x, y + rhs.y, x_chunk + rhs.x_chunk, y_chunk + rhs.y_chunk);
 }
 
 WPosition WPosition::operator+(const Vec2 & rhs) const
 {
-	float x_in = x + rhs.x;
-	float y_in = y + rhs.y;
-	if (x_in >= 128.0f || x_in < -128.0f || y_in >= 128.0f || y_in < -128.0f)
-	{
-		signed short x_chunk_in = (signed short)(x_in / 128.0f);
-		signed short y_chunk_in = (signed short)(y_in / 128.0f);
-		return WPosition(x_in - (128.0f * (float)x_chunk_in), y_in - (128.0f * (float)y_chunk_in), x_chunk + x_chunk_in, y_chunk + y_chunk_in);
-	}
-	return WPosition(x_in, y_in, x_chunk, y_chunk);
+	return WPosition(x + rhs.x, y + rhs.y, x_chunk, y_chunk);
 }
 
 WPosition & WPosition::operator+=(const WPosition & rhs)
@@ -72,60 +77,22 @@ WPosition & WPosition::operator+=(const WPosition & rhs)
 
 WPosition & WPosition::operator+=(const Vec2 & rhs)
 {
-	x += rhs.x;
-	y += rhs.y;
-	if (x >= 128.0f || x < -128.0f || y >= 128.0f || y < -128.0f)
-	{
-		signed short x_chunk_in = (signed short)(x / 128.0f);
-		signed short y_chunk_in = (signed short)(y / 128.0f);
-		x -= 128.0f * (float)x_chunk_in;
-		y -= 128.0f * (float)y_chunk_in;
-		x_chunk += x_chunk_in;
-		y_chunk += y_chunk_in;
-	}
-	return *this;
+	return *this = *this + rhs;
 }
 
 WPosition WPosition::operator-(const WPosition & rhs) const
 {
-	float x_in = x - rhs.x;
-	float y_in = y - rhs.y;
-	if (x_in >= 128.0f || x_in < -128.0f || y_in >= 128.0f || y_in < -128.0f)
-	{
-		signed short x_chunk_in = (signed short)(x_in / 128.0f);
-		signed short y_chunk_in = (signed short)(y_in / 128.0f);
-		return WPosition(x_in - (128.0f * (float)x_chunk_in), y_in - (128.0f * (float)y_chunk_in), x_chunk + x_chunk_in - rhs.x_chunk, y_chunk + y_chunk_in - rhs.y_chunk);
-	}
-	return WPosition(x_in, y_in, x_chunk - rhs.x_chunk, y_chunk - rhs.y_chunk);
+	return WPosition(x - rhs.x, y - rhs.y, x_chunk - rhs.x_chunk, y_chunk - rhs.y_chunk);
 }
 
 WPosition WPosition::operator-(const Vec2 & rhs) const
 {
-	float x_in = x - rhs.x;
-	float y_in = y - rhs.y;
-	if (x_in >= 128.0f || x_in < -128.0f || y_in >= 128.0f || y_in < -128.0f)
-	{
-		signed short x_chunk_in = (signed short)(x_in / 128.0f);
-		signed short y_chunk_in = (signed short)(y_in / 128.0f);
-		return WPosition(x_in - (128.0f * (float)x_chunk_in), y_in - (128.0f * (float)y_chunk_in), x_chunk + x_chunk_in, y_chunk + y_chunk_in);
-	}
-	return WPosition(x_in, y_in, x_chunk, y_chunk);
+	return WPosition(x - rhs.x, y - rhs.y, x_chunk, y_chunk);
 }
 
 WPosition & WPosition::operator-=(const Vec2 & rhs)
 {
-	x -= rhs.x;
-	y -= rhs.y;
-	if (x >= 128.0f || x < -128.0f || y >= 128.0f || y < -128.0f)
-	{
-		signed short x_chunk_in = (signed short)(x / 128.0f);
-		signed short y_chunk_in = (signed short)(y / 128.0f);
-		x -= 128.0f * (float)x_chunk_in;
-		y -= 128.0f * (float)y_chunk_in;
-		x_chunk += x_chunk_in;
-		y_chunk += y_chunk_in;
-	}
-	return *this;
+	return *this = *this - rhs;
 }
 
 WPosition WPosition::operator-() const
@@ -135,17 +102,18 @@ WPosition WPosition::operator-() const
 
 WPosition & WPosition::operator=(const Vec2 & rhs)
 {
-	signed short x_chunk_in = (signed short)(rhs.x / 128.0f);
-	signed short y_chunk_in = (signed short)(rhs.y / 128.0f);
-	x = rhs.x - 128.0f * (float)x_chunk_in;
-	y = rhs.y - 128.0f * (float)y_chunk_in;
-	x_chunk = x_chunk_in;
-	y_chunk = y_chunk_in;
-
-	return *this;
+	return *this = WPosition(rhs);
 }
 
 Vec2 WPosition::GetPosition() const
 {
-	return Vec2(x + ((float)x_chunk * 128.0f) , y + ((float)y_chunk * 128.0f));
+	return Vec2(x + ((float)x_chunk * 256.0f) , y + ((float)y_chunk * 256.0f));
+}
+
+void WPosition::Reset()
+{
+	x = 0.0f;
+	y = 0.0f;
+	x_chunk = 0;
+	y_chunk = 0;
 }
