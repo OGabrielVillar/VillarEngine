@@ -6,6 +6,10 @@ DrawSystem::DrawSystem(Graphics& gfx_in, World& world_in)
 	world = &world_in;
 	UIElement xx;
 	screen.elements_inside = &xx;
+	xbar1 = 0;
+	xbar2 = gfx->ScreenWidth / 2;
+	xbar3 = gfx->ScreenWidth;
+	threshold = (float)gfx->ScreenWidth / 1.0f;
 }
 
 void DrawSystem::Go(float ft_in)
@@ -16,6 +20,84 @@ void DrawSystem::Go(float ft_in)
 
 void DrawSystem::ComposeFrame()
 {
+	float automation_cicle = 3.0f;
+	if (digjoy_wheel_dir)
+	{
+		digjoy_wheel += ft;
+		if (digjoy_wheel >= automation_cicle)
+		{
+			digjoy_wheel -= ft * 2.0f;
+			digjoy_wheel_dir = false;
+		}
+	}
+	else
+	{
+		digjoy_wheel -= ft;
+		if (digjoy_wheel < 0.0f)
+		{
+			digjoy_wheel += ft * 2.0f;
+			digjoy_wheel_dir = true;
+		}
+	}
+
+	for (size_t i = 0; i <= 2; i++)
+	{
+		digjoy[i] = digjoy_wheel / automation_cicle;
+	}
+
+	Color xbar1_color((unsigned char)((float)255 * digjoy[0]), 0, 0);
+	Color xbar2_color(0, (unsigned char)((float)255 * digjoy[1]), 0);
+	Color xbar3_color(0, 0, (unsigned char)((float)255 * digjoy[2]));
+	for (size_t x = 0; x < gfx->ScreenWidth ; x++)
+	{
+		for (size_t y = 0; y < gfx->ScreenHeight; y++)
+		{
+			float bar1dist = std::abs((float)x - (float)xbar1);
+			int r_buff1 = xbar1_color.GetR();
+			int g_buff1 = xbar1_color.GetG();
+			int b_buff1 = xbar1_color.GetB();
+			if (bar1dist < threshold)
+			{r_buff1 = (int)((float)r_buff1*(1.0f - ((float)bar1dist / (float)threshold)));
+			 g_buff1 = (int)((float)g_buff1*(1.0f - ((float)bar1dist / (float)threshold)));
+			 b_buff1 = (int)((float)b_buff1*(1.0f - ((float)bar1dist / (float)threshold)));}
+			else
+			{r_buff1 = 0;
+			 g_buff1 = 0;
+			 b_buff1 = 0;}
+
+			float bar2dist = std::abs((float)x - (float)xbar2);
+			int r_buff2 = xbar2_color.GetR();
+			int g_buff2 = xbar2_color.GetG();
+			int b_buff2 = xbar2_color.GetB();
+			if (bar2dist < threshold)
+			{r_buff2 = (int)((float)r_buff2*(1.0f - ((float)bar2dist / (float)threshold)));
+			 g_buff2 = (int)((float)g_buff2*(1.0f - ((float)bar2dist / (float)threshold)));
+			 b_buff2 = (int)((float)b_buff2*(1.0f - ((float)bar2dist / (float)threshold)));}
+			else
+			{r_buff2 = 0;
+			 g_buff2 = 0;
+			 b_buff2 = 0;}
+
+			float bar3dist = std::abs((float)x - (float)xbar3);
+			int r_buff3 = xbar3_color.GetR();
+			int g_buff3 = xbar3_color.GetG();
+			int b_buff3 = xbar3_color.GetB();
+			if (bar3dist < threshold)
+			{r_buff3 = (int)((float)r_buff3*(1.0f - ((float)bar3dist / (float)threshold)));
+			 g_buff3 = (int)((float)g_buff3*(1.0f - ((float)bar3dist / (float)threshold)));
+			 b_buff3 = (int)((float)b_buff3*(1.0f - ((float)bar3dist / (float)threshold)));}
+			else
+			{r_buff3 = 0;
+			 g_buff3 = 0;
+			 b_buff3 = 0;}
+
+			int r = (r_buff1 + r_buff2 + r_buff3) / 3;
+			int g = (g_buff1 + g_buff2 + g_buff3) / 3;
+			int b = (b_buff1 + b_buff2 + b_buff3) / 3;
+			Color color((unsigned char)r, (unsigned char)g, (unsigned char)b);
+			gfx->PutPixel(x,y,color);
+		}
+	}
 	Vec2 center = Vec2(gfx->ScreenWidth / 2.0f, gfx->ScreenHeight / 2.0f);
 
 	Transformation matrix = *world->GetCamera()->GetTransformation();

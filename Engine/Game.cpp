@@ -90,9 +90,10 @@ void Game::Controls()
 
 	}
 
-	//if (wnd.mouse.LeftIsPressed()){	
-	//	world.userunit->rigidbody.SetPosition(Vec2((float)wnd.mouse.GetPosX(), (float)wnd.mouse.GetPosY()));
-	//}
+	if (wnd.mouse.RightIsPressed()){	
+		drawSystem.xbar2 = wnd.mouse.GetPosX();
+	}
+
 	float camera_velocity = (1.0f / (world.GetCamera()->GetTransformation()->GetScale() * world.GetCamera()->zoom)) * ft.Get();
 
 	if (wnd.kbd.KeyIsPressed((char)104))
@@ -188,21 +189,20 @@ void Game::Controls()
 	WPosition b;
 
 	WPosition userunit_position(world.userunit->GetTransformation().GetWPosition());
-	font.DrawText(
-		"User Position\nx: " + std::to_string(userunit_position.x) + "(" + std::to_string(userunit_position.x_chunk)
-		+ ")\ny: " + std::to_string(userunit_position.y) + "(" + std::to_string(userunit_position.y_chunk)
-		+ ")"
-		, Vei2(gfx.ScreenHeight-40, 40), Colors::Yellow, gfx);
+	//font.DrawText(
+	//	"User Position\nx: " + std::to_string(userunit_position.x) + "(" + std::to_string(userunit_position.x_chunk)
+	//	+ ")\ny: " + std::to_string(userunit_position.y) + "(" + std::to_string(userunit_position.y_chunk)
+	//	+ ")"
+	//	, Vei2(gfx.ScreenHeight-40, 40), Colors::Yellow, gfx);
 
 
 	WPosition mousewp(GetMouseWorldPosition());
-	font.DrawText(	"x: "	+ std::to_string(mousewp.x)	+ "(" + std::to_string(mousewp.x_chunk)
-	+				")\ny: " + std::to_string(mousewp.y) + "(" + std::to_string(mousewp.y_chunk)
-	+				")\nx: "	+ std::to_string(mousewp.GetPosition().x)
-	+				")\ny: " + std::to_string(mousewp.GetPosition().y)
-	+				")"
-	, Vei2(40, 40), Colors::Yellow, gfx);
-
+	//font.DrawText(	"x: "	+ std::to_string(mousewp.x)	+ "(" + std::to_string(mousewp.x_chunk)
+	//+				")\ny: " + std::to_string(mousewp.y) + "(" + std::to_string(mousewp.y_chunk)
+	//+				")\nx: "	+ std::to_string(mousewp.GetPosition().x)
+	//+				")\ny: " + std::to_string(mousewp.GetPosition().y)
+	//+				")"
+	//, Vei2(40, 40), Colors::Yellow, gfx);
 	if (wnd.mouse.LeftIsPressed())
 	{
 		if (!lefthasbeenpressed)
@@ -216,11 +216,11 @@ void Game::Controls()
 		left_clickLastPos = offset;
 		world.GetCamera()->GetTransformation()->MoveTo(left_camInitialPos - offset);
 
-		font.DrawText(
-			"Mouse Position\nx: " + std::to_string(offset.x) + "(" + std::to_string(offset.x_chunk)
-			+ ")\ny: " + std::to_string(offset.y) + "(" + std::to_string(offset.y_chunk)
-			+ ")"
-			, Vei2(40, 180), Colors::Yellow, gfx);
+		//font.DrawText(
+		//	"Mouse Position\nx: " + std::to_string(offset.x) + "(" + std::to_string(offset.x_chunk)
+		//	+ ")\ny: " + std::to_string(offset.y) + "(" + std::to_string(offset.y_chunk)
+		//	+ ")"
+		//	, Vei2(40, 180), Colors::Yellow, gfx);
 	}
 	else
 	{

@@ -114,12 +114,12 @@ World::World() :
 	//AddCommand(linhagrande, (char)37, lefteffect);
 
 	// 25 UNIT SPAWN
-	float circlespawn_radius = 12.0f;
-	int circlespawn_amount = 30;
+	float circlespawn_radius = 14.0f;
+	int circlespawn_amount = 160;
 	for (size_t i = 0; i < circlespawn_amount; i++)
 	{
 		AddUnit(Unit("Steve", Vec2(std::cos(((PI*2)/circlespawn_amount)*i)*circlespawn_radius, std::sin(((PI * 2) / circlespawn_amount)*i)*circlespawn_radius)));
-		GetCreatedUnit()->SetRadius(radius);
+		GetCreatedUnit()->SetRadius(radius*0.35f);
 		GetCreatedUnit()->rigidbody.transformation.SetOrientationInRadians(PI / 2);
 		//Effect spaceeffectx;
 		//spaceeffectx.SetFunction(0, Function::Type::AddForce, Function::Unit::Source);
