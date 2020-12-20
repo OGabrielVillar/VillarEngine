@@ -38,26 +38,30 @@ WPosition::WPosition(float x_in, float y_in, signed short x_chunk_in, signed sho
 	x(x_in),
 	y(y_in)
 {
-	if (x >= 128.0f || y >= 128.0f )
+	signed short x_chunk_off(0);
+	signed short y_chunk_off(0);
+	if (x >= 128.0f)
 	{
-		signed short x_chunk_off = (signed short)((x / 256.0f) + 0.5f);
-		signed short y_chunk_off = (signed short)((y / 256.0f) + 0.5f);
-		x -= 256.0f * (float)x_chunk_off;
-		y -= 256.0f * (float)y_chunk_off;
-		x_chunk += x_chunk_off;
-		y_chunk += y_chunk_off;
-		return;
+		x_chunk_off = (signed short)((x / 256.0f) + 0.5f);
+		
 	}
-	else if (x < -128.0f || y < -128.0f)
+	else if (x < 128.0f)
 	{
-		signed short x_chunk_off = (signed short)((x / 256.0f) - 0.5f);
-		signed short y_chunk_off = (signed short)((y / 256.0f) - 0.5f);
-		x -= 256.0f * (float)x_chunk_off;
-		y -= 256.0f * (float)y_chunk_off;
-		x_chunk += x_chunk_off;
-		y_chunk += y_chunk_off;
-		return;
+		x_chunk_off = (signed short)((x / 256.0f) - 0.5f);
 	}
+	if (y >= 128.0f)
+	{
+		y_chunk_off = (signed short)((y / 256.0f) + 0.5f);
+	}
+	else if (y < 128.0f)
+	{
+		y_chunk_off = (signed short)((y / 256.0f) - 0.5f);
+	}
+	x -= 256.0f * (float)x_chunk_off;
+	y -= 256.0f * (float)y_chunk_off;
+	x_chunk += x_chunk_off;
+	y_chunk += y_chunk_off;
+	return;
 }
 
 WPosition WPosition::operator+(const WPosition & rhs) const

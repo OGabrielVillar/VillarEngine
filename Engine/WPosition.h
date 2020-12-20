@@ -32,10 +32,10 @@ public:
 	signed char x_round;
 	signed char y_round;
 };
-inline Vec2 DistFromTo(const WPosition& a, const WPosition& b)
-{
-	if (a.x_chunk == b.x_chunk && a.y_chunk == b.y_chunk) {
-		return Vec2(b.x - a.x, b.y - a.y);
-	}
-	return Vec2((b.x + ((float)b.x_chunk * 128.0f)) - (a.x + ((float)a.x_chunk * 128.0f)), (b.y + ((float)b.y_chunk * 128.0f)) - (a.y + ((float)a.y_chunk * 128.0f)));
-}
+//inline Vec2 DistFromTo(const WPosition& a, const WPosition& b)
+//{
+//	if (a.x_chunk == b.x_chunk && a.y_chunk == b.y_chunk) {
+//		return Vec2(b.x - a.x, b.y - a.y);
+//	}
+//	return Vec2((b.x + ((float)b.x_chunk * 128.0f)) - (a.x + ((float)a.x_chunk * 128.0f)), (b.y + ((float)b.y_chunk * 128.0f)) - (a.y + ((float)a.y_chunk * 128.0f)));
+//}

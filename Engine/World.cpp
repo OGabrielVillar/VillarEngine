@@ -66,9 +66,8 @@ World::World() :
 	//GetCreatedUnit()->rigidbody.UpdateMass();
 
 	AddUnit(Unit("esfera", Vec2(0.0f, -8.0f)));
-	GetCreatedUnit()->SetRadius(radius);
+	GetCreatedUnit()->SetRadius(radius*2.0f);
 	control.SetSelectedUnit(*GetCreatedUnit());
-	GetCreatedUnit()->rigidbody.transformation.SetOrientationInRadians(PI / 3.8f);
 	userunit = GetCreatedUnit();
 
 	float force = 50.0f;			//cm per second
@@ -115,11 +114,11 @@ World::World() :
 
 	// 25 UNIT SPAWN
 	float circlespawn_radius = 14.0f;
-	int circlespawn_amount = 160;
+	int circlespawn_amount = 10;
 	for (size_t i = 0; i < circlespawn_amount; i++)
 	{
 		AddUnit(Unit("Steve", Vec2(std::cos(((PI*2)/circlespawn_amount)*i)*circlespawn_radius, std::sin(((PI * 2) / circlespawn_amount)*i)*circlespawn_radius)));
-		GetCreatedUnit()->SetRadius(radius*0.35f);
+		GetCreatedUnit()->SetRadius(radius*1.0f);
 		GetCreatedUnit()->rigidbody.transformation.SetOrientationInRadians(PI / 2);
 		//Effect spaceeffectx;
 		//spaceeffectx.SetFunction(0, Function::Type::AddForce, Function::Unit::Source);

@@ -24,7 +24,7 @@
 #include <wrl.h>
 #include "ChiliException.h"
 #include "Colors.h"
-#include "Surface.h"
+#include "Texture.h"
 #include "RectI.h"
 #include "Vec2.h"
 #include "Transformation.h"
@@ -68,16 +68,17 @@ public:
 	void DrawCurve3P(Vec2& start, Vec2& end, Vec2& mid, Color c);
 	void DrawCircleLine(Vec2& start, Vec2& end, float radius_in, Color c);
 	void DrawCircleCurve3P(Vec2& start, Vec2& end, Vec2& mid, float radius_in, Color c);
-	void DrawSpriteNonChroma( int x,int y,const Surface& s );
-	void DrawSpriteNonChroma( int x,int y,const RectI& srcRect,const Surface& s );
-	void DrawSpriteNonChroma( int x,int y,RectI srcRect,const RectI& clip,const Surface& s );
-	void DrawSprite( int x,int y,const Surface& s,Color chroma = Colors::Magenta );
-	void DrawSprite( int x,int y,const RectI& srcRect,const Surface& s,Color chroma = Colors::Magenta );
-	void DrawSprite( int x,int y,RectI srcRect,const RectI& clip,const Surface& s,Color chroma = Colors::Magenta );
+	void DrawSpriteNonChroma( int x,int y,const Texture& s );
+	void DrawSpriteNonChroma( int x,int y,const RectI& srcRect,const Texture& s );
+	void DrawSpriteNonChroma( int x,int y,RectI srcRect,const RectI& clip,const Texture& s );
+	void DrawSprite(const Texture& s, const Vec2& topleft, float scale, const Vec2& angle);
+	void DrawSprite( int x,int y,const Texture& s,Color chroma = Colors::Magenta );
+	void DrawSprite( int x,int y,const RectI& srcRect,const Texture& s,Color chroma = Colors::Magenta );
+	void DrawSprite( int x,int y,RectI srcRect,const RectI& clip,const Texture& s,Color chroma = Colors::Magenta );
 	// this version of drawsprite substitutes all drawn pixel colors with the supplied color
-	void DrawSpriteSubstitute( int x,int y,Color substitute,const Surface& s,Color chroma = Colors::Magenta );
-	void DrawSpriteSubstitute( int x,int y,Color substitute,const RectI& srcRect,const Surface& s,Color chroma = Colors::Magenta );
-	void DrawSpriteSubstitute( int x,int y,Color substitute,RectI srcRect,const RectI& clip,const Surface& s,Color chroma = Colors::Magenta );
+	void DrawSpriteSubstitute( int x,int y,Color substitute,const Texture& s,Color chroma = Colors::Magenta );
+	void DrawSpriteSubstitute( int x,int y,Color substitute,const RectI& srcRect,const Texture& s,Color chroma = Colors::Magenta );
+	void DrawSpriteSubstitute( int x,int y,Color substitute,RectI srcRect,const RectI& clip,const Texture& s,Color chroma = Colors::Magenta );
 	~Graphics();
 private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain>				pSwapChain;
@@ -96,5 +97,6 @@ private:
 public:
 	static constexpr int ScreenWidth = 1500;
 	static constexpr int ScreenHeight = 900;
+	Vec2 screen_center = Vec2((float)ScreenWidth,(float)ScreenHeight);
 	static RectI GetScreenRect();
 };

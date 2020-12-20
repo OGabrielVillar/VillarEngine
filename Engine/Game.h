@@ -23,7 +23,7 @@
 #include "Keyboard.h"
 #include "Mouse.h"
 #include "Graphics.h"
-#include "Surface.h"
+#include "Texture.h"
 #include "Animation.h"
 #include "FrameTimer.h"
 #include "Character.h"

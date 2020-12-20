@@ -90,10 +90,6 @@ void Game::Controls()
 
 	}
 
-	if (wnd.mouse.RightIsPressed()){	
-		drawSystem.xbar2 = wnd.mouse.GetPosX();
-	}
-
 	float camera_velocity = (1.0f / (world.GetCamera()->GetTransformation()->GetScale() * world.GetCamera()->zoom)) * ft.Get();
 
 	if (wnd.kbd.KeyIsPressed((char)104))
@@ -189,20 +185,20 @@ void Game::Controls()
 	WPosition b;
 
 	WPosition userunit_position(world.userunit->GetTransformation().GetWPosition());
-	//font.DrawText(
-	//	"User Position\nx: " + std::to_string(userunit_position.x) + "(" + std::to_string(userunit_position.x_chunk)
-	//	+ ")\ny: " + std::to_string(userunit_position.y) + "(" + std::to_string(userunit_position.y_chunk)
-	//	+ ")"
-	//	, Vei2(gfx.ScreenHeight-40, 40), Colors::Yellow, gfx);
+	font.DrawText(
+		"User Position\nx: " + std::to_string(userunit_position.x) + "(" + std::to_string(userunit_position.x_chunk)
+		+ ")\ny: " + std::to_string(userunit_position.y) + "(" + std::to_string(userunit_position.y_chunk)
+		+ ")"
+		, Vei2(gfx.ScreenHeight-40, 40), Colors::Yellow, gfx);
 
 
 	WPosition mousewp(GetMouseWorldPosition());
-	//font.DrawText(	"x: "	+ std::to_string(mousewp.x)	+ "(" + std::to_string(mousewp.x_chunk)
-	//+				")\ny: " + std::to_string(mousewp.y) + "(" + std::to_string(mousewp.y_chunk)
-	//+				")\nx: "	+ std::to_string(mousewp.GetPosition().x)
-	//+				")\ny: " + std::to_string(mousewp.GetPosition().y)
-	//+				")"
-	//, Vei2(40, 40), Colors::Yellow, gfx);
+	font.DrawText(	"Mouse Position\nx: "	+ std::to_string(mousewp.x)	+ "(" + std::to_string(mousewp.x_chunk)
+	+				")\ny: " + std::to_string(mousewp.y) + "(" + std::to_string(mousewp.y_chunk)
+	+				")\nx: "	+ std::to_string(mousewp.GetPosition().x)
+	+				")\ny: " + std::to_string(mousewp.GetPosition().y)
+	+				")"
+	, Vei2(40, 40), Colors::Yellow, gfx);
 	if (wnd.mouse.LeftIsPressed())
 	{
 		if (!lefthasbeenpressed)
@@ -232,7 +228,7 @@ WPosition Game::GetMouseWorldPosition()
 {
 	Vec2 center(gfx.ScreenWidth / 2.0f, gfx.ScreenHeight / 2.0f);
 	Transformation  matrix(*world.GetCamera()->GetTransformation());
-	float zoom(world.GetCamera()->zoom * center.Len());
+	float zoom(world.GetCamera()->zoom);
 	matrix.ScalesBy(zoom);
 	Transformation screen_position(Vec2(((float)wnd.mouse.GetPosX() - center.x)/zoom, ((float)wnd.mouse.GetPosY() - center.y)/zoom));
 	

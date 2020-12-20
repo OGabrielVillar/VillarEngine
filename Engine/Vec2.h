@@ -100,6 +100,11 @@ inline float GetAngleBetween(const Vec2& v1, const Vec2& v2)
 inline Vec2 GetRotated90(Vec2 vec_in) {
 	return Vec2(vec_in.y, -vec_in.x);
 }
+
+inline Vec2 GetRotated270(Vec2 vec_in) {
+	return Vec2(vec_in.y, vec_in.x);
+}
+
 inline Vec2 GetRotated90OnAxis(Vec2 vec_in,Vec2 axis_in) {
 	Vec2 line_section = vec_in-axis_in;
 	return Vec2(line_section.y+axis_in.x, -line_section.x+ axis_in.y);

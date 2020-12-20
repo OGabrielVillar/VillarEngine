@@ -1,9 +1,9 @@
-#include "Surface.h"
+#include "Texture.h"
 #include "ChiliWin.h"
 #include <cassert>
 #include <fstream>
 
-Surface::Surface( const std::string& filename )
+Texture::Texture( const std::string& filename )
 {
 	std::ifstream file( filename,std::ios::binary );
 	assert( file );
@@ -64,7 +64,7 @@ Surface::Surface( const std::string& filename )
 	}
 }
 
-Surface::Surface( int width,int height )
+Texture::Texture( int width,int height )
 	:
 	width( width ),
 	height( height ),
@@ -72,9 +72,9 @@ Surface::Surface( int width,int height )
 {
 }
 
-Surface::Surface( const Surface& rhs )
+Texture::Texture( const Texture& rhs )
 	:
-	Surface( rhs.width,rhs.height )
+	Texture( rhs.width,rhs.height )
 {
 	const int nPixels = width * height;
 	for( int i = 0; i < nPixels; i++ )
@@ -83,13 +83,13 @@ Surface::Surface( const Surface& rhs )
 	}
 }
 
-Surface::~Surface()
+Texture::~Texture()
 {
 	delete [] pPixels;
 	pPixels = nullptr;
 }
 
-Surface& Surface::operator=( const Surface& rhs )
+Texture& Texture::operator=( const Texture& rhs )
 {
 	width = rhs.width;
 	height = rhs.height;
@@ -105,7 +105,7 @@ Surface& Surface::operator=( const Surface& rhs )
 	return *this;
 }
 
-void Surface::PutPixel( int x,int y,Color c )
+void Texture::PutPixel( int x,int y,Color c )
 {
 	assert( x >= 0 );
 	assert( x < width );
@@ -114,7 +114,7 @@ void Surface::PutPixel( int x,int y,Color c )
 	pPixels[y * width + x] = c;
 }
 
-Color Surface::GetPixel( int x,int y ) const
+Color Texture::GetPixel( int x,int y ) const
 {
 	assert( x >= 0 );
 	assert( x < width );
@@ -123,17 +123,17 @@ Color Surface::GetPixel( int x,int y ) const
 	return pPixels[y * width + x];
 }
 
-int Surface::GetWidth() const
+int Texture::GetWidth() const
 {
 	return width;
 }
 
-int Surface::GetHeight() const
+int Texture::GetHeight() const
 {
 	return height;
 }
 
-RectI Surface::GetRect() const
+RectI Texture::GetRect() const
 {
 	return{ 0,width,0,height };
 }

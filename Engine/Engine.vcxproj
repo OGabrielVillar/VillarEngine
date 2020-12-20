@@ -173,7 +173,7 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="RigidBody.h" />
     <ClInclude Include="ChiliSound.h" />
-    <ClInclude Include="Surface.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="Transformation.h" />
     <ClInclude Include="Unit.h" />
     <ClInclude Include="Vec2.h" />
@@ -211,7 +211,7 @@
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="ChiliSound.cpp" />
     <ClCompile Include="FileManagement.cpp" />
-    <ClCompile Include="Surface.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Transformation.cpp" />
     <ClCompile Include="UIElement.cpp" />
     <ClCompile Include="Unit.cpp" />

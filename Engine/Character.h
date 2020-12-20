@@ -28,7 +28,7 @@ public:
 	// activates a damage visual effect
 	void ActivateEffect();
 private:
-	Surface sprite;
+	Texture sprite;
 	Vec2 pos;
 	Vec2 vel = { 0.0f,0.0f };
 	std::vector<Animation> animations;

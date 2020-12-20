@@ -141,9 +141,6 @@
     <ClInclude Include="Resource.h">
       <Filter>Header Files\ChiliFramework</Filter>
     </ClInclude>
-    <ClInclude Include="Surface.h">
-      <Filter>Header Files\ChiliFramework</Filter>
-    </ClInclude>
     <ClInclude Include="VMath.h">
       <Filter>Header Files\VillarMath</Filter>
     </ClInclude>
@@ -181,6 +178,12 @@
       <Filter>Header Files\font</Filter>
     </ClInclude>
     <ClInclude Include="ChiliSound.h">
+      <Filter>Header Files\ChiliFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
       <Filter>Header Files\ChiliFramework</Filter>
     </ClInclude>
   </ItemGroup>
@@ -254,9 +257,6 @@
     <ClCompile Include="RectI.cpp">
       <Filter>Source Files\ChiliFramework</Filter>
     </ClCompile>
-    <ClCompile Include="Surface.cpp">
-      <Filter>Source Files\ChiliFramework</Filter>
-    </ClCompile>
     <ClCompile Include="Material.cpp">
       <Filter>Source Files\WorldSide</Filter>
     </ClCompile>
@@ -291,6 +291,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ChiliSound.cpp">
+      <Filter>Source Files\ChiliFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
       <Filter>Source Files\ChiliFramework</Filter>
     </ClCompile>
   </ItemGroup>

@@ -545,17 +545,17 @@ void Graphics::DrawCircleCurve3P(Vec2 & start, Vec2 & mid, Vec2 & end, float rad
 	}
 }
 
-void Graphics::DrawSpriteNonChroma( int x,int y,const Surface& s )
+void Graphics::DrawSpriteNonChroma( int x,int y,const Texture& s )
 {
 	DrawSpriteNonChroma( x,y,s.GetRect(),s );
 }
 
-void Graphics::DrawSpriteNonChroma( int x,int y,const RectI& srcRect,const Surface& s )
+void Graphics::DrawSpriteNonChroma( int x,int y,const RectI& srcRect,const Texture& s )
 {
 	DrawSpriteNonChroma( x,y,srcRect,GetScreenRect(),s );
 }
 
-void Graphics::DrawSpriteNonChroma( int x,int y,RectI srcRect,const RectI& clip,const Surface& s )
+void Graphics::DrawSpriteNonChroma( int x,int y,RectI srcRect,const RectI& clip,const Texture& s )
 {
 	assert( srcRect.left >= 0 );
 	assert( srcRect.right <= s.GetWidth() );
@@ -588,17 +588,190 @@ void Graphics::DrawSpriteNonChroma( int x,int y,RectI srcRect,const RectI& clip,
 	}
 }
 
-void Graphics::DrawSprite( int x,int y,const Surface& s,Color chroma )
+void Graphics::DrawSprite(const Texture & s, const Vec2 & topleft, float scale, const Vec2 & angle)
+{
+	Vec2 sprite_center(GetRotated((((float)s.GetWidth() * scale) / 2.0f, ((float)s.GetHeight()  * scale) / 2.0f), angle));
+	if (screen_center.LenSqrd() < (screen_center - (sprite_center+topleft)).LenSqrd())
+	{
+		return;
+	}
+
+	if (scale > 1.0f)
+	{
+		for (int ty = 0; ty < s.GetHeight(); ty++)
+		{
+			for (int tx = 0; tx < s.GetWidth(); tx++)
+			{
+				Color c(s.GetPixel(tx, ty));
+				if (c != Colors::Magenta)
+				{
+					float pre_x((float)tx*scale);
+					float pre_y((float)ty*scale);
+					for (float sy = 0.0f; sy < scale; sy++)
+					{
+						for (float sx = 0.0f; sx < scale; sx++)
+						{
+							float x = pre_x + sx;
+							float y = pre_y + sy;
+							Vec2 nowpixel((angle.x*x) - angle.y*y, (angle.y*x) + angle.x*y);
+							PutPixelInCanvas(int(nowpixel.x + topleft.x), int(nowpixel.y + topleft.y), c);
+						}
+					}
+				}
+			}
+		}
+		return;
+	}
+	for (float sy = 0.0f; sy < s.GetHeight()*scale; sy ++)
+	{
+		for (float sx = 0.0f; sx < s.GetWidth()*scale; sx++)
+		{
+			Color c(s.GetPixel(int(sx / scale), int(sy / scale)));
+			if (c != Colors::Magenta)
+			{
+				Vec2 nowpixel((angle.x*sx) - angle.y*sy, (angle.y*sx) + angle.x*sy);
+				PutPixelInCanvas(int(nowpixel.x + topleft.x), int(nowpixel.y + topleft.y), c);
+			}
+		}
+	}
+	return;
+}
+
+//void Graphics::DrawTexture(const Texture& s, Vec2 a_corner, Vec2 b_corner, Vec2 c_corner, Vec2 d_corner)
+//{
+	//assert(a_corner.x < 0);
+	//assert(a_corner.x >= ScreenWidth);
+	//assert(a_corner.y < 0);
+	//assert(a_corner.y >= ScreenHeight);
+	//assert(b_corner.x < 0);
+	//assert(b_corner.x >= ScreenWidth);
+	//assert(b_corner.y < 0);
+	//assert(b_corner.y >= ScreenHeight);
+	//assert(c_corner.x < 0);
+	//assert(c_corner.x >= ScreenWidth);
+	//assert(c_corner.y < 0);
+	//assert(c_corner.y >= ScreenHeight);
+	//assert(d_corner.x < 0);
+	//assert(d_corner.x >= ScreenWidth);
+	//assert(d_corner.y < 0);
+	//assert(d_corner.y >= ScreenHeight);
+	
+	//TEXTURE RASTERIZATION:
+
+	//triangle setup
+	//
+	//if (a_corner.y > b_corner.y)
+	//{
+	//
+	//}
+	//Vec2* bot = &a_corner;
+	//Vec2* mid = &b_corner;
+	//Vec2* top = &c_corner;
+	////texture setup
+	//Vec2 texture_dimensions((float)s.GetWidth(), (float)s.GetHeight());
+	//Vec2 texture_interpolation;
+	//Vec2 texture_cicle_interpolation;
+	//Vec2 texture_line_interpolation;
+	//
+	//Vec2 bot_to_top(*top - *bot);
+	//Vec2 bot_to_mid(*mid - *bot);
+	//Vec2 mid_to_top(*top - *mid);
+	//float firsthalf_percentage(bot_to_mid.y / bot_to_top.y);
+	//
+	//Vec2 tracing_start(bot->x, bot->y);
+	//Vec2 tracing(tracing_start);
+	//Vec2 tracing_offset(bot_to_top.x / bot_to_top.y, 1.0f);
+	//float bot_y = bot->y;
+	//
+	//float tracing_x_limit(tracing.x);
+	//float tracing_x_limit_offset(bot_to_mid.x / bot_to_mid.y);
+	//float mid_y = mid->y;
+	//
+	//
+	//// FIRST HALF
+	//for (; tracing.y < mid_y; tracing += tracing_offset)
+	//{
+	//	float y_percent = (tracing.y - tracing_start.y) / bot_to_mid.y;
+	//	if (tracing.x < tracing_x_limit)
+	//	{
+	//		for (float x = tracing.x; x < tracing_x_limit; x += 1.0f)
+	//		{
+	//			float x_percent = (x - tracing.x) / (tracing.x + tracing_x_limit);
+	//			//texture_cicle_interpolation = texture_dimensions * firsthalf_percentage * y_percent;
+	//			//texture_line_interpolation = (Vec2(texture_dimensions.x * y_percent, 0.0f) - Vec2(texture_dimensions * firsthalf_percentage * y_percent)) * x_percent + texture_cicle_interpolation;
+	//			//const Color srcPixel = s.GetPixel((int)texture_line_interpolation.x, (int)texture_line_interpolation.y);
+	//			//if (srcPixel != Colors::Magenta)
+	//			//{
+	//				PutPixelInCanvas(x, tracing.y, Colors::Blue);
+	//			//}
+	//		}
+	//	}
+	//	//else
+	//	//{
+	//	//	for (float x = tracing.x; x > tracing_x_limit; x -= 1.0f)
+	//	//	{
+	//	//		float x_percent = (x - tracing.x) / (tracing.x + tracing_x_limit);
+	//	//		texture_cicle_interpolation = texture_dimensions * firsthalf_percentage * y_percent;
+	//	//		texture_line_interpolation = (Vec2(texture_dimensions.x * y_percent,0.0f) - Vec2(texture_dimensions * firsthalf_percentage * y_percent)) * x_percent + texture_cicle_interpolation;
+	//	//		const Color srcPixel = s.GetPixel((int)texture_line_interpolation.x, (int)texture_line_interpolation.y);
+	//	//		if (srcPixel != Colors::Magenta)
+	//	//		{
+	//	//			PutPixelInCanvas(x, tracing.y, srcPixel);
+	//	//		}
+	//	//	}
+	//	//}
+	//	tracing_x_limit += tracing_x_limit_offset;
+	//}
+
+	// SECOND HALF
+	//tracing_x_limit_offset = mid_to_top.x / mid_to_top.y;
+	//
+	//for (; tracing.y < mid_y; tracing += tracing_offset)
+	//{
+	//	float y_percent = (tracing.y - tracing_start.y) / bot_to_mid.y;
+	//	if (tracing.x < tracing_x_limit)
+	//	{
+	//		for (float x = tracing.x; x < tracing_x_limit; x += 1.0f)
+	//		{
+	//			float x_percent = (x - tracing.x) / (tracing.x + tracing_x_limit);
+	//			texture_cicle_interpolation = texture_dimensions * (1.0 - firsthalf_percentage) * y_percent + (texture_dimensions * firsthalf_percentage);
+	//			texture_line_interpolation = (Vec2(texture_dimensions.x,texture_dimensions.y * y_percent) - Vec2(texture_dimensions * firsthalf_percentage * y_percent)) * x_percent + texture_cicle_interpolation;
+	//			const Color srcPixel = s.GetPixel((int)texture_line_interpolation.x, (int)texture_line_interpolation.y);
+	//			if (srcPixel != Colors::Magenta)
+	//			{
+	//				PutPixelInCanvas(x, tracing.y, srcPixel);
+	//			}
+	//		}
+	//	}
+	//	else
+	//	{
+	//		for (float x = tracing.x; x > tracing_x_limit; x -= 1.0f)
+	//		{
+	//			float x_percent = (x - tracing.x) / (tracing.x + tracing_x_limit);
+	//			texture_cicle_interpolation = texture_dimensions * (1.0 - firsthalf_percentage) * y_percent + (texture_dimensions * firsthalf_percentage);
+	//			texture_line_interpolation = (Vec2(texture_dimensions.x, texture_dimensions.y * y_percent) - Vec2(texture_dimensions * firsthalf_percentage * y_percent)) * x_percent + texture_cicle_interpolation;
+	//			const Color srcPixel = s.GetPixel((int)texture_line_interpolation.x, (int)texture_line_interpolation.y);
+	//			if (srcPixel != Colors::Magenta)
+	//			{
+	//				PutPixelInCanvas(x, tracing.y, srcPixel);
+	//			}
+	//		}
+	//	}
+	//	tracing_x_limit += tracing_x_limit_offset;
+	//}
+//}
+
+void Graphics::DrawSprite( int x,int y,const Texture& s,Color chroma )
 {
 	DrawSprite( x,y,s.GetRect(),s,chroma );
 }
 
-void Graphics::DrawSprite( int x,int y,const RectI& srcRect,const Surface& s,Color chroma )
+void Graphics::DrawSprite( int x,int y,const RectI& srcRect,const Texture& s,Color chroma )
 {
 	DrawSprite( x,y,srcRect,GetScreenRect(),s,chroma );
 }
 
-void Graphics::DrawSprite( int x,int y,RectI srcRect,const RectI& clip,const Surface& s,Color chroma )
+void Graphics::DrawSprite( int x,int y,RectI srcRect,const RectI& clip,const Texture& s,Color chroma )
 {
 	assert( srcRect.left >= 0 );
 	assert( srcRect.right <= s.GetWidth() );
@@ -635,17 +808,17 @@ void Graphics::DrawSprite( int x,int y,RectI srcRect,const RectI& clip,const Sur
 	}
 }
 
-void Graphics::DrawSpriteSubstitute( int x,int y,Color substitute,const Surface& s,Color chroma )
+void Graphics::DrawSpriteSubstitute( int x,int y,Color substitute,const Texture& s,Color chroma )
 {
 	DrawSpriteSubstitute( x,y,substitute,s.GetRect(),s,chroma );
 }
 
-void Graphics::DrawSpriteSubstitute( int x,int y,Color substitute,const RectI& srcRect,const Surface& s,Color chroma )
+void Graphics::DrawSpriteSubstitute( int x,int y,Color substitute,const RectI& srcRect,const Texture& s,Color chroma )
 {
 	DrawSpriteSubstitute( x,y,substitute,srcRect,GetScreenRect(),s,chroma );
 }
 
-void Graphics::DrawSpriteSubstitute( int x,int y,Color substitute,RectI srcRect,const RectI& clip,const Surface& s,Color chroma )
+void Graphics::DrawSpriteSubstitute( int x,int y,Color substitute,RectI srcRect,const RectI& clip,const Texture& s,Color chroma )
 {
 	assert( srcRect.left >= 0 );
 	assert( srcRect.right <= s.GetWidth() );

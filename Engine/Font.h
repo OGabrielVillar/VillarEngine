@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Graphics.h"
-#include "Surface.h"
+#include "Texture.h"
 #include "Vei2.h"
 
 class Font
@@ -13,7 +13,7 @@ private:
 	RectI MapGlyphRect( char c ) const;
 private:
 	// holds the font sheet bitmap data
-	Surface surface;
+	Texture surface;
 	// this gives the dimensions of a glyph in the font sheet
 	int glyphWidth;
 	int glyphHeight;

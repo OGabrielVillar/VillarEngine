@@ -4,14 +4,14 @@
 #include <string>
 #include "RectI.h"
 
-class Surface
+class Texture
 {
 public:
-	Surface( const std::string& filename );
-	Surface( int width,int height );
-	Surface( const Surface& );
-	~Surface();
-	Surface& operator=( const Surface& );
+	Texture( const std::string& filename );
+	Texture( int width,int height );
+	Texture( const Texture& );
+	~Texture();
+	Texture& operator=( const Texture& );
 	void PutPixel( int x,int y,Color c );
 	Color GetPixel( int x,int y ) const;
 	int GetWidth() const;
