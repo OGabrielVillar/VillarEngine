@@ -7,6 +7,7 @@ public:
 	IdListBlock(unsigned int id_in, IdListBlock<T>* previous_in);
 	~IdListBlock() = default;
 	void PushElement(T& element_in);
+	void PushElement(T* element_in);
 	T* GetElement();
 	IdListBlock<T>* GenerateNextBlock(unsigned int id_in);
 	IdListBlock<T>* GetPreviousBlock();
@@ -31,6 +32,12 @@ template<class T>
 inline void IdListBlock<T>::PushElement(T & element_in)
 {
 	element = new T(element_in);
+}
+
+template<class T>
+inline void IdListBlock<T>::PushElement(T* element_in)
+{
+	element = element_in;
 }
 
 template<class T>
@@ -88,6 +95,7 @@ public://FUNCTIONS
 	T* operator [](unsigned int);
 	//void ClearRem();
 	void PushElement(T& element_in);
+	void PushElement(T* element_in);
 	//void RemoveElement(T* element_in);
 	IdListBlock<T>* GetFirstBlock();
 	IdListBlock<T>* GetLastBlock();
@@ -113,6 +121,13 @@ inline T * IdList<T>::operator[](unsigned int x)
 
 template<class T>
 inline void IdList<T>::PushElement(T & element_in)
+{
+	NewBlock();
+	last_block->PushElement(element_in);
+}
+
+template<class T>
+inline void IdList<T>::PushElement(T* element_in)
 {
 	NewBlock();
 	last_block->PushElement(element_in);

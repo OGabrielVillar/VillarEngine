@@ -31,6 +31,7 @@
 #include "List.h"
 #include "FileStream.h"
 
+#include "MotionSystem.h"
 #include "DrawSystem.h"
 #include "World.h"
 #include "IdList.h"
@@ -52,6 +53,7 @@ private:
 	void Controls();
 	WPosition GetMouseWorldPosition();
 	WPosition GetScreenWorldPosition(const Vec2& screen_pos);
+	void DoTheBoundThing();
 private:
 	FileStream fs;
 
@@ -59,6 +61,7 @@ private:
 	Graphics gfx;
 	World world;
 	DrawSystem drawSystem;
+	MotionSystem motionSystem;
 	Control* defaultControl;
 	FrameTimer ft;
 	float velocity_sum;
@@ -74,6 +77,8 @@ private:
 	WPosition left_clickPos;
 	WPosition left_camInitialPos;
 	WPosition left_clickLastPos;
+
+	float x_animation_test = 0.0f;
 	//List<std::string> list;
 	////Character link = Vec2(111,111);
 	//Sound hit = L"Sounds\\hit.wav";

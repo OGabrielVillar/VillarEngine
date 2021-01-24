@@ -12,5 +12,5 @@ public:
 private:
 	Transformation transformation;
 public:
-	float zoom = 1.0f;
+	float zoom = 60.0f;
 };

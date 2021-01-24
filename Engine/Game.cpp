@@ -26,7 +26,8 @@ Game::Game(MainWindow& wnd)
 	wnd(wnd),
 	gfx(wnd),
 	world(),
-	drawSystem(gfx,world),
+	drawSystem(gfx, world),
+	motionSystem(),
 	CamDefaultTransf(*world.GetCamera()->GetTransformation())
 {
 	defaultControl = world.GetControl();
@@ -39,6 +40,14 @@ Game::Game(MainWindow& wnd)
 	fs.Write<char>((char)40,"gugu");
 	char ztest = fs.Read<char>();
 	char wtest = fs.Read<char>();
+
+	//ANIMATION TESTS
+	motionSystem.AddFloatMotion(new Reference<float>(&x_animation_test));
+	const unsigned int test_array_size(4);
+	float test_array_times[test_array_size] = { 0.2f,2.0f,2.2f,4.0f };
+	float test_array_values[test_array_size] = { 0.0f,1.25f,2.5f,3.75f };
+	motionSystem.GetLastFloatMotion().SetUpKeys(test_array_times, test_array_values, test_array_size);
+
 }
 
 void Game::Go()
@@ -51,32 +60,14 @@ void Game::Go()
 
 void Game::Update()
 {
-	Vec2 Bound = Vec2(25.0f, 25.0f);
-	Vec2 center = Bound / 2.0f;
-	Unit* pU;
 
-	IdListReader<Unit> lr_pu(world.GetUnitIdList());
 
-	while (!lr_pu.Ended())
-	{
-		if (!bound_active) { break; }
-		pU = lr_pu.Get();
-		if (pU->GetName().empty()) { lr_pu.Next(); continue; }
+	motionSystem.Go(ft.Mark());
 
-		Vec2 pu_position = pU->GetTransformation().GetPosition();
-		if (DistSqr(pu_position) > DistSqr(center))
-		{
-			Vec2 rotation_matrix = pU->GetTransformation().GetPosition().GetNormalized();
-			Vec2 velocity_in_matrix = GetRotated(pU->rigidbody.GetVelocity(), (GetInvertedAngle(rotation_matrix)));
-			pU->rigidbody.SetVelocity(GetRotated(Vec2(velocity_in_matrix.x, -velocity_in_matrix.y), rotation_matrix));
-			pU->SetPosition(-(rotation_matrix*(center.Len() - 1.0f)));
-		}
-
-		lr_pu.Next();
-	}
+	DoTheBoundThing();
 	Controls();
 
-	world.Go(ft.Mark());
+	world.Go(ft.Get());
 
 
 
@@ -198,7 +189,7 @@ void Game::Controls()
 	+				")\nx: "	+ std::to_string(mousewp.GetPosition().x)
 	+				")\ny: " + std::to_string(mousewp.GetPosition().y)
 	+				")"
-	, Vei2(40, 40), Colors::Yellow, gfx);
+	, Vei2(40 + int(50.0f * x_animation_test), 40), Colors::Yellow, gfx);
 	if (wnd.mouse.LeftIsPressed())
 	{
 		if (!lefthasbeenpressed)
@@ -244,6 +235,33 @@ WPosition Game::GetScreenWorldPosition(const Vec2& screen_pos)
 	Transformation screen_position(Vec2((screen_pos.x - center.x) / zoom, (screen_pos.y - center.y) / zoom));
 
 	return WPosition((matrix + Transformation(screen_position)).GetWPosition());
+}
+
+void Game::DoTheBoundThing()
+{
+	Vec2 Bound = Vec2(25.0f, 25.0f);
+	Vec2 center = Bound / 2.0f;
+	Unit* pU;
+
+	IdListReader<Unit> lr_pu(world.GetUnitIdList());
+
+	while (!lr_pu.Ended())
+	{
+		if (!bound_active) { break; }
+		pU = lr_pu.Get();
+		if (pU->GetName().empty()) { lr_pu.Next(); continue; }
+
+		Vec2 pu_position = pU->GetTransformation().GetPosition();
+		if (DistSqr(pu_position) > DistSqr(center))
+		{
+			Vec2 rotation_matrix = pU->GetTransformation().GetPosition().GetNormalized();
+			Vec2 velocity_in_matrix = GetRotated(pU->rigidbody.GetVelocity(), (GetInvertedAngle(rotation_matrix)));
+			pU->rigidbody.SetVelocity(GetRotated(Vec2(velocity_in_matrix.x, -velocity_in_matrix.y), rotation_matrix));
+			pU->SetPosition(-(rotation_matrix*(center.Len() - 1.0f)));
+		}
+
+		lr_pu.Next();
+	}
 }
 
 void Game::ComposeFrame()		

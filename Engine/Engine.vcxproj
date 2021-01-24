@@ -154,7 +154,11 @@
     <ClInclude Include="Function.h" />
     <ClInclude Include="FileStream.h" />
     <ClInclude Include="IdList.h" />
+    <ClInclude Include="Motion.h" />
+    <ClInclude Include="MotionSystem.h" />
+    <ClInclude Include="Reference.h" />
     <ClInclude Include="SoundSystem.h" />
+    <ClInclude Include="Sprite.h" />
     <ClInclude Include="TextRendering.h" />
     <ClInclude Include="ttfParser.h" />
     <ClInclude Include="WPosition.h" />
@@ -203,8 +207,10 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="Material.cpp" />
+    <ClCompile Include="MotionSystem.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="PhysicSystem.cpp" />
+    <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="TextRendering.cpp" />
     <ClCompile Include="WPosition.cpp" />
     <ClCompile Include="RectI.cpp" />

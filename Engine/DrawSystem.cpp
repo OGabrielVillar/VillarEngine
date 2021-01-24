@@ -37,6 +37,7 @@ void DrawSystem::ComposeFrame()
 
 	gfx->DrawCircle((matrix - Transformation(Vec2(0.0f))).GetPosition() + center, Vec2(12.5f).Len() * matrix.GetScale(), Colors::White);
 
+	gfx->DrawTexture(stevie, (matrix - Transformation(Vec2(0.0f))).GetPosition() + center, Vec2(19.5f, 18.0f), 1.0f / 200.0f * matrix.GetScale(), GetInvertedAngle(matrix.GetOrientation()));
 
 	Unit* pU;
 
@@ -60,12 +61,15 @@ void DrawSystem::ComposeFrame()
 			if (pU == world->userunit)
 			{
 				cx = Colors::Yellow;
-				Transformation pu_v0Transf = matrix - (pU->rigidbody.GetVerticeTransf(0) + Transformation(-pU->GetFormRadius()));
+				Transformation pu_v0Transf = matrix - pU->rigidbody.GetVerticeTransf(0);
 				Vec2 pu_v0Position = pu_v0Transf.GetPosition() + center;
+				Transformation pu_v0Transftest = matrix - Transformation(pU->rigidbody.GetCOM());
+				Vec2 pu_v0Positiontest = pu_v0Transftest.GetPosition() + center;
 				float pu_v0Radius = pU->GetFormRadius()*pu_v0Transf.GetScale();
-				gfx->DrawSprite(tatuzin, pu_v0Position, pu_v0Radius / 16.0f, pu_v0Transf.GetOrientation());
-
-
+				gfx->DrawTexture(tatuzin, pu_v0Position, Vec2(19.5f,18.0f), pu_v0Radius/20.0f, pu_v0Transf.GetOrientation());
+				gfx->DrawCircle(pu_v0Position, pu_v0Radius / 20.0f,Colors::Yellow);
+				gfx->DrawCircle(pu_v0Positiontest, pu_v0Radius / 20.0f, Colors::Red);
+				
 				lr_pu.Next();
 				continue;
 			}

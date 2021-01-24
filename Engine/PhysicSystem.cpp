@@ -41,15 +41,13 @@ void PhysicSystem::MoveBodies()
 				//	lr_a.Get()->rigidbody.velocity += punit_to_sun.Normalize() * ((GCONST * Sun->rigidbody.mass * lr_a.Get()->rigidbody.mass) / punit_to_sun.LenSqrd());	//GRAVITY
 				//}
 				
-				//lr_a.Get()->rigidbody.velocity += Vec2(0.0f, 0.2f);	//GRAVITY
+				lr_a.Get()->rigidbody.velocity += Vec2(0.0f, 0.2f);	//GRAVITY
 				lr_a.Get()->rigidbody.velocity += lr_a.Get()->rigidbody.force;
 				lr_a.Get()->rigidbody.angularVelocity += lr_a.Get()->rigidbody.torque;
 				//Punit->rigidbody.velocity *= AIRRESISTENCE;			//DRAG
 				//Punit->rigidbody.angularVelocity *= AIRRESISTENCE;	//DRAG
-				Transformation movement = Transformation(lr_a.Get()->rigidbody.velocity*ft);
-				Vec2 rotation = (Vec2(std::cos(lr_a.Get()->rigidbody.angularVelocity*ft), std::sin(lr_a.Get()->rigidbody.angularVelocity*ft)));
-				lr_a.Get()->rigidbody.SetTransformation(movement + lr_a.Get()->rigidbody.GetTransformation());
-				lr_a.Get()->rigidbody.transformation.RotatesBy(rotation);
+				lr_a.Get()->rigidbody.transformation.MovesBy(lr_a.Get()->rigidbody.velocity*ft);
+				lr_a.Get()->rigidbody.transformation.RotatesBy(Vec2(std::cos(lr_a.Get()->rigidbody.angularVelocity*ft), std::sin(lr_a.Get()->rigidbody.angularVelocity*ft)));
 				lr_a.Get()->rigidbody.force.Set(0.0f, 0.0f);
 			}
 

@@ -141,7 +141,7 @@ Vec2 RigidBody::GetForce()
 
 Vec2 RigidBody::GetCOM()
 {
-	return GetTransformation().GetPosition();
+	return GetRotated(COM,transformation.GetOrientation()) + GetTransformation().GetPosition();
 }
 
 void RigidBody::AddForce(const Vec2 & force_in)

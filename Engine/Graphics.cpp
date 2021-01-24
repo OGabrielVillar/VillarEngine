@@ -588,16 +588,17 @@ void Graphics::DrawSpriteNonChroma( int x,int y,RectI srcRect,const RectI& clip,
 	}
 }
 
-void Graphics::DrawSprite(const Texture & s, const Vec2 & topleft, float scale, const Vec2 & angle)
+void Graphics::DrawTexture(const Texture & s, const Vec2 & topleft, const Vec2 & offset, float scale, const Vec2 & angle)
 {
-	Vec2 sprite_center(GetRotated((((float)s.GetWidth() * scale) / 2.0f, ((float)s.GetHeight()  * scale) / 2.0f), angle));
-	if (screen_center.LenSqrd() < (screen_center - (sprite_center+topleft)).LenSqrd())
+	Vec2 texture_center(GetRotated((((float)s.GetWidth() * scale) / 2.0f, ((float)s.GetHeight()  * scale) / 2.0f), angle));
+	if (screen_center.LenSqrd() < (screen_center - (texture_center +topleft)).LenSqrd())
 	{
 		return;
 	}
 
 	if (scale > 1.0f)
 	{
+		Vec2 offset_final = offset*scale;
 		for (int ty = 0; ty < s.GetHeight(); ty++)
 		{
 			for (int tx = 0; tx < s.GetWidth(); tx++)
@@ -611,10 +612,11 @@ void Graphics::DrawSprite(const Texture & s, const Vec2 & topleft, float scale, 
 					{
 						for (float sx = 0.0f; sx < scale; sx++)
 						{
-							float x = pre_x + sx;
-							float y = pre_y + sy;
-							Vec2 nowpixel((angle.x*x) - angle.y*y, (angle.y*x) + angle.x*y);
-							PutPixelInCanvas(int(nowpixel.x + topleft.x), int(nowpixel.y + topleft.y), c);
+							float x = pre_x + sx - offset_final.x;
+							float y = pre_y + sy - offset_final.y;
+							float nowpixel_x((angle.x*x) - angle.y*y);
+							float nowpixel_y((angle.y*x) + angle.x*y);
+							PutPixelInCanvas(int(nowpixel_x + topleft.x), int(nowpixel_y + topleft.y), c);
 						}
 					}
 				}
@@ -622,6 +624,7 @@ void Graphics::DrawSprite(const Texture & s, const Vec2 & topleft, float scale, 
 		}
 		return;
 	}
+	Vec2 offset_final = offset * scale;
 	for (float sy = 0.0f; sy < s.GetHeight()*scale; sy ++)
 	{
 		for (float sx = 0.0f; sx < s.GetWidth()*scale; sx++)
@@ -629,8 +632,11 @@ void Graphics::DrawSprite(const Texture & s, const Vec2 & topleft, float scale, 
 			Color c(s.GetPixel(int(sx / scale), int(sy / scale)));
 			if (c != Colors::Magenta)
 			{
-				Vec2 nowpixel((angle.x*sx) - angle.y*sy, (angle.y*sx) + angle.x*sy);
-				PutPixelInCanvas(int(nowpixel.x + topleft.x), int(nowpixel.y + topleft.y), c);
+				float x = sx - offset_final.x;
+				float y = sy - offset_final.y;
+				float nowpixel_x((angle.x*x) - angle.y*y);
+				float nowpixel_y((angle.y*x) + angle.x*y);
+				PutPixelInCanvas(int(nowpixel_x + topleft.x), int(nowpixel_y + topleft.y), c);
 			}
 		}
 	}

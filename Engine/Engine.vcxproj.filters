@@ -52,6 +52,9 @@
     <Filter Include="Header Files\font">
       <UniqueIdentifier>{c112585f-243d-480e-aec2-b817a65096b0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Motion">
+      <UniqueIdentifier>{eb811eaf-45f8-4828-851a-88504e88b477}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI.h">
@@ -186,6 +189,18 @@
     <ClInclude Include="Texture.h">
       <Filter>Header Files\ChiliFramework</Filter>
     </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>Header Files\VisualSide</Filter>
+    </ClInclude>
+    <ClInclude Include="Motion.h">
+      <Filter>Header Files\Motion</Filter>
+    </ClInclude>
+    <ClInclude Include="MotionSystem.h">
+      <Filter>Header Files\Motion</Filter>
+    </ClInclude>
+    <ClInclude Include="Reference.h">
+      <Filter>Header Files\Motion</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CombatSystem.cpp">
@@ -295,6 +310,12 @@
     </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Source Files\ChiliFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MotionSystem.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

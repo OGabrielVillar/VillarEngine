@@ -71,7 +71,7 @@ public:
 	void DrawSpriteNonChroma( int x,int y,const Texture& s );
 	void DrawSpriteNonChroma( int x,int y,const RectI& srcRect,const Texture& s );
 	void DrawSpriteNonChroma( int x,int y,RectI srcRect,const RectI& clip,const Texture& s );
-	void DrawSprite(const Texture& s, const Vec2& topleft, float scale, const Vec2& angle);
+	void DrawTexture(const Texture& s, const Vec2& topleft, const Vec2& offset, float scale, const Vec2& angle);
 	void DrawSprite( int x,int y,const Texture& s,Color chroma = Colors::Magenta );
 	void DrawSprite( int x,int y,const RectI& srcRect,const Texture& s,Color chroma = Colors::Magenta );
 	void DrawSprite( int x,int y,RectI srcRect,const RectI& clip,const Texture& s,Color chroma = Colors::Magenta );

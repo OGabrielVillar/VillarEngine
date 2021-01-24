@@ -19,5 +19,6 @@ private:
 	UIElement screen;
 	float ft;
 	Texture tatuzin = Texture("tatuzin.bmp");
+	Texture stevie = Texture("stevie.bmp");
 public:
 };
