@@ -362,6 +362,54 @@ void Graphics::DrawCircle(Vec2 position_in, float radius_in, Color c)
 	}
 }
 
+void Graphics::DrawCircleFilled(Vec2 & const position_in, float radius_in, Color c)
+{
+	int x_pos = (int)position_in.x;
+	int y_pos = (int)position_in.y;
+
+	int radius = int(radius_in);
+
+	int x_start = x_pos - radius;
+	int y_start = y_pos - radius;
+
+	int x_end = x_pos + radius;
+	int y_end = y_pos + radius;
+
+	if (x_start >= ScreenWidth)
+	{ return; }
+	else if (x_start < 0)
+	{ x_start = 0; }
+
+	if (y_start >= ScreenHeight)
+	{ return; }
+	else if (y_start < 0)
+	{ y_start = 0; }
+	
+	if (x_end < 0)
+	{ return; }
+	else if (x_end >= ScreenWidth)
+	{ x_end = ScreenWidth - 1; }
+	
+	if (y_end < 0)
+	{ return; }
+	else if (y_end >= ScreenHeight)
+	{ y_end = ScreenHeight - 1; }
+
+	for (; y_start <= y_end; y_start++)
+	{
+		for (int x = x_start; x <= x_end; x++)
+		{
+			int x_cat = x - x_pos;
+			int y_cat = y_start - y_pos;
+			if ((x_cat * x_cat) + (y_cat * y_cat) <= radius * radius)
+			{
+				PutPixel(x, y_start, c);
+			}
+		}
+
+	}
+}
+
 void Graphics::DrawLine(Vec2& a, Vec2& b, Color c)
 {
 	float xstart = (float)a.x;
@@ -545,49 +593,6 @@ void Graphics::DrawCircleCurve3P(Vec2 & start, Vec2 & mid, Vec2 & end, float rad
 	}
 }
 
-void Graphics::DrawSpriteNonChroma( int x,int y,const Texture& s )
-{
-	DrawSpriteNonChroma( x,y,s.GetRect(),s );
-}
-
-void Graphics::DrawSpriteNonChroma( int x,int y,const RectI& srcRect,const Texture& s )
-{
-	DrawSpriteNonChroma( x,y,srcRect,GetScreenRect(),s );
-}
-
-void Graphics::DrawSpriteNonChroma( int x,int y,RectI srcRect,const RectI& clip,const Texture& s )
-{
-	assert( srcRect.left >= 0 );
-	assert( srcRect.right <= s.GetWidth() );
-	assert( srcRect.top >= 0 );
-	assert( srcRect.bottom <= s.GetHeight() );
-	if( x < clip.left )
-	{
-		srcRect.left += clip.left - x;
-		x = clip.left;
-	}
-	if( y < clip.top )
-	{
-		srcRect.top += clip.top - y;
-		y = clip.top;
-	}
-	if( x + srcRect.GetWidth() > clip.right )
-	{
-		srcRect.right -= x + srcRect.GetWidth() - clip.right;
-	}
-	if( y + srcRect.GetHeight() > clip.bottom )
-	{
-		srcRect.bottom -= y + srcRect.GetHeight() - clip.bottom;
-	}
-	for( int sy = srcRect.top; sy < srcRect.bottom; sy++ )
-	{
-		for( int sx = srcRect.left; sx < srcRect.right; sx++ )
-		{
-			PutPixel( x + sx - srcRect.left,y + sy - srcRect.top,s.GetPixel( sx,sy ) );
-		}
-	}
-}
-
 void Graphics::DrawTexture(const Texture & s, const Vec2 & topleft, const Vec2 & offset, float scale, const Vec2 & angle)
 {
 	Vec2 texture_center(GetRotated((((float)s.GetWidth() * scale) / 2.0f, ((float)s.GetHeight()  * scale) / 2.0f), angle));
@@ -641,6 +646,43 @@ void Graphics::DrawTexture(const Texture & s, const Vec2 & topleft, const Vec2 &
 		}
 	}
 	return;
+}
+
+void Graphics::DrawString(const std::string & string_in, PixelFont & pxlfont_in, int x_pos, int y_pos,Color c)
+{
+	int x_spacing_sum = 0;
+	int y_spacing_sum = 0;
+	for (int i = 0; i < string_in.length(); i++)
+	{
+		switch (string_in[i])
+		{
+		case(10):
+			y_spacing_sum += 11;
+			x_spacing_sum = 0;
+			continue;
+		case(32): 
+			x_spacing_sum += 3;
+			continue;
+		default:
+		if (string_in[i] < pxlfont_in.from_char || string_in[i] > pxlfont_in.to_char)
+		{
+			continue;
+		}
+		for (int y = pxlfont_in.GetCharGlyph(string_in[i]).y_space; y < pxlfont_in.GetCharGlyph(string_in[i]).y_size; y++)
+		{
+			for (int x = 0; x < pxlfont_in.GetCharGlyph(string_in[i]).x_size; x++)
+			{
+				if (pxlfont_in.GetCharGlyph(string_in[i]).GetPixel(x, y))
+				{
+					PutPixelInCanvas(x + x_pos + x_spacing_sum, y + y_pos + y_spacing_sum, c);
+				}
+				
+			}
+		}
+		break;
+		}
+		x_spacing_sum += pxlfont_in.GetCharGlyph(string_in[i]).x_size + 1;
+	}
 }
 
 //void Graphics::DrawTexture(const Texture& s, Vec2 a_corner, Vec2 b_corner, Vec2 c_corner, Vec2 d_corner)
@@ -766,101 +808,6 @@ void Graphics::DrawTexture(const Texture & s, const Vec2 & topleft, const Vec2 &
 	//	tracing_x_limit += tracing_x_limit_offset;
 	//}
 //}
-
-void Graphics::DrawSprite( int x,int y,const Texture& s,Color chroma )
-{
-	DrawSprite( x,y,s.GetRect(),s,chroma );
-}
-
-void Graphics::DrawSprite( int x,int y,const RectI& srcRect,const Texture& s,Color chroma )
-{
-	DrawSprite( x,y,srcRect,GetScreenRect(),s,chroma );
-}
-
-void Graphics::DrawSprite( int x,int y,RectI srcRect,const RectI& clip,const Texture& s,Color chroma )
-{
-	assert( srcRect.left >= 0 );
-	assert( srcRect.right <= s.GetWidth() );
-	assert( srcRect.top >= 0 );
-	assert( srcRect.bottom <= s.GetHeight() );
-	if( x < clip.left )
-	{
-		srcRect.left += clip.left - x;
-		x = clip.left;
-	}
-	if( y < clip.top )
-	{
-		srcRect.top += clip.top - y;
-		y = clip.top;
-	}
-	if( x + srcRect.GetWidth() > clip.right )
-	{
-		srcRect.right -= x + srcRect.GetWidth() - clip.right;
-	}
-	if( y + srcRect.GetHeight() > clip.bottom )
-	{
-		srcRect.bottom -= y + srcRect.GetHeight() - clip.bottom;
-	}
-	for( int sy = srcRect.top; sy < srcRect.bottom; sy++ )
-	{
-		for( int sx = srcRect.left; sx < srcRect.right; sx++ )
-		{
-			const Color srcPixel = s.GetPixel( sx,sy );
-			if( srcPixel != chroma )
-			{
-				PutPixel( x + sx - srcRect.left,y + sy - srcRect.top,srcPixel );
-			}
-		}
-	}
-}
-
-void Graphics::DrawSpriteSubstitute( int x,int y,Color substitute,const Texture& s,Color chroma )
-{
-	DrawSpriteSubstitute( x,y,substitute,s.GetRect(),s,chroma );
-}
-
-void Graphics::DrawSpriteSubstitute( int x,int y,Color substitute,const RectI& srcRect,const Texture& s,Color chroma )
-{
-	DrawSpriteSubstitute( x,y,substitute,srcRect,GetScreenRect(),s,chroma );
-}
-
-void Graphics::DrawSpriteSubstitute( int x,int y,Color substitute,RectI srcRect,const RectI& clip,const Texture& s,Color chroma )
-{
-	assert( srcRect.left >= 0 );
-	assert( srcRect.right <= s.GetWidth() );
-	assert( srcRect.top >= 0 );
-	assert( srcRect.bottom <= s.GetHeight() );
-	if( x < clip.left )
-	{
-		srcRect.left += clip.left - x;
-		x = clip.left;
-	}
-	if( y < clip.top )
-	{
-		srcRect.top += clip.top - y;
-		y = clip.top;
-	}
-	if( x + srcRect.GetWidth() > clip.right )
-	{
-		srcRect.right -= x + srcRect.GetWidth() - clip.right;
-	}
-	if( y + srcRect.GetHeight() > clip.bottom )
-	{
-		srcRect.bottom -= y + srcRect.GetHeight() - clip.bottom;
-	}
-	for( int sy = srcRect.top; sy < srcRect.bottom; sy++ )
-	{
-		for( int sx = srcRect.left; sx < srcRect.right; sx++ )
-		{
-			const Color srcPixel = s.GetPixel( sx,sy );
-			if( srcPixel != chroma )
-			{
-				// use substitute color instead of color from the surface (if not chroma)
-				PutPixel( x + sx - srcRect.left,y + sy - srcRect.top,substitute );
-			}
-		}
-	}
-}
 
 
 //////////////////////////////////////////////////

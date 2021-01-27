@@ -18,7 +18,6 @@
  *	You should have received a copy of the GNU General Public License					  *
  *	along with The Chili DirectX Framework.  If not, see <http://www.gnu.org/licenses/>.  *
  ******************************************************************************************/
-#include "MainWindow.h"
 #include "Game.h"
 
 Game::Game(MainWindow& wnd)
@@ -26,13 +25,18 @@ Game::Game(MainWindow& wnd)
 	wnd(wnd),
 	gfx(wnd),
 	world(),
-	drawSystem(gfx, world),
 	motionSystem(),
+	memoryManager(),
+	drawSystem(gfx, world, motionSystem, memoryManager),
 	CamDefaultTransf(*world.GetCamera()->GetTransformation())
 {
+	drawSystem.BindControls(wnd.kbd, wnd.mouse);
+
 	defaultControl = world.GetControl();
 	defaultControl->BindKeyboard(wnd.kbd);
 	world.GetPCombatSystem()->BindKeyboard(wnd.kbd);
+
+
 
 	fs.OpenFile("test\test.txt");
 	char xtest = fs.Read<char>();
@@ -41,13 +45,8 @@ Game::Game(MainWindow& wnd)
 	char ztest = fs.Read<char>();
 	char wtest = fs.Read<char>();
 
-	//ANIMATION TESTS
-	motionSystem.AddFloatMotion(new Reference<float>(&x_animation_test));
-	const unsigned int test_array_size(4);
-	float test_array_times[test_array_size] = { 0.2f,2.0f,2.2f,4.0f };
-	float test_array_values[test_array_size] = { 0.0f,1.25f,2.5f,3.75f };
-	motionSystem.GetLastFloatMotion().SetUpKeys(test_array_times, test_array_values, test_array_size);
-
+	bool testbool[3]{ false };
+	bool testbool2[3]{ true };
 }
 
 void Game::Go()
@@ -171,25 +170,30 @@ void Game::Controls()
 	link.SetDirection( dir );
 	// update character
 	link.Update( ft.Mark() );
-	*/
+	
 	WPosition a;
-	WPosition b;
+	WPosition b;*/
 
-	WPosition userunit_position(world.userunit->GetTransformation().GetWPosition());
-	font.DrawText(
-		"User Position\nx: " + std::to_string(userunit_position.x) + "(" + std::to_string(userunit_position.x_chunk)
-		+ ")\ny: " + std::to_string(userunit_position.y) + "(" + std::to_string(userunit_position.y_chunk)
-		+ ")"
-		, Vei2(gfx.ScreenHeight-40, 40), Colors::Yellow, gfx);
+	//WPosition userunit_position(world.userunit->GetTransformation().GetWPosition());
+	//font.DrawText(
+	//	"User Position\nx: " + std::to_string(userunit_position.x) + "(" + std::to_string(userunit_position.x_chunk)
+	//	+ ")\ny: " + std::to_string(userunit_position.y) + "(" + std::to_string(userunit_position.y_chunk)
+	//	+ ")"
+	//	, Vei2(gfx.ScreenHeight-40, 40), Colors::Yellow, gfx);
+	//
+	//
+	//font.DrawText(	"Mouse Position\nx: "	+ std::to_string(mousewp.x)	+ "(" + std::to_string(mousewp.x_chunk)
+	//+				")\ny: " + std::to_string(mousewp.y) + "(" + std::to_string(mousewp.y_chunk)
+	//+				")\nx: "	+ std::to_string(mousewp.GetPosition().x)
+	//+				")\ny: " + std::to_string(mousewp.GetPosition().y)
+	//+				")"
+	//, Vei2(40 , 40), Colors::Yellow, gfx);
+
+
+
 
 
 	WPosition mousewp(GetMouseWorldPosition());
-	font.DrawText(	"Mouse Position\nx: "	+ std::to_string(mousewp.x)	+ "(" + std::to_string(mousewp.x_chunk)
-	+				")\ny: " + std::to_string(mousewp.y) + "(" + std::to_string(mousewp.y_chunk)
-	+				")\nx: "	+ std::to_string(mousewp.GetPosition().x)
-	+				")\ny: " + std::to_string(mousewp.GetPosition().y)
-	+				")"
-	, Vei2(40 + int(50.0f * x_animation_test), 40), Colors::Yellow, gfx);
 	if (wnd.mouse.LeftIsPressed())
 	{
 		if (!lefthasbeenpressed)
@@ -202,12 +206,6 @@ void Game::Controls()
 		WPosition offset = (mousewp - left_clickPos) + left_clickLastPos;
 		left_clickLastPos = offset;
 		world.GetCamera()->GetTransformation()->MoveTo(left_camInitialPos - offset);
-
-		//font.DrawText(
-		//	"Mouse Position\nx: " + std::to_string(offset.x) + "(" + std::to_string(offset.x_chunk)
-		//	+ ")\ny: " + std::to_string(offset.y) + "(" + std::to_string(offset.y_chunk)
-		//	+ ")"
-		//	, Vei2(40, 180), Colors::Yellow, gfx);
 	}
 	else
 	{
@@ -240,7 +238,7 @@ WPosition Game::GetScreenWorldPosition(const Vec2& screen_pos)
 void Game::DoTheBoundThing()
 {
 	Vec2 Bound = Vec2(25.0f, 25.0f);
-	Vec2 center = Bound / 2.0f;
+	float center = 12.5f;
 	Unit* pU;
 
 	IdListReader<Unit> lr_pu(world.GetUnitIdList());
@@ -252,12 +250,12 @@ void Game::DoTheBoundThing()
 		if (pU->GetName().empty()) { lr_pu.Next(); continue; }
 
 		Vec2 pu_position = pU->GetTransformation().GetPosition();
-		if (DistSqr(pu_position) > DistSqr(center))
+		if (DistSqr(pu_position) > center*center)
 		{
 			Vec2 rotation_matrix = pU->GetTransformation().GetPosition().GetNormalized();
 			Vec2 velocity_in_matrix = GetRotated(pU->rigidbody.GetVelocity(), (GetInvertedAngle(rotation_matrix)));
 			pU->rigidbody.SetVelocity(GetRotated(Vec2(velocity_in_matrix.x, -velocity_in_matrix.y), rotation_matrix));
-			pU->SetPosition(-(rotation_matrix*(center.Len() - 1.0f)));
+			pU->SetPosition(-(rotation_matrix*(center - 1.0f)));
 		}
 
 		lr_pu.Next();

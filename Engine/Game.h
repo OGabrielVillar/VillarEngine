@@ -20,6 +20,7 @@
  ******************************************************************************************/
 #pragma once
 
+#include "MainWindow.h"
 #include "Keyboard.h"
 #include "Mouse.h"
 #include "Graphics.h"
@@ -27,9 +28,9 @@
 #include "Animation.h"
 #include "FrameTimer.h"
 #include "Character.h"
-#include "Font.h"
 #include "List.h"
 #include "FileStream.h"
+#include "MemoryManager.h"
 
 #include "MotionSystem.h"
 #include "DrawSystem.h"
@@ -60,25 +61,23 @@ private:
 	MainWindow& wnd;
 	Graphics gfx;
 	World world;
-	DrawSystem drawSystem;
 	MotionSystem motionSystem;
+	MemoryManager memoryManager;
+	DrawSystem drawSystem;
 	Control* defaultControl;
 	FrameTimer ft;
 	float velocity_sum;
 	Transformation CamDefaultTransf;
 
 
-
 	bool bound_active = true;
 	/********************************/
 	//  User Variables              
-	Font font = "Images\\Fixedsys16x28.bmp";
+	//Font font = "Images\\Fixedsys16x28.bmp";
 	bool lefthasbeenpressed = false;
 	WPosition left_clickPos;
 	WPosition left_camInitialPos;
 	WPosition left_clickLastPos;
-
-	float x_animation_test = 0.0f;
 	//List<std::string> list;
 	////Character link = Vec2(111,111);
 	//Sound hit = L"Sounds\\hit.wav";

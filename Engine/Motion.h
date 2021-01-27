@@ -56,22 +56,26 @@ public:
 
 	//
 	void SetUpKeys(float* times_in, T* values_in, unsigned int many_keys_in) {
+
 		if (many_keys != 0)
 		{
 			return;
 		}
 
 		active = true;
-
 		many_keys = many_keys_in;
 		key_times = new float[many_keys_in];
 		key_values = new T[many_keys_in];
+
+		float time_sum = 0.0f;
 		for (unsigned int i = 0; i < many_keys_in; i++)
 		{
-			key_times[i] = times_in[i];
+			time_sum += times_in[i];
+			key_times[i] = time_sum;
 			key_values[i] = values_in[i];
 		}
 		end = key_times[many_keys-1];
+
 	}
 private:
 	bool active = false;

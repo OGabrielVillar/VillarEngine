@@ -22,12 +22,14 @@
 #include "ChiliWin.h"
 #include <d3d11.h>
 #include <wrl.h>
+#include <string>
 #include "ChiliException.h"
 #include "Colors.h"
 #include "Texture.h"
 #include "RectI.h"
 #include "Vec2.h"
 #include "Transformation.h"
+#include "PixelFont.h"
 
 class Graphics
 {
@@ -56,6 +58,8 @@ public:
 	Graphics& operator=( const Graphics& ) = delete;
 	void EndFrame();
 	void BeginFrame();
+
+
 	void PutPixel( int x,int y,int r,int g,int b )
 	{
 		PutPixel( x,y,{ unsigned char( r ),unsigned char( g ),unsigned char( b ) } );
@@ -63,22 +67,20 @@ public:
 	void PutPixel( int x,int y,Color c );
 	void PutPixelInCanvas(int x, int y, Color c);
 	void DrawCircle( Vec2 position, float radius, Color c);
+	void DrawCircleFilled( Vec2 & const position, float radius, Color c);
+
 	void DrawLine( Vec2& start, Vec2& end, Color c);
 	void DrawCurve3Ptestes(Vec2 & p0, Vec2 & p1, Vec2 & p2, float radius_in, Color c);
 	void DrawCurve3P(Vec2& start, Vec2& end, Vec2& mid, Color c);
 	void DrawCircleLine(Vec2& start, Vec2& end, float radius_in, Color c);
 	void DrawCircleCurve3P(Vec2& start, Vec2& end, Vec2& mid, float radius_in, Color c);
-	void DrawSpriteNonChroma( int x,int y,const Texture& s );
-	void DrawSpriteNonChroma( int x,int y,const RectI& srcRect,const Texture& s );
-	void DrawSpriteNonChroma( int x,int y,RectI srcRect,const RectI& clip,const Texture& s );
+
+
+
 	void DrawTexture(const Texture& s, const Vec2& topleft, const Vec2& offset, float scale, const Vec2& angle);
-	void DrawSprite( int x,int y,const Texture& s,Color chroma = Colors::Magenta );
-	void DrawSprite( int x,int y,const RectI& srcRect,const Texture& s,Color chroma = Colors::Magenta );
-	void DrawSprite( int x,int y,RectI srcRect,const RectI& clip,const Texture& s,Color chroma = Colors::Magenta );
-	// this version of drawsprite substitutes all drawn pixel colors with the supplied color
-	void DrawSpriteSubstitute( int x,int y,Color substitute,const Texture& s,Color chroma = Colors::Magenta );
-	void DrawSpriteSubstitute( int x,int y,Color substitute,const RectI& srcRect,const Texture& s,Color chroma = Colors::Magenta );
-	void DrawSpriteSubstitute( int x,int y,Color substitute,RectI srcRect,const RectI& clip,const Texture& s,Color chroma = Colors::Magenta );
+	void DrawString(const std::string& string_in, PixelFont & pxlfont_in, int x_pos, int y_pos, Color c);
+
+
 	~Graphics();
 private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain>				pSwapChain;

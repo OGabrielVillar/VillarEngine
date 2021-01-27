@@ -1,4 +1,4 @@
-#include "Font.h"
+#include "Fonta.h"
 #include <cassert>
 
 Font::Font( const std::string& filename,Color chroma )
@@ -35,7 +35,7 @@ void Font::DrawText( const std::string& text,const Vei2& pos,Color color,Graphic
 		else if( c >= firstChar + 1 && c <= lastChar )
 		{
 			// use DrawSpriteSubstitute so that we can choose the color of the font rendered
-			gfx.DrawSpriteSubstitute( curPos.x,curPos.y,color,MapGlyphRect( c ),surface,chroma );
+			//gfx.DrawSpriteSubstitute( curPos.x,curPos.y,color,MapGlyphRect( c ),surface,chroma );
 		}
 		// advance screen pos for next character
 		curPos.x += glyphWidth;
